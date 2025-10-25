@@ -1,0 +1,407 @@
+/* --- TEMEL STİLLER ve GENEL YAPI --- */
+/* from: bg-slate-100 min-h-screen font-sans */
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    "Helvetica Neue", Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.app-container {
+  background-color: #f1f5f9; /* slate-100 */
+  min-height: 100vh;
+}
+
+/* --- HEADER --- */
+/* from: bg-gradient-to-r from-sky-600 to-indigo-700 text-white shadow-lg */
+.app-header {
+  background-image: linear-gradient(to right, #0284c7, #4338ca);
+  color: white;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1),
+    0 4px 6px -4px rgba(0, 0, 0, 0.1);
+}
+
+/* from: container mx-auto px-4 py-6 flex items-center */
+.app-header__content {
+  max-width: 1280px; /* container */
+  margin-left: auto;
+  margin-right: auto;
+  padding: 24px 16px;
+  display: flex;
+  align-items: center;
+}
+
+/* from: mr-3 */
+.app-header__icon {
+  margin-right: 12px;
+}
+
+/* from: text-3xl font-bold tracking-tight */
+.app-header__title {
+  font-size: 1.875rem; /* 30px */
+  font-weight: 700;
+  letter-spacing: -0.025em;
+  margin: 0; /* h1 reset */
+}
+
+/* --- ANA İÇERİK ve YERLEŞİM --- */
+/* from: container mx-auto p-4 md:p-8 */
+.main-container {
+  max-width: 1280px;
+  margin-left: auto;
+  margin-right: auto;
+  padding: 16px;
+}
+@media (min-width: 768px) {
+  .main-container {
+    padding: 32px;
+  }
+}
+
+/* from: grid grid-cols-1 lg:grid-cols-3 gap-6 */
+.main-layout {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 24px;
+}
+@media (min-width: 1024px) {
+  .main-layout {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+/* from: lg:col-span-2 */
+.main-layout__list-wrapper {
+  grid-column: span 1;
+}
+@media (min-width: 1024px) {
+  .main-layout__list-wrapper {
+    grid-column: span 2;
+  }
+}
+
+/* from: lg:col-span-1 lg:sticky lg:top-8 self-start */
+.main-layout__sidebar-wrapper {
+  grid-column: span 1;
+}
+@media (min-width: 1024px) {
+  .main-layout__sidebar-wrapper {
+    position: sticky;
+    top: 32px; /* top-8 */
+    align-self: start;
+  }
+}
+
+/* --- FİLTRE KUTUSU --- */
+/* from: bg-white p-4 rounded-xl shadow-lg mb-6 border border-gray-200 */
+.filter-container {
+  background-color: white;
+  padding: 16px;
+  border-radius: 12px;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1),
+    0 4px 6px -4px rgba(0, 0, 0, 0.1);
+  margin-bottom: 24px;
+  border: 1px solid #e5e7eb;
+}
+
+/* from: flex flex-col sm:flex-row gap-4 */
+.filter-container__controls {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+@media (min-width: 640px) {
+  .filter-container__controls {
+    flex-direction: row;
+  }
+}
+
+/* from: AramaCubugu ve KategoriFiltre iç stilleri */
+.arama-cubugu-wrapper,
+.kategori-filtre-wrapper {
+  width: 100%;
+}
+@media (min-width: 640px) {
+  .kategori-filtre-wrapper {
+    width: auto;
+  }
+}
+
+/* from: w-full px-4 py-2 border ... transition-shadow */
+.arama-input,
+.kategori-select {
+  width: 100%;
+  padding: 8px 16px;
+  border: 1px solid #d1d5db; /* border-gray-300 */
+  border-radius: 8px;
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05); /* shadow-sm */
+  transition: box-shadow 0.2s;
+  box-sizing: border-box; /* Önemli */
+}
+
+.arama-input:focus,
+.kategori-select:focus {
+  outline: none;
+  border-color: transparent;
+  box-shadow: 0 0 0 2px #0ea5e9; /* ring-2 focus:ring-sky-500 */
+}
+
+/* from: KategoriFiltre (select stili) */
+.kategori-select {
+  padding-right: 32px;
+  appearance: none;
+  background-color: white;
+  /* Tailwind'in inline SVG'sini CSS ile yeniden oluşturma */
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
+  background-position: right 0.5rem center;
+  background-repeat: no-repeat;
+  background-size: 1.5em 1.5em;
+}
+
+/* --- KİTAP LİSTESİ (sol taraf) --- */
+/* from: grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 */
+.kitap-listesi {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 24px;
+}
+@media (min-width: 640px) {
+  .kitap-listesi {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+@media (min-width: 1024px) {
+  .kitap-listesi {
+    /* Not: Ana layout'un 2 span'ı içinde 3 sütun */
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+/* from: text-gray-500 italic ... col-span-full */
+.kitap-listesi__empty-mesaj {
+  color: #6b7280;
+  font-style: italic;
+  grid-column: 1 / -1; /* col-span-full */
+  text-align: center;
+  margin-top: 32px;
+  padding: 40px;
+  background-color: white;
+  border-radius: 8px;
+  border: 1px solid #e5e7eb;
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+}
+
+/* --- KİTAP KARTI --- */
+/* from: bg-white p-4 rounded-xl shadow-md border ... transition-all ... hover:shadow-xl ... */
+.kitap-karti {
+  background-color: white;
+  padding: 16px;
+  border-radius: 12px;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
+    0 2px 4px -2px rgba(0, 0, 0, 0.1); /* shadow-md */
+  border: 1px solid #e5e7eb;
+  transition: all 0.3s ease;
+  transform: scale(1);
+}
+
+.kitap-karti:hover {
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1),
+    0 4px 6px -4px rgba(0, 0, 0, 0.1); /* shadow-xl */
+  transform: scale(1.02);
+}
+
+/* from: text-lg font-bold text-gray-900 */
+.kitap-karti__baslik {
+  font-size: 1.125rem; /* 18px */
+  font-weight: 700;
+  color: #111827;
+  margin-top: 0;
+  margin-bottom: 4px;
+}
+
+/* from: text-sm text-gray-600 mb-1 */
+.kitap-karti__yazar {
+  font-size: 0.875rem; /* 14px */
+  color: #4b5563;
+  margin-bottom: 4px;
+  margin-top: 0;
+}
+
+/* from: text-xs text-white bg-sky-600 ... px-2 py-0.5 ... mb-4 */
+.kitap-karti__kategori {
+  font-size: 0.75rem; /* 12px */
+  color: white;
+  background-color: #0284c7; /* sky-600 */
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 9999px; /* rounded-full */
+  margin-bottom: 16px;
+  font-weight: 500;
+}
+
+/* from: w-full flex items-center justify-center ... transition-colors */
+.kitap-karti__buton {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 12px;
+  border-radius: 8px;
+  font-size: 0.875rem; /* 14px */
+  font-weight: 500;
+  transition: background-color 0.2s, color 0.2s;
+  border: none;
+  cursor: pointer;
+}
+
+/* from: bg-sky-100 text-sky-800 hover:bg-sky-200 */
+.kitap-karti__buton {
+  background-color: #e0f2fe;
+  color: #075985;
+}
+.kitap-karti__buton:hover {
+  background-color: #bae6fd;
+}
+
+/* from: bg-yellow-400 text-yellow-900 hover:bg-yellow-500 shadow-sm */
+.kitap-karti__buton--favori {
+  background-color: #facc15;
+  color: #713f12;
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+}
+.kitap-karti__buton--favori:hover {
+  background-color: #eab308;
+}
+
+/* from: mr-2 */
+.kitap-karti__buton-icon {
+  margin-right: 8px;
+}
+
+/* from: fill-current */
+.kitap-karti__buton-icon--favori {
+  fill: currentColor;
+}
+
+/* --- FAVORİ PANELİ (sağ taraf) --- */
+/* from: w-full bg-white p-4 rounded-xl shadow-xl border border-gray-200 */
+.favori-panel {
+  width: 100%;
+  background-color: white;
+  padding: 16px;
+  border-radius: 12px;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1),
+    0 4px 6px -4px rgba(0, 0, 0, 0.1); /* shadow-xl */
+  border: 1px solid #e5e7eb;
+}
+
+/* from: flex justify-between items-center w-full text-left mb-2 */
+.favori-panel__toggle {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  text-align: left;
+  margin-bottom: 8px;
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+}
+
+/* from: text-xl font-bold text-transparent bg-clip-text bg-gradient-to-r ... */
+.favori-panel__baslik {
+  font-size: 1.25rem; /* 20px */
+  font-weight: 700;
+  color: transparent;
+  background-clip: text;
+  -webkit-background-clip: text;
+  background-image: linear-gradient(to right, #0284c7, #4338ca);
+  margin: 0;
+}
+
+/* from: text-gray-600 */
+.favori-panel__icon {
+  color: #4b5563;
+}
+
+/* from: mt-4 space-y-3 */
+.favori-panel__content {
+  margin-top: 16px;
+}
+.favori-panel__content > * + * {
+  margin-top: 12px;
+}
+
+/* from: text-gray-500 italic */
+.favori-panel__empty-mesaj {
+  color: #6b7280;
+  font-style: italic;
+}
+
+/* from: space-y-1 */
+.favori-liste {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.favori-liste > * + * {
+  margin-top: 4px;
+}
+
+/* from: flex justify-between items-center group p-2 rounded-md hover:bg-gray-50 */
+.favori-liste__item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px;
+  border-radius: 6px;
+  transition: background-color 0.2s;
+}
+.favori-liste__item:hover {
+  background-color: #f9fafb;
+}
+
+/* from: font-semibold text-gray-700 */
+.favori-liste__item-baslik {
+  font-weight: 600;
+  color: #374151;
+}
+
+/* from: text-sm text-gray-500 block */
+.favori-liste__item-yazar {
+  font-size: 0.875rem; /* 14px */
+  color: #6b7280;
+  display: block;
+}
+
+/* from: text-xs text-red-500 opacity-50 group-hover:opacity-100 ... */
+.favori-liste__kaldir-btn {
+  font-size: 0.75rem; /* 12px */
+  color: #ef4444; /* red-500 */
+  opacity: 0.5;
+  transition: opacity 0.2s, background-color 0.2s;
+  font-weight: 500;
+  padding: 4px 8px;
+  border-radius: 4px;
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+.favori-liste__item:hover .favori-liste__kaldir-btn {
+  opacity: 1;
+}
+.favori-liste__kaldir-btn:hover {
+  background-color: #fee2e2; /* red-100 */
+}
+
+/* --- FOOTER --- */
+/* from: text-center py-6 mt-8 text-slate-500 text-sm */
+.app-footer {
+  text-align: center;
+  padding: 24px 0;
+  margin-top: 32px;
+  color: #64748b; /* slate-500 */
+  font-size: 0.875rem; /* 14px */
+}
