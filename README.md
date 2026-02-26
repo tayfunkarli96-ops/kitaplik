@@ -7,17 +7,9 @@ TfilmK isimli film yorumlama sitemiz kullanıcılarının eski ve yeni çıkmı�
 
 **Referans Uygulama:** [imdb.com](https://www.imdb.com/), [rottentomatoes.com](https://www.rottentomatoes.com/)
 
-**Uygulama Adresi:** [movieq.com.tr](https://movieq.com.tr/)
+
 
 **Grup Adı:** TAyKaR
 
 **Proje Ekibi:** Tayfun KARLI
-1. [Gereksinim Analizi](Gereksinim-Analizi.md)
-2. [Durum Diyagramı](Durum-Diyagramı.md)
-3. [Durum Senaryoları](Durum-Senaryoları.md)
-4. [Front-End](Front-End.md)
-5. [Back-End](Back-End.md)
-6. [Video Sunum](Sunum.md)
-
-![Durum Diyagramı](https://raw.githubusercontent.com/moruex/YazMuh/main/files/Durum-Diyagrami.png)
 
