@@ -1,4 +1,4 @@
-# MovieQ
+# TfilmK
 
 **Proje Tanımı:** 
 MovieQ isimli film yorumlama sitemiz kullanıcılarının eski ve yeni çıkmış filmlerden haberdar olabileceği, filmleri puanlayabileceği, yorum yapabileceği ve kullanıcıların birbirleri ile etkileşime girebileceği kullanıcı dostu bir site olarak tasarlandı. Kullanıcıların puanlamasına göre filmi daha sonra izlemek için izleme listesine ekleyebilir, izlediğiniz filmleri işaretleyebilir ve en sevdiğiniz filmleri favorilerinize ekleyebilirsiniz. Ayrıca filmler hakkındaki gelişmeleri takip edebilir, aradığınız filmi filtreleme sistemi ile rahatça bulabilirsiniz. Kısacası bir film severseniz sitemizi kullanmaktan zevk alacağınızı düşünüyoruz. 
@@ -9,10 +9,9 @@ MovieQ isimli film yorumlama sitemiz kullanıcılarının eski ve yeni çıkmı�
 
 **Uygulama Adresi:** [movieq.com.tr](https://movieq.com.tr/)
 
-**Grup Adı:** SAYFA
+**Grup Adı:** TAyKaR
 
-**Proje Ekibi:** Semih Çantal, Akif Tarık Binici, Ylyas Yylkybayev, Furkan Sayar, Abdullah Kural
-
+**Proje Ekibi:** Tayfun KARLI
 1. [Gereksinim Analizi](Gereksinim-Analizi.md)
 2. [Durum Diyagramı](Durum-Diyagramı.md)
 3. [Durum Senaryoları](Durum-Senaryoları.md)
