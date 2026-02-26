@@ -1,16 +1,24 @@
-# React + Vite
+# MovieQ
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+**Proje Tanımı:** 
+MovieQ isimli film yorumlama sitemiz kullanıcılarının eski ve yeni çıkmış filmlerden haberdar olabileceği, filmleri puanlayabileceği, yorum yapabileceği ve kullanıcıların birbirleri ile etkileşime girebileceği kullanıcı dostu bir site olarak tasarlandı. Kullanıcıların puanlamasına göre filmi daha sonra izlemek için izleme listesine ekleyebilir, izlediğiniz filmleri işaretleyebilir ve en sevdiğiniz filmleri favorilerinize ekleyebilirsiniz. Ayrıca filmler hakkındaki gelişmeleri takip edebilir, aradığınız filmi filtreleme sistemi ile rahatça bulabilirsiniz. Kısacası bir film severseniz sitemizi kullanmaktan zevk alacağınızı düşünüyoruz. 
 
-Currently, two official plugins are available:
+**Proje Kategorisi:** Film
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+**Referans Uygulama:** [imdb.com](https://www.imdb.com/), [rottentomatoes.com](https://www.rottentomatoes.com/)
 
-## React Compiler
+**Uygulama Adresi:** [movieq.com.tr](https://movieq.com.tr/)
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+**Grup Adı:** SAYFA
 
-## Expanding the ESLint configuration
+**Proje Ekibi:** Semih Çantal, Akif Tarık Binici, Ylyas Yylkybayev, Furkan Sayar, Abdullah Kural
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+1. [Gereksinim Analizi](Gereksinim-Analizi.md)
+2. [Durum Diyagramı](Durum-Diyagramı.md)
+3. [Durum Senaryoları](Durum-Senaryoları.md)
+4. [Front-End](Front-End.md)
+5. [Back-End](Back-End.md)
+6. [Video Sunum](Sunum.md)
+
+![Durum Diyagramı](https://raw.githubusercontent.com/moruex/YazMuh/main/files/Durum-Diyagrami.png)
+
