@@ -13,3 +13,8 @@ TfilmK isimli film yorumlama sitemiz kullanıcılarının eski ve yeni çıkmı�
 
 **Proje Ekibi:** Tayfun KARLI
 
+
+![Uploading Gemini_Generated_Image_tkdvtjtkdvtjtkdv (1).png…]()
+![Uploading Gemini_Generated_Image_tkdvtjtkdvtjtkdv (1).png…]()
+![Uploading Gemini_Generated_Image_tkdvtjtkdvtjtkdv (1).png…]()
+![Uploading Gemini_Generated_Image_tkdvtjtkdvtjtkdv (1).png…]()
