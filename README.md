@@ -14,7 +14,4 @@ TfilmK isimli film yorumlama sitemiz kullanıcılarının eski ve yeni çıkmı�
 **Proje Ekibi:** Tayfun KARLI
 
 
-![Uploading Gemini_Generated_Image_tkdvtjtkdvtjtkdv (1).png…]()
-![Uploading Gemini_Generated_Image_tkdvtjtkdvtjtkdv (1).png…]()
-![Uploading Gemini_Generated_Image_tkdvtjtkdvtjtkdv (1).png…]()
-![Uploading Gemini_Generated_Image_tkdvtjtkdvtjtkdv (1).png…]()
+<img width="1412" height="372" alt="Ekran görüntüsü 2026-02-27 145158" src="https://github.com/user-attachments/assets/662dd571-2f46-4bcf-ab5f-ad5a48b29b8b" />
