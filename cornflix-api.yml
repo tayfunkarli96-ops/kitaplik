@@ -1,204 +1,356 @@
-openapi: 3.0.0
+
+      
+openapi: 3.0.3
 info:
-  title: Cornflix API (Film Sitesi)
-  description: Cornflix film platformu için belirlenen 10 temel gereksinimi içeren REST API tasarımı.
+  title: Cornflix Film ve İçerik Yönetim API'si
   version: 1.0.0
+  description: >
+    Bu API, Cornflix film platformunun gereksinim analizi aşamasında belirlenen 
+    işlemleri gerçekleştirmek üzere tasarlanmış bir RESTful servistir. 
+    Profil düzenleme, film güncelleme, kişi bilgileri, filtreleme, yorum yönetimi, 
+    quiz ile önerme ve haber düzenleme gibi 10 temel gereksinimi destekler.
+  contact:
+    name: Tayfun Karlı
+    email: admin@cornflix.com
+
 servers:
-  - url: http://localhost:8080/api
-    description: Yerel Geliştirme Sunucusu
+  - url: https://api.cornflix.com
+    description: Üretim sunucusu (Production)
+  - url: https://localhost:3000
+    description: Yerel geliştirme sunucusu (Development)
+
+tags:
+  - name: Kullanıcılar
+    description: 1- Profil Düzenleme ve 6- İzlenecekler Listesi işlemleri
+  - name: Filmler
+    description: 2- Film Güncelleme, 4- Filtreleme ve 10- Dil Seçenekleri
+  - name: Kişiler
+    description: 3- Oyuncu ve Yönetmen Bilgileri
+  - name: Yorumlar
+    description: 5- Yorum Düzenleme ve 7- Yorum Onaylama
+  - name: Quiz
+    description: 8- Quiz ile Film Önerme
+  - name: Haberler
+    description: 9- Haber Düzenleme
+
+security:
+  - BearerAuth: []
 
 paths:
-  /users/{userId}:
+  /api/users/{userid}:
+    parameters:
+      - name: userid
+        in: path
+        required: true
+        description: Kullanıcının benzersiz ID'si
+        schema:
+          type: string
     put:
-      summary: 1- PROFİL DÜZENLEME
-      description: Kullanıcının kendi profil bilgilerini güncellemesini sağlar.
-      parameters:
-        - name: userId
-          in: path
-          required: true
-          schema:
-            type: integer
+      tags:
+        - Kullanıcılar
+      summary: 1- Profil Düzenleme
+      operationId: updateUserProfile
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              type: object
-              properties:
-                username:
-                  type: string
-                email:
-                  type: string
+              $ref: '#/components/schemas/UserInput'
       responses:
-        '200':
-          description: Profil başarıyla güncellendi.
+        "200":
+          description: Profil başarıyla güncellendi
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        "400":
+          description: Geçersiz istek verisi
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        "401":
+          description: Kimlik doğrulama başarısız
 
-  /movies/{movieId}:
+  /api/movies/{movieid}:
+    parameters:
+      - name: movieid
+        in: path
+        required: true
+        description: Filmin benzersiz ID'si
+        schema:
+          type: string
     put:
-      summary: 2- FİLM GÜNCELLEME
-      description: Yetkili kullanıcıların film detaylarını güncellemesini sağlar.
-      parameters:
-        - name: movieId
-          in: path
-          required: true
-          schema:
-            type: integer
+      tags:
+        - Filmler
+      summary: 2- Film Güncelleme
+      operationId: updateMovie
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              type: object
-              properties:
-                title:
-                  type: string
-                description:
-                  type: string
+              $ref: '#/components/schemas/MovieInput'
       responses:
-        '200':
-          description: Film bilgileri güncellendi.
+        "200":
+          description: Film başarıyla güncellendi
+        "403":
+          description: Yetkisiz işlem (Sadece Admin)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
 
-  /people/{personId}:
+  /api/people/{personid}:
+    parameters:
+      - name: personid
+        in: path
+        required: true
+        description: Oyuncu veya yönetmenin ID'si
+        schema:
+          type: string
     get:
-      summary: 3- OYUNCU VE YÖNETMEN BİLGİLERİ
-      description: Oyuncu veya yönetmenlerin detaylı biyografilerini getirir.
-      parameters:
-        - name: personId
-          in: path
-          required: true
-          schema:
-            type: integer
+      tags:
+        - Kişiler
+      summary: 3- Oyuncu ve Yönetmen Bilgileri
+      operationId: getPerson
       responses:
-        '200':
-          description: Kişi bilgileri başarıyla getirildi.
+        "200":
+          description: Kişi bilgileri getirildi
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Person'
+        "404":
+          description: Kişi bulunamadı
 
-  /movies:
+  /api/movies:
     get:
-      summary: 4- FİLM FİLTRELEME & 10- DİL SEÇENEKLERİ
-      description: Filmleri yıla, türe göre filtreler. Başlık üzerinden dil seçeneği kabul eder.
+      tags:
+        - Filmler
+      summary: 4- Film Filtreleme & 10- Dil Seçenekleri
+      operationId: listFilteredMovies
       parameters:
         - name: Accept-Language
           in: header
-          description: 10- DİL SEÇENEKLERİ (Örn. tr, en)
           required: false
+          description: 10- Dil Seçenekleri (örn: tr, en)
           schema:
             type: string
         - name: genre
           in: query
-          description: 4- FİLM FİLTRELEME (Türe göre)
+          required: false
+          description: 4- Türe göre film filtreleme
           schema:
             type: string
         - name: year
           in: query
-          description: 4- FİLM FİLTRELEME (Yıla göre)
+          required: false
+          description: 4- Çıkış yılına göre filtreleme
           schema:
             type: integer
       responses:
-        '200':
-          description: Filtrelenmiş film listesi döndürüldü.
+        "200":
+          description: Filmler listelendi
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Movie'
 
-  /reviews/{reviewId}:
+  /api/comments/{commentid}:
+    parameters:
+      - name: commentid
+        in: path
+        required: true
+        description: Yorum ID'si
+        schema:
+          type: string
     put:
-      summary: 5- YORUM DÜZENLEME
-      description: Kullanıcının kendi yaptığı bir yorumu sonradan değiştirmesini sağlar.
-      parameters:
-        - name: reviewId
-          in: path
-          required: true
-          schema:
-            type: integer
+      tags:
+        - Yorumlar
+      summary: 5- Yorum Düzenleme
+      operationId: updateComment
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              type: object
-              properties:
-                content:
-                  type: string
-                rating:
-                  type: integer
+              $ref: '#/components/schemas/CommentInput'
       responses:
-        '200':
-          description: Yorum başarıyla güncellendi.
+        "200":
+          description: Yorum güncellendi
 
-  /users/{userId}/watchlist:
+  /api/users/{userid}/watchlist:
+    parameters:
+      - name: userid
+        in: path
+        required: true
+        description: Kullanıcı ID'si
+        schema:
+          type: string
     post:
-      summary: 6- İZLENECEKLER LİSTESİ OLUŞTURMA
-      description: Kullanıcının profiline izlemek istediği yeni bir filmi eklemesini sağlar.
-      parameters:
-        - name: userId
-          in: path
-          required: true
-          schema:
-            type: integer
+      tags:
+        - Kullanıcılar
+      summary: 6- İzlenecekler Listesi Oluşturma
+      operationId: addToWatchlist
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              type: object
-              properties:
-                movieId:
-                  type: integer
+              $ref: '#/components/schemas/WatchlistInput'
       responses:
-        '201':
-          description: Film izlenecekler listesine eklendi.
+        "201":
+          description: Film listeye eklendi
 
-  /reviews/{reviewId}/approve:
+  /api/comments/{commentid}/approve:
+    parameters:
+      - name: commentid
+        in: path
+        required: true
+        description: Onaylanacak yorum ID'si
+        schema:
+          type: string
     patch:
-      summary: 7- YORUM ONAYLAMA
-      description: Adminlerin platforma düşen yeni yorumları onaylamasını sağlar.
-      parameters:
-        - name: reviewId
-          in: path
-          required: true
-          schema:
-            type: integer
+      tags:
+        - Yorumlar
+      summary: 7- Yorum Onaylama
+      operationId: approveComment
       responses:
-        '200':
-          description: Yorum onaylandı ve yayına alındı.
+        "200":
+          description: Yorum yayına alındı
 
-  /quiz/recommend:
+  /api/quiz/recommend:
     post:
-      summary: 8- QUİZ İLE FİLM ÖNERME
-      description: Kullanıcının verdiği quiz cevaplarına göre film önerisi sunar.
+      tags:
+        - Quiz
+      summary: 8- Quiz ile Film Önerme
+      operationId: quizRecommendation
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              type: object
-              properties:
-                answers:
-                  type: array
-                  items:
-                    type: string
+              $ref: '#/components/schemas/QuizInput'
       responses:
-        '200':
-          description: Önerilen filmler listelendi.
+        "200":
+          description: Öneriler listelendi
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Movie'
 
-  /news/{newsId}:
+  /api/news/{newsid}:
+    parameters:
+      - name: newsid
+        in: path
+        required: true
+        description: Haber ID'si
+        schema:
+          type: string
     put:
-      summary: 9- HABER DÜZENLEME
-      description: Eklenen haberlerin metinlerinin güncellenmesini sağlar.
-      parameters:
-        - name: newsId
-          in: path
-          required: true
-          schema:
-            type: integer
+      tags:
+        - Haberler
+      summary: 9- Haber Düzenleme
+      operationId: updateNews
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              type: object
-              properties:
-                title:
-                  type: string
-                content:
-                  type: string
+              $ref: '#/components/schemas/NewsInput'
       responses:
-        '200':
-          description: Haber başarıyla güncellendi.
+        "200":
+          description: Haber güncellendi
+
+components:
+  securitySchemes:
+    BearerAuth:
+      type: apiKey
+      in: header
+      name: Authorization
+      description: 'JWT tabanlı kimlik doğrulama.'
+  schemas:
+    Error:
+      type: object
+      properties:
+        message:
+          type: string
+          example: "Bir hata oluştu"
+    User:
+      type: object
+      properties:
+        _id:
+          type: string
+        username:
+          type: string
+        email:
+          type: string
+    UserInput:
+      type: object
+      properties:
+        username:
+          type: string
+        email:
+          type: string
+      required:
+        - username
+        - email
+    Movie:
+      type: object
+      properties:
+        _id:
+          type: string
+        title:
+          type: string
+        description:
+          type: string
+    MovieInput:
+      type: object
+      properties:
+        title:
+          type: string
+        description:
+          type: string
+      required:
+        - title
+    Person:
+      type: object
+      properties:
+        name:
+          type: string
+        role:
+          type: string
+          example: "Yönetmen"
+    CommentInput:
+      type: object
+      properties:
+        text:
+          type: string
+      required:
+        - text
+    WatchlistInput:
+      type: object
+      properties:
+        movieId:
+          type: string
+      required:
+        - movieId
+    QuizInput:
+      type: object
+      properties:
+        answers:
+          type: array
+          items:
+            type: string
+    NewsInput:
+      type: object
+      properties:
+        title:
+          type: string
+        content:
+          type: string
