@@ -1,0 +1,204 @@
+openapi: 3.0.0
+info:
+  title: Cornflix API (Film Sitesi)
+  description: Cornflix film platformu için belirlenen 10 temel gereksinimi içeren REST API tasarımı.
+  version: 1.0.0
+servers:
+  - url: http://localhost:8080/api
+    description: Yerel Geliştirme Sunucusu
+
+paths:
+  /users/{userId}:
+    put:
+      summary: 1- PROFİL DÜZENLEME
+      description: Kullanıcının kendi profil bilgilerini güncellemesini sağlar.
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                email:
+                  type: string
+      responses:
+        '200':
+          description: Profil başarıyla güncellendi.
+
+  /movies/{movieId}:
+    put:
+      summary: 2- FİLM GÜNCELLEME
+      description: Yetkili kullanıcıların film detaylarını güncellemesini sağlar.
+      parameters:
+        - name: movieId
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                title:
+                  type: string
+                description:
+                  type: string
+      responses:
+        '200':
+          description: Film bilgileri güncellendi.
+
+  /people/{personId}:
+    get:
+      summary: 3- OYUNCU VE YÖNETMEN BİLGİLERİ
+      description: Oyuncu veya yönetmenlerin detaylı biyografilerini getirir.
+      parameters:
+        - name: personId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Kişi bilgileri başarıyla getirildi.
+
+  /movies:
+    get:
+      summary: 4- FİLM FİLTRELEME & 10- DİL SEÇENEKLERİ
+      description: Filmleri yıla, türe göre filtreler. Başlık üzerinden dil seçeneği kabul eder.
+      parameters:
+        - name: Accept-Language
+          in: header
+          description: 10- DİL SEÇENEKLERİ (Örn. tr, en)
+          required: false
+          schema:
+            type: string
+        - name: genre
+          in: query
+          description: 4- FİLM FİLTRELEME (Türe göre)
+          schema:
+            type: string
+        - name: year
+          in: query
+          description: 4- FİLM FİLTRELEME (Yıla göre)
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Filtrelenmiş film listesi döndürüldü.
+
+  /reviews/{reviewId}:
+    put:
+      summary: 5- YORUM DÜZENLEME
+      description: Kullanıcının kendi yaptığı bir yorumu sonradan değiştirmesini sağlar.
+      parameters:
+        - name: reviewId
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                content:
+                  type: string
+                rating:
+                  type: integer
+      responses:
+        '200':
+          description: Yorum başarıyla güncellendi.
+
+  /users/{userId}/watchlist:
+    post:
+      summary: 6- İZLENECEKLER LİSTESİ OLUŞTURMA
+      description: Kullanıcının profiline izlemek istediği yeni bir filmi eklemesini sağlar.
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                movieId:
+                  type: integer
+      responses:
+        '201':
+          description: Film izlenecekler listesine eklendi.
+
+  /reviews/{reviewId}/approve:
+    patch:
+      summary: 7- YORUM ONAYLAMA
+      description: Adminlerin platforma düşen yeni yorumları onaylamasını sağlar.
+      parameters:
+        - name: reviewId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Yorum onaylandı ve yayına alındı.
+
+  /quiz/recommend:
+    post:
+      summary: 8- QUİZ İLE FİLM ÖNERME
+      description: Kullanıcının verdiği quiz cevaplarına göre film önerisi sunar.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                answers:
+                  type: array
+                  items:
+                    type: string
+      responses:
+        '200':
+          description: Önerilen filmler listelendi.
+
+  /news/{newsId}:
+    put:
+      summary: 9- HABER DÜZENLEME
+      description: Eklenen haberlerin metinlerinin güncellenmesini sağlar.
+      parameters:
+        - name: newsId
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                title:
+                  type: string
+                content:
+                  type: string
+      responses:
+        '200':
+          description: Haber başarıyla güncellendi.
