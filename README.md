@@ -14,4 +14,17 @@ COrnFliX isimli film yorumlama sitemiz kullanıcılarının eski ve yeni çıkm�
 
 
 <img width="2816" height="1536" alt="Gemini_Generated_Image_tkdvtjtkdvtjtkdv (1)" src="https://github.com/user-attachments/assets/c961acbb-677f-4236-8fbf-5b660c5c7a38" />
+## 2. Rest API Tasarımı
+
+[Cornflix API Tasarımı YAML Dosyası İçin Tıklayınız](https://github.com/tayfunkarli96-ops/kitaplik/blob/main/cornflix-api.yml)
+
+Aşağıda API tasarımımızın OpenAPI formatındaki içeriği bulunmaktadır:
+
+```yaml
+openapi: 3.0.3
+info:
+  title: Cornflix Film ve İçerik Yönetim API'si
+  version: 1.0.0
+paths:
+  # Tüm endpoint detayları yukarıdaki cornflix-api.yml dosyasındadır.
 
