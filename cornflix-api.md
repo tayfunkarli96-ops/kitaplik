@@ -27,20 +27,20 @@ servers:
 
 tags:
   - name: UserOperations
-    description: Profil ve izleme listesi işlemleri
+    description: Üyelik, profil ve izleme listesi işlemleri
   - name: ContentOperations
     description: Film, oyuncu ve haber yönetim işlemleri
-  - name: SocialOperations
-    description: Yorum ve değerlendirme işlemleri
-  - name: RecommendationOperations
-    description: Quiz ve öneri sistemleri
+  - name: CommunityOperations
+    description: Değerlendirme ve yorum onay işlemleri
+  - name: SystemOperations
+    description: Quiz ve dil ayarları yönetimi
 
 paths:
   # 1. GEREKSİNİM: PROFİL DÜZENLEME
   /users/{id}:
     put:
       tags: [UserOperations]
-      summary: 1. Profil bilgilerini düzenleme
+      summary: 1. Profil bilgilerini düzenleme (Kullanıcı)
       parameters:
         - $ref: '#/components/parameters/idParam'
       requestBody:
@@ -89,16 +89,17 @@ paths:
       parameters:
         - name: genre
           in: query
+          description: Film türüne göre filtreleme (Aksiyon, Dram vb.)
           schema:
             type: string
       responses:
         '200':
-          description: Filtrelenmiş film listesi.
+          description: Filtrelenmiş film listesi getirildi.
 
   # 5. GEREKSİNİM: YORUM DÜZENLEME
   /comments/{id}:
     put:
-      tags: [SocialOperations]
+      tags: [CommunityOperations]
       summary: 5. Kullanıcının kendi yorumunu düzenlemesi
       parameters:
         - $ref: '#/components/parameters/idParam'
@@ -120,42 +121,42 @@ paths:
   # 7. GEREKSİNİM: YORUM ONAYLAMA (ADMIN)
   /comments/{id}/approve:
     patch:
-      tags: [SocialOperations]
+      tags: [CommunityOperations]
       summary: 7. Yorumların admin tarafından onaylanması
       parameters:
         - $ref: '#/components/parameters/idParam'
       responses:
         '200':
-          description: Yorum yayına alındı.
+          description: Yorum onaylandı ve yayına alındı.
 
   # 8. GEREKSİNİM: FİLM ÖNERİ TESTİ (QUIZ)
   /quiz/recommend:
     post:
-      tags: [RecommendationOperations]
+      tags: [SystemOperations]
       summary: 8. Film testi/quiz sonucuna göre öneri yapma
       responses:
         '200':
-          description: Kişiselleştirilmiş öneriler getirildi.
+          description: Kişiselleştirilmiş film önerileri getirildi.
 
   # 9. GEREKSİNİM: HABER DÜZENLEME (ADMIN)
   /news/{id}:
     put:
       tags: [ContentOperations]
-      summary: 9. Platform haberlerini düzenleme (Admin)
+      summary: 9. Platform haberlerini/duyurularını düzenleme (Admin)
       parameters:
         - $ref: '#/components/parameters/idParam'
       responses:
         '200':
-          description: Haber güncellendi.
+          description: Haber başarıyla güncellendi.
 
   # 10. GEREKSİNİM: ÇOKLU DİL DESTEĞİ
   /settings/language:
     get:
-      tags: [UserOperations]
-      summary: 10. Sistem dil seçeneklerini görüntüleme
+      tags: [SystemOperations]
+      summary: 10. Sistem dil seçeneklerini görüntüleme (TR/EN)
       responses:
         '200':
-          description: Mevcut diller listelendi (TR/EN).
+          description: Mevcut dil seçenekleri listelendi.
 
 components:
   parameters:
@@ -168,9 +169,9 @@ components:
 
   responses:
     Unauthorized:
-      description: Yetkisiz erişim (Giriş yapmalısınız).
+      description: Yetkisiz erişim (Giriş yapmanız gerekmektedir).
     NotFound:
-      description: Kayıt bulunamadı.
+      description: İstenen kayıt sistemde bulunamadı.
 
   schemas:
     UserUpdate:
