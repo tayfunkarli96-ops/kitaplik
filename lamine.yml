@@ -2,12 +2,12 @@ openapi: 3.0.3
 info:
   title: Cornflix Film ve İçerik Yönetim API'si
   version: 1.0.0
-  description: Cornflix platformu için Admin, Kayıtlı Kullanıcı ve Misafir rollerini kapsayan API tasarımı.
+  description: Cornflix platformu için Admin, Kayıtlı Kullanıcı ve Misafir rollerini kapsayan 10 gereksinimli API tasarımı.
 
 paths:
   /api/users/{userid}:
     put:
-      summary: 1. Profil Düzenleme (Kullanıcı)
+      summary: 1. Profil Düzenleme (Kayıtlı Kullanıcı)
       parameters:
         - name: userid
           in: path
@@ -16,7 +16,7 @@ paths:
             type: string
       responses:
         '200':
-          description: Profil başarıyla güncellendi.
+          description: Profil güncellendi.
 
   /api/movies/{movieid}:
     put:
@@ -29,7 +29,7 @@ paths:
             type: string
       responses:
         '200':
-          description: Film başarıyla güncellendi.
+          description: Film güncellendi.
 
   /api/people/{personid}:
     get:
@@ -46,26 +46,19 @@ paths:
 
   /api/movies:
     get:
-      summary: 4. Filtreleme ve 10. Dil Seçeneği (Tümü)
+      summary: 4. Gelişmiş Film Filtreleme (Tümü)
       parameters:
         - name: genre
           in: query
-          description: Film türüne göre filtreleme
           schema:
             type: string
-        - name: Accept-Language
-          in: header
-          description: Çoklu dil desteği (tr, en)
-          schema:
-            type: string
-            default: tr
       responses:
         '200':
-          description: Film listesi başarıyla getirildi.
+          description: Filtrelenmiş liste getirildi.
 
   /api/comments/{commentid}:
     put:
-      summary: 5. Yorum Düzenleme (Kullanıcı)
+      summary: 5. Yorum Düzenleme (Kayıtlı Kullanıcı)
       parameters:
         - name: commentid
           in: path
@@ -78,7 +71,7 @@ paths:
 
   /api/users/{userid}/watchlist:
     post:
-      summary: 6. İzlenecekler Listesine Ekleme (Kullanıcı)
+      summary: 6. İzlenecekler Listesine Ekleme (Kayıtlı Kullanıcı)
       parameters:
         - name: userid
           in: path
@@ -100,14 +93,14 @@ paths:
             type: string
       responses:
         '200':
-          description: Yorum onaylandı ve yayına alındı.
+          description: Yorum onaylandı.
 
   /api/quiz/recommend:
     post:
       summary: 8. Film Testi / Quiz ile Önerme (Tümü)
       responses:
         '200':
-          description: Test sonucuna göre film önerileri getirildi.
+          description: Öneriler getirildi.
 
   /api/news/{newsid}:
     put:
@@ -121,4 +114,10 @@ paths:
       responses:
         '200':
           description: Haber güncellendi.
-          
+
+  /api/settings/language:
+    get:
+      summary: 10. Çoklu Dil Desteği Seçenekleri (Tümü)
+      responses:
+        '200':
+          description: Mevcut dil seçenekleri listelendi.
