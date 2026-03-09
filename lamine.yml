@@ -1,1 +1,13 @@
+[Cornflix API Tasarımı YAML Dosyası İçin Tıklayınız](https://github.com/tayfunkarli96-ops/kitaplik/blob/main/cornflix-api.yml)
+
+Aşağıda API tasarımımızın OpenAPI formatındaki içeriği bulunmaktadır:
+
+```yaml
+openapi: 3.0.3
+info:
+  title: Cornflix Film ve İçerik Yönetim API'si
+  version: 1.0.0
+paths:
+  # Tüm endpoint detayları yukarıdaki cornflix-api.yml dosyasındadır.
+
 
