@@ -1,132 +1,188 @@
-# API Tasarımı - OpenAPI Specification Örneği
-
-**OpenAPI Spesifikasyon Dosyası:** [lamine.yml](lamine.yml)
-
-Bu doküman, OpenAPI Specification (OAS) 3.0 standardına göre hazırlanmış Cornflix API tasarımını içermektedir.
-
-## OpenAPI Specification
-
-```yaml
 openapi: 3.0.3
 info:
-  title: Cornflix Film ve İçerik Yönetim API'si
+  title: Cornflix Film ve İçerik Yönetim API
+  description: |
+    Kullanıcıların filmleri keşfetmelerini, izleme listeleri oluşturmalarını ve 
+    adminlerin içerik yönetimi yapmalarını sağlayan modern bir streaming platformu için Restful API.
+
+    ## Özellikler
+    - Kullanıcı Profil ve Hesap Yönetimi
+    - Film ve Oyuncu Bilgi Sistemi
+    - İzleme Listesi ve Favori Yönetimi
+    - Admin İçerik ve Yorum Onay Sistemi
+    - Akıllı Film Öneri (Quiz) Sistemi
   version: 1.0.0
-  description: Cornflix platformu için Admin, Kayıtlı Kullanıcı ve Misafir rollerini kapsayan API tasarımı.
+  contact:
+    name: Cornflix API Destek Ekibi
+    email: api-support@cornflix.com
+  license:
+    name: MIT
+    url: https://opensource.org/licenses/MIT
+
+servers:
+  - url: https://api.cornflix.com/v1
+    description: Production server
+  - url: http://localhost:3000/v1
+    description: Development server
+
+tags:
+  - name: UserOperations
+    description: Profil ve izleme listesi işlemleri
+  - name: ContentOperations
+    description: Film, oyuncu ve haber yönetim işlemleri
+  - name: SocialOperations
+    description: Yorum ve değerlendirme işlemleri
+  - name: RecommendationOperations
+    description: Quiz ve öneri sistemleri
 
 paths:
-  /api/users/{userid}:
+  # 1. GEREKSİNİM: PROFİL DÜZENLEME
+  /users/{id}:
     put:
-      summary: 1. Profil Düzenleme (Kullanıcı)
+      tags: [UserOperations]
+      summary: 1. Profil bilgilerini düzenleme
       parameters:
-        - name: userid
-          in: path
-          required: true
-          schema:
-            type: string
+        - $ref: '#/components/parameters/idParam'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserUpdate'
       responses:
         '200':
           description: Profil başarıyla güncellendi.
+        '401':
+          $ref: '#/components/responses/Unauthorized'
 
-  /api/movies/{movieid}:
+  # 2. GEREKSİNİM: FİLM GÜNCELLEME (ADMIN)
+  /movies/{id}:
     put:
-      summary: 2. Film Güncelleme (Admin)
+      tags: [ContentOperations]
+      summary: 2. Film bilgilerini güncelleme (Admin)
       parameters:
-        - name: movieid
-          in: path
-          required: true
-          schema:
-            type: string
+        - $ref: '#/components/parameters/idParam'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MovieUpdate'
       responses:
         '200':
-          description: Film başarıyla güncellendi.
+          description: Film detayları başarıyla güncellendi.
 
-  /api/people/{personid}:
+  # 3. GEREKSİNİM: OYUNCU/YÖNETMEN BİLGİSİ
+  /people/{id}:
     get:
-      summary: 3. Oyuncu/Yönetmen Bilgisi Görüntüleme (Tümü)
+      tags: [ContentOperations]
+      summary: 3. Oyuncu ve yönetmen detaylarını görüntüleme
       parameters:
-        - name: personid
-          in: path
-          required: true
-          schema:
-            type: string
+        - $ref: '#/components/parameters/idParam'
       responses:
         '200':
-          description: Kişi bilgileri getirildi.
+          description: Kişi bilgileri başarıyla getirildi.
 
-  /api/movies:
+  # 4. GEREKSİNİM: FİLM FİLTRELEME
+  /movies:
     get:
-      summary: 4. Filtreleme ve 10. Dil Seçeneği (Tümü)
+      tags: [ContentOperations]
+      summary: 4. Gelişmiş film filtreleme ve arama
       parameters:
         - name: genre
           in: query
-          description: Film türüne göre filtreleme
           schema:
             type: string
-        - name: Accept-Language
-          in: header
-          description: Çoklu dil desteği (tr, en)
-          schema:
-            type: string
-            default: tr
       responses:
         '200':
-          description: Film listesi başarıyla getirildi.
+          description: Filtrelenmiş film listesi.
 
-  /api/comments/{commentid}:
+  # 5. GEREKSİNİM: YORUM DÜZENLEME
+  /comments/{id}:
     put:
-      summary: 5. Yorum Düzenleme (Kullanıcı)
+      tags: [SocialOperations]
+      summary: 5. Kullanıcının kendi yorumunu düzenlemesi
       parameters:
-        - name: commentid
-          in: path
-          required: true
-          schema:
-            type: string
+        - $ref: '#/components/parameters/idParam'
       responses:
         '200':
-          description: Yorum güncellendi.
+          description: Yorum başarıyla güncellendi.
 
-  /api/users/{userid}/watchlist:
+  # 6. GEREKSİNİM: İZLENECEKLER LİSTESİ
+  /users/{id}/watchlist:
     post:
-      summary: 6. İzlenecekler Listesine Ekleme (Kullanıcı)
+      tags: [UserOperations]
+      summary: 6. İzlenecekler listesine film ekleme
       parameters:
-        - name: userid
-          in: path
-          required: true
-          schema:
-            type: string
+        - $ref: '#/components/parameters/idParam'
       responses:
         '201':
-          description: Listeye eklendi.
+          description: Film listeye başarıyla eklendi.
 
-  /api/comments/{commentid}/approve:
+  # 7. GEREKSİNİM: YORUM ONAYLAMA (ADMIN)
+  /comments/{id}/approve:
     patch:
-      summary: 7. Yorum Onaylama (Admin)
+      tags: [SocialOperations]
+      summary: 7. Yorumların admin tarafından onaylanması
       parameters:
-        - name: commentid
-          in: path
-          required: true
-          schema:
-            type: string
+        - $ref: '#/components/parameters/idParam'
       responses:
         '200':
-          description: Yorum onaylandı ve yayına alındı.
+          description: Yorum yayına alındı.
 
-  /api/quiz/recommend:
+  # 8. GEREKSİNİM: FİLM ÖNERİ TESTİ (QUIZ)
+  /quiz/recommend:
     post:
-      summary: 8. Film Testi / Quiz ile Önerme (Tümü)
+      tags: [RecommendationOperations]
+      summary: 8. Film testi/quiz sonucuna göre öneri yapma
       responses:
         '200':
-          description: Test sonucuna göre film önerileri getirildi.
+          description: Kişiselleştirilmiş öneriler getirildi.
 
-  /api/news/{newsid}:
+  # 9. GEREKSİNİM: HABER DÜZENLEME (ADMIN)
+  /news/{id}:
     put:
-      summary: 9. Haber Düzenleme (Admin)
+      tags: [ContentOperations]
+      summary: 9. Platform haberlerini düzenleme (Admin)
       parameters:
-        - name: newsid
-          in: path
-          required: true
-          schema:
-            type: string
+        - $ref: '#/components/parameters/idParam'
       responses:
         '200':
           description: Haber güncellendi.
+
+  # 10. GEREKSİNİM: ÇOKLU DİL DESTEĞİ
+  /settings/language:
+    get:
+      tags: [UserOperations]
+      summary: 10. Sistem dil seçeneklerini görüntüleme
+      responses:
+        '200':
+          description: Mevcut diller listelendi (TR/EN).
+
+components:
+  parameters:
+    idParam:
+      name: id
+      in: path
+      required: true
+      schema:
+        type: integer
+
+  responses:
+    Unauthorized:
+      description: Yetkisiz erişim (Giriş yapmalısınız).
+    NotFound:
+      description: Kayıt bulunamadı.
+
+  schemas:
+    UserUpdate:
+      type: object
+      properties:
+        name: {type: string}
+        email: {type: string}
+        password: {type: string}
+    
+    MovieUpdate:
+      type: object
+      properties:
+        title: {type: string}
+        description: {type: string}
+        rating: {type: number}
