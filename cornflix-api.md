@@ -1,189 +1,26 @@
-openapi: 3.0.3
-info:
-  title: Cornflix Film ve İçerik Yönetim API
-  description: |
-    Kullanıcıların filmleri keşfetmelerini, izleme listeleri oluşturmalarını ve 
-    adminlerin içerik yönetimi yapmalarını sağlayan modern bir streaming platformu için Restful API.
+# 🚀 COrnFliX API Tasarım Dokümantasyonu
 
-    ## Özellikler
-    - Kullanıcı Profil ve Hesap Yönetimi
-    - Film ve Oyuncu Bilgi Sistemi
-    - İzleme Listesi ve Favori Yönetimi
-    - Admin İçerik ve Yorum Onay Sistemi
-    - Akıllı Film Öneri (Quiz) Sistemi
-  version: 1.0.0
-  contact:
-    name: Cornflix API Destek Ekibi
-    email: api-support@cornflix.com
-  license:
-    name: MIT
-    url: https://opensource.org/licenses/MIT
+**Ana Teknik Dosya:** [lamine.yml](./lamine.yml)
 
-servers:
-  - url: https://api.cornflix.com/v1
-    description: Production server
-  - url: http://localhost:3000/v1
-    description: Development server
+Bu doküman, COrnFliX film platformunun 10 temel fonksiyonel gereksinimini kapsayan, **OpenAPI 3.0.3** standartlarında hazırlanmış profesyonel API tasarımıdır.
 
-tags:
-  - name: UserOperations
-    description: Üyelik, profil ve izleme listesi işlemleri
-  - name: ContentOperations
-    description: Film, oyuncu ve haber yönetim işlemleri
-  - name: CommunityOperations
-    description: Değerlendirme ve yorum onay işlemleri
-  - name: SystemOperations
-    description: Quiz ve dil ayarları yönetimi
+## 🎬 API İşlem Özeti (10 Gereksinim Matrisi)
 
-paths:
-  # 1. GEREKSİNİM: PROFİL DÜZENLEME
-  /users/{id}:
-    put:
-      tags: [UserOperations]
-      summary: 1. Profil bilgilerini düzenleme (Kullanıcı)
-      parameters:
-        - $ref: '#/components/parameters/idParam'
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/UserUpdate'
-      responses:
-        '200':
-          description: Profil başarıyla güncellendi.
-        '401':
-          $ref: '#/components/responses/Unauthorized'
+| No | Fonksiyon | Endpoint (Uç Nokta) | Metot | Erişim Rolü |
+|:---:|:---|:---|:---:|:---|
+| 1 | Profil Güncelleme | `/users/{id}` | PUT | Kayıtlı Kullanıcı |
+| 2 | Film Güncelleme | `/movies/{id}` | PUT | Admin |
+| 3 | Oyuncu/Yönetmen Bilgi | `/people/{id}` | GET | Tümü |
+| 4 | Gelişmiş Filtreleme | `/movies` | GET | Tümü |
+| 5 | Yorum Düzenleme | `/comments/{id}` | PUT | Kayıtlı Kullanıcı |
+| 6 | İzleme Listesi Yönetimi| `/users/{id}/watchlist`| POST | Kayıtlı Kullanıcı |
+| 7 | Yorum Onaylama | `/comments/{id}/approve`| PATCH | Admin |
+| 8 | Film Öneri (Quiz) | `/quiz/recommend` | POST | Tümü |
+| 9 | Haber Güncelleme | `/news/{id}` | PUT | Admin |
+| 10| Çoklu Dil Desteği | `/movies` (Header) | GET | Tümü |
 
-  # 2. GEREKSİNİM: FİLM GÜNCELLEME (ADMIN)
-  /movies/{id}:
-    put:
-      tags: [ContentOperations]
-      summary: 2. Film bilgilerini güncelleme (Admin)
-      parameters:
-        - $ref: '#/components/parameters/idParam'
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/MovieUpdate'
-      responses:
-        '200':
-          description: Film detayları başarıyla güncellendi.
+## 🛠️ Teknik Önizleme (Formatlı Görünüm)
 
-  # 3. GEREKSİNİM: OYUNCU/YÖNETMEN BİLGİSİ
-  /people/{id}:
-    get:
-      tags: [ContentOperations]
-      summary: 3. Oyuncu ve yönetmen detaylarını görüntüleme
-      parameters:
-        - $ref: '#/components/parameters/idParam'
-      responses:
-        '200':
-          description: Kişi bilgileri başarıyla getirildi.
-
-  # 4. GEREKSİNİM: FİLM FİLTRELEME
-  /movies:
-    get:
-      tags: [ContentOperations]
-      summary: 4. Gelişmiş film filtreleme ve arama
-      parameters:
-        - name: genre
-          in: query
-          description: Film türüne göre filtreleme (Aksiyon, Dram vb.)
-          schema:
-            type: string
-      responses:
-        '200':
-          description: Filtrelenmiş film listesi getirildi.
-
-  # 5. GEREKSİNİM: YORUM DÜZENLEME
-  /comments/{id}:
-    put:
-      tags: [CommunityOperations]
-      summary: 5. Kullanıcının kendi yorumunu düzenlemesi
-      parameters:
-        - $ref: '#/components/parameters/idParam'
-      responses:
-        '200':
-          description: Yorum başarıyla güncellendi.
-
-  # 6. GEREKSİNİM: İZLENECEKLER LİSTESİ
-  /users/{id}/watchlist:
-    post:
-      tags: [UserOperations]
-      summary: 6. İzlenecekler listesine film ekleme
-      parameters:
-        - $ref: '#/components/parameters/idParam'
-      responses:
-        '201':
-          description: Film listeye başarıyla eklendi.
-
-  # 7. GEREKSİNİM: YORUM ONAYLAMA (ADMIN)
-  /comments/{id}/approve:
-    patch:
-      tags: [CommunityOperations]
-      summary: 7. Yorumların admin tarafından onaylanması
-      parameters:
-        - $ref: '#/components/parameters/idParam'
-      responses:
-        '200':
-          description: Yorum onaylandı ve yayına alındı.
-
-  # 8. GEREKSİNİM: FİLM ÖNERİ TESTİ (QUIZ)
-  /quiz/recommend:
-    post:
-      tags: [SystemOperations]
-      summary: 8. Film testi/quiz sonucuna göre öneri yapma
-      responses:
-        '200':
-          description: Kişiselleştirilmiş film önerileri getirildi.
-
-  # 9. GEREKSİNİM: HABER DÜZENLEME (ADMIN)
-  /news/{id}:
-    put:
-      tags: [ContentOperations]
-      summary: 9. Platform haberlerini/duyurularını düzenleme (Admin)
-      parameters:
-        - $ref: '#/components/parameters/idParam'
-      responses:
-        '200':
-          description: Haber başarıyla güncellendi.
-
-  # 10. GEREKSİNİM: ÇOKLU DİL DESTEĞİ
-  /settings/language:
-    get:
-      tags: [SystemOperations]
-      summary: 10. Sistem dil seçeneklerini görüntüleme (TR/EN)
-      responses:
-        '200':
-          description: Mevcut dil seçenekleri listelendi.
-
-components:
-  parameters:
-    idParam:
-      name: id
-      in: path
-      required: true
-      schema:
-        type: integer
-
-  responses:
-    Unauthorized:
-      description: Yetkisiz erişim (Giriş yapmanız gerekmektedir).
-    NotFound:
-      description: İstenen kayıt sistemde bulunamadı.
-
-  schemas:
-    UserUpdate:
-      type: object
-      properties:
-        name: {type: string}
-        email: {type: string}
-        password: {type: string}
-    
-    MovieUpdate:
-      type: object
-      properties:
-        title: {type: string}
-        description: {type: string}
-        rating: {type: number}
+```yaml
+# lamine.yml içeriğinin bir kopyası aşağıdadır:
+(Buraya yukarıdaki lamine.yml kodlarının tamamını yapıştır)
