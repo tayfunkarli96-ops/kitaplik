@@ -1,13 +1,123 @@
-[Cornflix API Tasarımı YAML Dosyası İçin Tıklayınız](https://github.com/tayfunkarli96-ops/kitaplik/blob/main/cornflix-api.yml)
-
-Aşağıda API tasarımımızın OpenAPI formatındaki içeriği bulunmaktadır:
-
-```yaml
 openapi: 3.0.3
 info:
   title: Cornflix Film ve İçerik Yönetim API'si
   version: 1.0.0
+  description: Cornflix platformu için Admin, Kayıtlı Kullanıcı ve Misafir rollerini kapsayan API tasarımı.
+
 paths:
-  # Tüm endpoint detayları yukarıdaki cornflix-api.yml dosyasındadır.
+  /api/users/{userid}:
+    put:
+      summary: 1. Profil Düzenleme (Kullanıcı)
+      parameters:
+        - name: userid
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Profil başarıyla güncellendi.
 
+  /api/movies/{movieid}:
+    put:
+      summary: 2. Film Güncelleme (Admin)
+      parameters:
+        - name: movieid
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Film başarıyla güncellendi.
 
+  /api/people/{personid}:
+    get:
+      summary: 3. Oyuncu/Yönetmen Bilgisi Görüntüleme (Tümü)
+      parameters:
+        - name: personid
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Kişi bilgileri getirildi.
+
+  /api/movies:
+    get:
+      summary: 4. Filtreleme ve 10. Dil Seçeneği (Tümü)
+      parameters:
+        - name: genre
+          in: query
+          description: Film türüne göre filtreleme
+          schema:
+            type: string
+        - name: Accept-Language
+          in: header
+          description: Çoklu dil desteği (tr, en)
+          schema:
+            type: string
+            default: tr
+      responses:
+        '200':
+          description: Film listesi başarıyla getirildi.
+
+  /api/comments/{commentid}:
+    put:
+      summary: 5. Yorum Düzenleme (Kullanıcı)
+      parameters:
+        - name: commentid
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Yorum güncellendi.
+
+  /api/users/{userid}/watchlist:
+    post:
+      summary: 6. İzlenecekler Listesine Ekleme (Kullanıcı)
+      parameters:
+        - name: userid
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '201':
+          description: Listeye eklendi.
+
+  /api/comments/{commentid}/approve:
+    patch:
+      summary: 7. Yorum Onaylama (Admin)
+      parameters:
+        - name: commentid
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Yorum onaylandı ve yayına alındı.
+
+  /api/quiz/recommend:
+    post:
+      summary: 8. Film Testi / Quiz ile Önerme (Tümü)
+      responses:
+        '200':
+          description: Test sonucuna göre film önerileri getirildi.
+
+  /api/news/{newsid}:
+    put:
+      summary: 9. Haber Düzenleme (Admin)
+      parameters:
+        - name: newsid
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Haber güncellendi.
