@@ -1,31 +1,28 @@
-API Tasarımı - OpenAPI Specification Örneği
-OpenAPI Spesifikasyon Dosyası: lamine.yaml
+# API Tasarımı - OpenAPI Specification Örneği
 
-Bu doküman, OpenAPI Specification (OAS) 3.0 standardına göre hazırlanmış örnek bir API tasarımını içermektedir.
+**OpenAPI Spesifikasyon Dosyası:** [lamine.yaml](./lamine.yaml)
 
+Bu doküman, Cornflix ekibi tarafından geliştirilen "Film ve İçerik Yönetim Platformu" projesi için OpenAPI Specification (OAS) 3.0 standardına göre hazırlanmış API tasarımını içermektedir.
+
+## OpenAPI Specification
+
+```yaml
 openapi: 3.0.3
 info:
   title: Cornflix Film ve İçerik Yönetim API
   description: |
-    Cornflix platformu için RESTful API tasarımı.
+    Cornflix platformu için geliştirilen profesyonel Restful API tasarımı.
+    
     ## Özellikler
-    - Kullanıcı ve Profil Yönetimi
-    - Film Kataloğu ve Oyuncu Veritabanı
-    - JWT Tabanlı Kimlik Doğrulama
-    - Admin Onay Sistemi ve Haber Yönetimi
+    - Kullanıcı ve Profil Yönetimi (JWT Tabanlı)
+    - Film Kataloğu ve Detaylı Oyuncu/Yönetmen Veritabanı
+    - İzleme Listesi ve Favori İçerik Yönetimi
+    - Admin Onay Sistemi ve Haber/Duyuru Yönetimi
   version: 1.0.0
-  contact:
-    name: Cornflix API Destek Ekibi
-    email: api-support@cornflix.com
-  license:
-    name: MIT
-    url: https://opensource.org/licenses/MIT
 
 servers:
-  - url: https://api.cornflix.com/v1
+  - url: [https://api.cornflix.com/v1](https://api.cornflix.com/v1)
     description: Production server
-  - url: http://localhost:3000/v1
-    description: Development server
 
 tags:
   - name: auth
@@ -35,7 +32,7 @@ tags:
   - name: movies
     description: Film kataloğu ve içerik işlemleri
   - name: community
-    description: Yorum ve değerlendirme işlemleri
+    description: Yorum, puanlama ve onaylama işlemleri
 
 paths:
   /auth/login:
@@ -71,4 +68,194 @@ paths:
       requestBody:
         required: true
         content:
-          application/json
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserUpdate'
+      responses:
+        '200':
+          description: Profil başarıyla güncellendi
+        '400':
+          $ref: '#/components/responses/BadRequest'
+
+  /movies/{movieId}:
+    put:
+      tags: [movies]
+      summary: 2. Film bilgilerini güncelleme (Admin)
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/MovieIdParam'
+      responses:
+        '200':
+          description: Film güncellendi.
+
+  /people/{personId}:
+    get:
+      tags: [movies]
+      summary: 3. Oyuncu/Yönetmen detayı görüntüleme
+      parameters:
+        - name: personId
+          in: path
+          required: true
+          schema: { type: string, format: uuid }
+      responses:
+        '200':
+          description: Başarılı.
+
+  /movies:
+    get:
+      tags: [movies]
+      summary: 4. Gelişmiş film filtreleme
+      parameters:
+        - $ref: '#/components/parameters/PageParam'
+        - $ref: '#/components/parameters/LimitParam'
+      responses:
+        '200':
+          description: Başarılı
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MovieList'
+
+  /comments/{commentId}:
+    put:
+      tags: [community]
+      summary: 5. Kullanıcı yorumunu düzenleme
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Yorum güncellendi.
+
+  /users/{userId}/watchlist:
+    post:
+      tags: [users]
+      summary: 6. İzleme listesine film ekleme
+      security:
+        - bearerAuth: []
+      responses:
+        '201':
+          description: Listeye başarıyla eklendi.
+
+  /comments/{commentId}/approve:
+    patch:
+      tags: [community]
+      summary: 7. Yorum onaylama (Admin)
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Yorum onaylandı.
+
+  /quiz/recommend:
+    post:
+      tags: [movies]
+      summary: 8. Film testi (Quiz) ile öneri yapma
+      responses:
+        '200':
+          description: Öneriler oluşturuldu.
+
+  /news/{newsId}:
+    put:
+      tags: [movies]
+      summary: 9. Platform haberlerini düzenleme (Admin)
+      responses:
+        '200':
+          description: Haber güncellendi.
+
+  /settings/languages:
+    get:
+      tags: [users]
+      summary: 10. Çoklu dil desteği seçenekleri
+      responses:
+        '200':
+          description: Diller listelendi.
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  parameters:
+    UserIdParam:
+      name: userId
+      in: path
+      required: true
+      schema: { type: string, format: uuid }
+    MovieIdParam:
+      name: movieId
+      in: path
+      required: true
+      schema: { type: string, format: uuid }
+    PageParam:
+      name: page
+      in: query
+      schema: { type: integer, default: 1 }
+    LimitParam:
+      name: limit
+      in: query
+      schema: { type: integer, default: 20 }
+
+  schemas:
+    UserUpdate:
+      type: object
+      properties:
+        firstName: { type: string, example: "Tayfun" }
+        lastName: { type: string, example: "Karlı" }
+    
+    LoginCredentials:
+      type: object
+      required: [email, password]
+      properties:
+        email: { type: string, format: email, example: "kullanici@example.com" }
+        password: { type: string, format: password, example: "Guvenli123!" }
+
+    AuthToken:
+      type: object
+      properties:
+        token: { type: string, example: "eyJhbGciOiJIUzI1Ni..." }
+        expiresIn: { type: integer, example: 3600 }
+
+    MovieList:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            type: object
+            properties:
+              id: { type: string, format: uuid }
+              title: { type: string }
+        pagination: { $ref: '#/components/schemas/Pagination' }
+
+    Pagination:
+      type: object
+      properties:
+        page: { type: integer, example: 1 }
+        totalItems: { type: integer, example: 95 }
+
+    Error:
+      type: object
+      required: [code, message]
+      properties:
+        code: { type: string, example: "NOT_FOUND" }
+        message: { type: string, example: "Kaynak bulunamadı" }
+
+  responses:
+    BadRequest:
+      description: Geçersiz istek
+      content:
+        application/json:
+          schema: { $ref: '#/components/schemas/Error' }
+    Unauthorized:
+      description: Yetkisiz erişim
+      content:
+        application/json:
+          schema: { $ref: '#/components/schemas/Error' }
+    Forbidden:
+      description: Erişim reddedildi
+      content:
+        application/json:
+          schema: { $ref: '#/components/schemas/Error' }
