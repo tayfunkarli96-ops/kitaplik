@@ -1,4 +1,10 @@
-# React + TypeScript + Vite
+# 🍿 COrnFliX
+
+**COrnFliX** film ve dizi platformunun önyüz (frontend) kod deposuna hoş geldiniz! Bu proje modern web teknolojileri olan React, TypeScript ve Vite kullanılarak geliştirilmiştir.
+
+---
+
+## 🚀 Proje Altyapısı (React + TypeScript + Vite)
 
 This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
 
