@@ -34,13 +34,13 @@ const Footer = () => {
           <h4>{t('connect')}</h4>
           <div className="social-links">
             <span>
-              <img src="/x.svg" alt={t('socialXAlt')} /> @movieq
+              <img src="/x.svg" alt={t('socialXAlt')} /> @COrnFliX
             </span>
             <span>
-              <img src="/f.svg" alt={t('socialFacebookAlt')} /> @movieq
+              <img src="/f.svg" alt={t('socialFacebookAlt')} /> @COrnFliX
             </span>
             <span>
-              <img src="/i.svg" alt={t('socialInstagramAlt')} /> @movieq
+              <img src="/i.svg" alt={t('socialInstagramAlt')} /> @COrnFliX
             </span>
           </div>
         </div>

@@ -289,7 +289,7 @@ const MovieCarousel: React.FC<MovieCarouselProps> = ({
                       </div>
 
                       <div className="mc-rating-item">
-                        <span className="mc-rating-source">MovieQ</span>
+                        <span className="mc-rating-source">COrnFliX</span>
                         <span className="mc-rating-value">
                           {movie.movieQRating?.toFixed(1) ?? (
                             <span className="mc-rating-na">N/A</span>

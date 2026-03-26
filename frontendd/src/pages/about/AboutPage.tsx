@@ -36,7 +36,7 @@ const AboutPage: React.FC = () => {
                         <h2>{t('projectDetails')}</h2>
                         <p><strong>{t('category')}</strong> {t('categoryValue')}</p>
                         <p><strong>{t('inspiredBy')}</strong> <a href="https://imdb.com" target="_blank" rel="noopener noreferrer">imdb.com</a>, <a href="https://rottentomatoes.com" target="_blank" rel="noopener noreferrer">rottentomatoes.com</a>, <a href="https://rezka.ag" target="_blank" rel="noopener noreferrer">rezka.ag</a></p>
-                        <p><strong>{t('website')}</strong> movieq.com.tr</p>
+                        <p><strong>{t('website')}</strong> COrnFliX.com.tr</p>
                     </section>
 
                     <section className="about-section">

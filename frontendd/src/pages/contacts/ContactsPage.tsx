@@ -109,7 +109,7 @@ const ContactsPage: React.FC = () => {
                     <div className="contact-alternative">
                         <h2>{t('otherWaysToReachUs')}</h2>
                         <p>
-                            {t('generalInquiries')} <a href="mailto:support@movieq.com">movieq3231@gmail.com</a>
+                            {t('generalInquiries')} <a href="mailto:support@COrnFliX.com">movieq3231@gmail.com</a>
                         </p>
                     </div>
                 </div>

@@ -1,4 +1,4 @@
-# GraphQL schema for MovieQ (partial, for frontend tooling)
+# GraphQL schema for COrnFliX (partial, for frontend tooling)
 
 type Genre {
   id: ID!
