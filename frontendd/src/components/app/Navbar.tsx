@@ -131,9 +131,9 @@ const Navbar = () => {
   return (
     <header className={`navbar ${isScrolled ? 'scrolled' : ''}`}>
       <div className="navbar-container">
-        {/* Logo */}
+        {/* Logo - BURASI DEĞİŞTİRİLDİ */}
         <Link to="/" className="navbar-brand" onClick={handleLinkClick}>
-          Mov<span className="accent">i</span>e<span className="accent">Q</span>
+          COrn<span className="accent">Fli</span>X
         </Link>
 
         {/* Search Form */}
@@ -209,26 +209,4 @@ const Navbar = () => {
               </Link>
             ) : (
               <>
-                <Link to="/profile" className="profile-link" title={user?.username || t('profile')} onClick={handleLinkClick}>
-                  <div className="nav-profile-avatar">
-                    {user?.avatar_url ? (
-                        <img src={user.avatar_url} alt={user.username} className="avatar-image" />
-                    ) : (
-                        user?.username?.substring(0, 2).toUpperCase() || 'MQ'
-                    )}
-                    </div>
-                </Link>
-                {/* <IconButton onClick={handleLogout} className="sign-out-button" title="Sign Out" aria-label="Sign out">
-                  <LogOut size={22} />
-                </IconButton> */}
-              </>
-            )}
-          </div>
-        </div> {/* End nav-auth-wrapper */}
-
-      </div> {/* End navbar-container */}
-    </header>
-  );
-};
-
-export default Navbar;
+                <Link to="/profile" className="
