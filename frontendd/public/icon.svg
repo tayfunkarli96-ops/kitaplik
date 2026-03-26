@@ -1,16 +1,8 @@
-<!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    
-    <title>COrnFliX</title>
-    
-    <meta name="description" content="COrnFliX - En sevdiğiniz film ve dizileri keşfedin, puanlayın ve yorumlayın." />
-  </head>
-  <body>
-    <div id="root"></div>
-    <script type="module" src="/src/main.tsx"></script>
-  </body>
-</html>
+<svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+  <path d="M16.5 50.1c1.1-6.1 3.4-11 8.1-13.8-1.8 4.7-2.6 9.1-2.1 13.8l-6 0z" fill="#4CBB17"/>
+  <path d="M47.5 50.1c-1.1-6.1-3.4-11-8.1-13.8 1.8 4.7 2.6 9.1 2.1 13.8l6 0z" fill="#4CBB17"/>
+  <path d="M26.8 36.1c3.5-3.1 8.8-3.1 12.3 0l1.9 14.2c-2.3 2.3-5.3 2.3-7.6 0l-6.6-14.2z" fill="#FFC72C"/>
+  <path d="M32.9 32.3c2.4-2.8 7.5-6.7 11.3-3.7l6.3 4.9c1.9 1.5 1.9 3.9 0 5.4l-3.3 2.6-14.3-9.2z" fill="#FFFACD"/>
+  <path d="M43.9 23.3c7.1-1.4 14.6-0.3 19.1 5.6l-3.1 2.4c-3.1-4.2-8.3-4.8-13.1-3.8l-2.9-4.2z" fill="#BFC1C2"/>
+  <path d="M51 28v8l6.5-4-6.5-4z" fill="#A4A4A4"/>
+</svg>
