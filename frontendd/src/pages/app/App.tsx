@@ -16,12 +16,12 @@ function App() {
       <div style={{ paddingTop: '60px' }}>
         <Routes>
           <Route path="/" element={<HomePage />} />
+          <Route path="/movies" element={<MoviesPage />} />
           <Route path="/news" element={<NewsPage />} />
           <Route path="/about" element={<AboutPage />} />
           <Route path="/quiz" element={<QuizPage />} />
-          <Route path="/movie/:id" element={<MovieDetailsPage />} />
-          <Route path="/movies" element={<MoviesPage />} />
           <Route path="/contacts" element={<ContactsPage />} />
+          <Route path="/movie/:id" element={<MovieDetailsPage />} />
           <Route path="/login" element={<ProfilePage />} />
           <Route path="/profile" element={<ProfilePage />} />
         </Routes>
