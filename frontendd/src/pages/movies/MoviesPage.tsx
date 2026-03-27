@@ -1,44 +1,67 @@
 import React from 'react';
-import { NavLink, Outlet } from 'react-router-dom';
+import { Link } from 'react-router-dom';
+
+// 12 FİLMLİK DEV ARŞİV
+export const moviesData = [
+  { id: '1', title: "Fight Club", director: "David Fincher", year: "1999", runtime: "149 min", genres: "Action, Thriller", imdb: "8.8", ltb: "9.9", miq: "9.9", summary: "Uykusuzluk çeken bir ofis çalışanı ve umursamaz bir sabun üreticisi, yeraltı dövüş kulübü kurarlar.", poster: "https://m.media-amazon.com/images/M/MV5BMmEzNTkxZDYtMWJmNy00NzEwLThlODAtNWhmZWY0NWVkYTJlXkEyXkFqcGc@._V1_SX300.jpg" },
+  { id: '2', title: "Spider-Man: Into the Spider-Verse", director: "Bob Persichetti", year: "2018", runtime: "117 min", genres: "Animation, Action", imdb: "8.4", ltb: "9.8", miq: "9.8", summary: "Genç Miles Morales, kendi evreninin Örümcek Adam'ı olur.", poster: "https://m.media-amazon.com/images/M/MV5BMjMwNDkxMTgzOF5BMl5BanBnXkFtZTgwNTkwNTQ3NjM@._V1_SX300.jpg" },
+  { id: '3', title: "The Lord of the Rings", director: "Peter Jackson", year: "2003", runtime: "201 min", genres: "Adventure, Drama", imdb: "9.0", ltb: "9.2", miq: "9.2", summary: "Gandalf ve Aragorn, İnsanlık Dünyası'na liderlik ederler.", poster: "https://m.media-amazon.com/images/M/MV5BMTZkN2ZlYmEtN2RjNi00Zjk5LWFhN2ItYjBkNmI1ZDFiYzBhXkEyXkFqcGc@._V1_SX300.jpg" },
+  { id: '4', title: "The Dark Knight", director: "Christopher Nolan", year: "2008", runtime: "152 min", genres: "Action, Crime", imdb: "9.0", ltb: "9.5", miq: "9.5", summary: "Joker olarak bilinen tehdit, Gotham halkına kaos getirir.", poster: "https://m.media-amazon.com/images/M/MV5BMTMxNTMwODM0NF5BMl5BanBnXkFtZTcwODAyMTk2Mw@@._V1_SX300.jpg" },
+  { id: '5', title: "Interstellar", director: "Christopher Nolan", year: "2014", runtime: "169 min", genres: "Adventure, Sci-Fi", imdb: "8.7", ltb: "9.7", miq: "9.7", summary: "Bir kaşif ekibi uzaydaki bir solucan deliğinden geçer.", poster: "https://m.media-amazon.com/images/M/MV5BZjdkOTU3MDktN2IxOS00OGEyLWFmMjNjYjZlY2Y3YWBiZGIL2ltYWdlXkEyXkFqcGdeQXVyMTQxNzMzNDI@._V1_SX300.jpg" },
+  { id: '6', title: "The Matrix", director: "Lana Wachowski", year: "1999", runtime: "136 min", genres: "Action, Sci-Fi", imdb: "8.7", ltb: "9.6", miq: "9.8", summary: "Bir bilgisayar korsanı, gerçeğin şok edici yüzünü keşfeder.", poster: "https://m.media-amazon.com/images/M/MV5BNzQzOTk3OTAtNDQ0Zi00ZTVkLWI0MTEtMDllZjNkYzNjNTc4L2ltYWdlXkEyXkFqcGdeQXVyNjU0OTQ0OTY@._V1_SX300.jpg" },
+  { id: '7', title: "Inception", director: "Christopher Nolan", year: "2010", runtime: "148 min", genres: "Action, Sci-Fi", imdb: "8.8", ltb: "9.4", miq: "9.5", summary: "Kurumsal sırları çalan bir hırsıza yeni bir görev verilir.", poster: "https://m.media-amazon.com/images/M/MV5BMjAxMzY3NjcxNF5BMl5BanBnXkFtZTcwNTI5OTM0Mw@@._V1_SX300.jpg" },
+  { id: '8', title: "Pulp Fiction", director: "Quentin Tarantino", year: "1994", runtime: "154 min", genres: "Crime, Drama", imdb: "8.9", ltb: "9.8", miq: "9.6", summary: "Suç dünyasının farklı karakterlerinin hikayeleri kesişiyor.", poster: "https://m.media-amazon.com/images/M/MV5BNGNhMDIzZTItNDJhNi00Mzc1LTgwZWEtNzFlYmEzN2QwMjc1XkEyXkFqcGdeQXVyNjU0OTQ0OTY@._V1_SX300.jpg" },
+  { id: '9', title: "Goodfellas", director: "Martin Scorsese", year: "1990", runtime: "145 min", genres: "Biography, Crime", imdb: "8.7", ltb: "9.5", miq: "9.4", summary: "Mafya içindeki yaşamın efsanevi hikayesi.", poster: "https://m.media-amazon.com/images/M/MV5BY2NkZjEzMDgtN2RjYy00YzM1LWE4OWEtN2M1MTRlNzkyZDg1XkEyXkFqcGdeQXVyNzkwMjQ5NzM@._V1_SX300.jpg" },
+  { id: '10', title: "Se7en", director: "David Fincher", year: "1995", runtime: "127 min", genres: "Crime, Mystery", imdb: "8.6", ltb: "9.3", miq: "9.4", summary: "İki dedektif zeki bir seri katilin peşine düşer.", poster: "https://m.media-amazon.com/images/M/MV5BMTkyNzA0MDYxNV5BMl5BanBnXkFtZTcwNjA2NzQwNA@@._V1_SX300.jpg" },
+  { id: '11', title: "Gladiator", director: "Ridley Scott", year: "2000", runtime: "155 min", genres: "Action, Adventure", imdb: "8.5", ltb: "9.0", miq: "9.1", summary: "Eski bir general yozlaşmış imparatordan intikam alır.", poster: "https://m.media-amazon.com/images/M/MV5BMDliMmNhNDEtODUyOS00MjNlLTgxODItNTNjYjBlNzIyNDI1XkEyXkFqcGdeQXVyNTIzOTk5OQ@@._V1_SX300.jpg" },
+  { id: '12', title: "The Shawshank Redemption", director: "Frank Darabont", year: "1994", runtime: "142 min", genres: "Drama", imdb: "9.3", ltb: "9.9", miq: "9.9", summary: "İki mahkum yıllar boyunca ortak bir dostluk kurar.", poster: "https://m.media-amazon.com/images/M/MV5BNDE3ODcxYzMtY2YzZC00NmNlLWJiNDMtZDViZWM2MzIxZDYwXkEyXkFqcGdeQXVyNjAwNDUxODI@._V1_SX300.jpg" }
+];
 
 const MoviesPage = () => {
-  const subMenu = [
-    { name: '📺 Film Yönetimi', path: 'management' },
-    { name: '➕ Yeni Film Ekle', path: 'add' },
-    { name: '📊 İstatistikler', path: 'stats' },
-  ];
-
   return (
-    <div className="flex bg-black min-h-screen text-white pt-20">
+    <div className="bg-[#0a0a0a] min-h-screen text-white pt-24 pb-10 px-4 md:px-10">
       
-      {/* SOL TARAFTAKİ İÇ MENÜ */}
-      <aside className="w-64 bg-gray-950 p-6 border-r border-gray-800 flex flex-col space-y-3">
-        <h2 className="text-gray-500 uppercase tracking-widest text-xs font-black mb-6 px-3">
-          CornFlix Yönetim
-        </h2>
-        {subMenu.map((item) => (
-          <NavLink 
-            key={item.path} 
-            to={item.path}
-            className={({ isActive }) => 
-              `flex items-center gap-3 p-3 rounded-lg font-medium transition-all duration-300 ${
-                isActive 
-                  ? 'bg-pink-950/50 text-pink-300 border border-pink-700 shadow-[0_0_10px_rgba(236,72,193,0.4)]' 
-                  : 'text-gray-400 hover:bg-gray-800 hover:text-white'
-              }`
-            }
-          >
-            {item.name}
-          </NavLink>
-        ))}
-      </aside>
+      {/* ÜST FİLTRELEME ÇUBUĞU */}
+      <div className="max-w-6xl mx-auto bg-[#141414] border border-gray-800 p-4 rounded-xl flex flex-wrap gap-4 items-center mb-8 shadow-lg">
+        <input type="text" placeholder="Başlığa göre ara..." className="bg-black border border-gray-700 p-2 rounded text-sm flex-1 min-w-[150px] outline-none focus:border-cyan-500" />
+        <div className="flex items-center gap-2">
+          <span className="text-sm text-gray-400">Sırala:</span>
+          <select className="bg-black border border-gray-700 p-2 rounded text-sm text-gray-300 outline-none"><option>Puan (Yüksekten Düşüğe)</option></select>
+        </div>
+        <input type="text" placeholder="Yıl (örn., 2023)" className="bg-black border border-gray-700 p-2 rounded text-sm w-32 outline-none" />
+        <input type="text" placeholder="Min. Puan" className="bg-black border border-gray-700 p-2 rounded text-sm w-24 outline-none" />
+        <select className="bg-black border border-gray-700 p-2 rounded text-sm text-gray-300 outline-none"><option>Tüm Türler</option></select>
+        
+        <button className="bg-[#00e676] hover:bg-[#00c853] text-black font-bold py-2 px-6 rounded transition-colors text-sm shadow-[0_0_10px_rgba(0,230,118,0.4)]">
+          Filtreleri Uygula
+        </button>
+      </div>
 
-      {/* SAĞ TARAFTAKİ İÇERİK ALANI */}
-      <main className="flex-1 p-8 bg-black">
-        {/* Tıkladığın menünün içeriği buraya gelecek */}
-        <Outlet /> 
-      </main>
-      
+      {/* YATAY FİLM LİSTESİ */}
+      <div className="max-w-6xl mx-auto space-y-4">
+        {moviesData.map((movie) => (
+          <Link to={`/movie/${movie.id}`} key={movie.id} className="block group">
+            <div className="flex bg-[#111] border border-gray-800 rounded-xl overflow-hidden hover:border-cyan-500 transition-all shadow-lg p-1">
+              <img src={movie.poster} alt={movie.title} className="w-28 h-40 object-cover flex-shrink-0" />
+              <div className="flex-1 p-5 relative">
+                <div className="flex flex-col md:flex-row justify-between items-start mb-4">
+                  <h2 className="text-2xl font-bold text-white group-hover:text-cyan-300 transition-colors">{movie.title}</h2>
+                  <div className="flex gap-2 text-[11px] font-bold mt-2 md:mt-0">
+                    <span className="bg-[#f5c518] text-black px-2 py-1 rounded">IMDb: {movie.imdb}</span>
+                    <span className="bg-[#ef4444] text-white px-2 py-1 rounded">LTB: {movie.ltb}</span>
+                    <span className="bg-[#1e1b4b] text-cyan-400 border border-cyan-800 px-2 py-1 rounded">M iQ: {movie.miq}</span>
+                  </div>
+                </div>
+                <div className="space-y-1 text-sm text-gray-400 font-mono">
+                  <p><span className="text-gray-500">📺 Director:</span> {movie.director}</p>
+                  <p><span className="text-gray-500">📅 Year:</span> {movie.year} | <span className="text-gray-500">🕒 Runtime:</span> {movie.runtime}</p>
+                  <p><span className="text-gray-500">🎭 Genres:</span> {movie.genres}</p>
+                </div>
+              </div>
+            </div>
+          </Link>
+        ))}
+      </div>
     </div>
   );
 };
