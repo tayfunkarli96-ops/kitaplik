@@ -1,7 +1,7 @@
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 import App from '@pages/app/App';
-import client from './config/apolloClient';
+import client from './config/yeni-client';
 import { ApolloProvider } from '@apollo/client';
 import './index.css';
 import './i18n';
