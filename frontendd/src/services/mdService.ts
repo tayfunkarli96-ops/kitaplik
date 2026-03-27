@@ -1,5 +1,5 @@
 import { gql } from '@apollo/client';
-import client from '../config/apolloClient';
+import client from '../config/yeni-client';
 // User type might be imported if needed for request/response, but GQL handles types primarily
 // import { User } from './authService'; 
 
