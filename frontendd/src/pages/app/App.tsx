@@ -3,7 +3,8 @@ import Navbar from './components/app/Navbar';
 import HomePage from './pages/home/HomePage';
 import MoviesPage from './pages/movies/MoviesPage'; 
 import ContactsPage from './pages/contacts/ContactsPage'; 
-// Diğer sayfaların importlarını buraya ekle (News, About vb.)
+import NewsPage from './pages/news/NewsPage'; 
+import AboutPage from './pages/about/AboutPage';
 
 function App() {
   return (
@@ -13,8 +14,9 @@ function App() {
         <Routes>
           <Route path="/" element={<HomePage />} />
           <Route path="/movies" element={<MoviesPage />} />
+          <Route path="/news" element={<NewsPage />} />
+          <Route path="/about" element={<AboutPage />} />
           <Route path="/contacts" element={<ContactsPage />} />
-          {/* Diğer Route'larını buraya ekle */}
         </Routes>
       </div>
     </Router>
