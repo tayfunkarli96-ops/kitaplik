@@ -1,10 +1,7 @@
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 import App from '@pages/app/App';
-
-// Eğer klasör src içindeyse bu çalışır:
-import client from './config/apollo-client'; 
-
+import client from './config/apolloClient';
 import { ApolloProvider } from '@apollo/client';
 import './index.css';
 import './i18n';
