@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 
-// 🎬 15 DEV FİLM (Veri burada, API'ye falan gitmiyor, o yüzden 4 filmde kalamaz!)
-const DATA = [
+const FILM_ARSIVI = [
   { id: '1', title: "Fight Club", director: "Tayfun Karlı", year: "1999", genres: "Action", imdb: "8.8", poster: "https://image.tmdb.org/t/p/w500/pB8BM7pdSp6B6Ih7QZ4DrQ3PmJK.jpg" },
   { id: '2', title: "Inception", director: "Tayfun Karlı", year: "2010", genres: "Sci-Fi", imdb: "8.8", poster: "https://image.tmdb.org/t/p/w500/edv5bs1pUeeS0S1Ym6Q6o1pD9v5.jpg" },
   { id: '3', title: "Lord of the Rings", director: "Tayfun Karlı", year: "2003", genres: "Adventure", imdb: "9.0", poster: "https://image.tmdb.org/t/p/w500/rCzpDGLbOoPwLjy3OAm5NUPOTrC.jpg" },
@@ -22,10 +21,10 @@ const DATA = [
 
 const MoviesPage = () => {
   const [term, setTerm] = useState("");
-  const filtered = DATA.filter(f => f.title.toLowerCase().includes(term.toLowerCase()));
+  const filtered = FILM_ARSIVI.filter(m => m.title.toLowerCase().includes(term.toLowerCase()));
 
   return (
-    <div style={{ backgroundColor: '#05050a', minHeight: '100vh', color: '#fff', padding: '100px 30px', fontFamily: 'sans-serif' }}>
+    <div style={{ backgroundColor: '#05050a', minHeight: '100vh', color: '#fff', padding: '100px 20px', fontFamily: 'sans-serif' }}>
       <style>{`
         .neon-box-cyan { border: 2px solid #00f3ff; border-radius: 12px; background: rgba(0, 15, 25, 0.7); box-shadow: 0 0 15px #00f3ff; margin-bottom: 20px; }
         .neon-box-pink { border: 2px solid #ff00ff; border-radius: 12px; background: rgba(25, 0, 15, 0.7); box-shadow: 0 0 15px #ff00ff; margin-bottom: 20px; }
@@ -35,38 +34,38 @@ const MoviesPage = () => {
 
       <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
         <div className="neon-box-cyan" style={{ padding: '20px', display: 'flex', gap: '15px' }}>
-          <input type="text" placeholder="Film Adı Ara..." className="cyber-input" value={term} onChange={(e) => setTerm(e.target.value)} />
+          <input type="text" placeholder="Film Ara..." className="cyber-input" value={term} onChange={(e) => setTerm(e.target.value)} />
           <button className="btn-pink">SEARCH</button>
         </div>
 
         <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr', gap: '30px', marginTop: '30px' }}>
-          {/* FİLMLER */}
           <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
             {filtered.map((m, i) => (
-              <div key={m.id} className={i % 2 === 0 ? "neon-box-pink" : "neon-box-cyan"} style={{ display: 'flex', padding: '15px', gap: '20px', alignItems: 'center' }}>
-                <img src={m.poster} alt={m.title} style={{ width: '100px', height: '140px', objectFit: 'cover', borderRadius: '8px' }} />
-                <div>
-                  <h2 style={{ margin: '0 0 10px 0', fontSize: '26px' }}>{m.title}</h2>
-                  <p style={{ color: '#ccc' }}>Yönetmen: {m.director} | Yıl: {m.year}</p>
+              <Link to={`/movie/${m.id}`} key={m.id} style={{ textDecoration: 'none', color: 'inherit' }}>
+                <div className={i % 2 === 0 ? "neon-box-pink" : "neon-box-cyan"} style={{ display: 'flex', padding: '15px', gap: '20px', alignItems: 'center' }}>
+                  <img src={m.poster} alt={m.title} style={{ width: '100px', height: '140px', objectFit: 'cover', borderRadius: '8px' }} />
+                  <div>
+                    <h2 style={{ margin: '0 0 5px 0' }}>{m.title}</h2>
+                    <p style={{ color: '#ccc' }}>Yönetmen: {m.director} | Yıl: {m.year}</p>
+                  </div>
                 </div>
-              </div>
+              </Link>
             ))}
           </div>
 
-          {/* SAĞ: STATS VE YORUMLAR (GERİ GELDİ) */}
           <div style={{ position: 'sticky', top: '100px', height: 'fit-content', display: 'flex', flexDirection: 'column', gap: '20px' }}>
             <div className="neon-box-pink" style={{ padding: '30px', textAlign: 'center' }}>
-              <h3>Stats</h3>
+              <h3 style={{ color: '#00f3ff' }}>Stats</h3>
               <div style={{ fontSize: '32px', fontWeight: 'bold' }}>{filtered.length} Film Mevcut</div>
             </div>
             <div className="neon-box-pink" style={{ padding: '30px', textAlign: 'center' }}>
-              <h3>Comment</h3>
+              <h3 style={{ color: '#00f3ff' }}>Comment</h3>
               <p style={{ fontSize: '40px' }}>💬</p>
               <p>23 Görüş Bildirildi</p>
               <button className="btn-pink" style={{ width: '100%' }}>Görüş Bildir</button>
             </div>
             <div className="neon-box-cyan" style={{ padding: '20px' }}>
-              <h3>Son Görüşler</h3>
+              <h3 style={{ color: '#00f3ff' }}>Son Görüşler</h3>
               <p>👤 "Arayüz akıyor moruk!"</p>
               <p>👤 "Tayfun Karlı yine yapmış."</p>
             </div>
@@ -77,4 +76,4 @@ const MoviesPage = () => {
   );
 };
 
-export default MoviesPage; // VERCEL İÇİN BU ŞART!
+export default MoviesPage;
