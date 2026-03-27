@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 
@@ -11,6 +10,9 @@ import QuizPage from '../quiz/QuizPage';
 import MovieDetailsPage from '../movies/MovieDetailsPage';
 import MoviesPage from '../movies/MoviesPage'; 
 
+// İŞTE BURASI: ContactsPage (s harfi eklendi, Vercel artık çökmeyecek!)
+import ContactPage from '../contacts/ContactsPage'; 
+
 function App() {
   return (
     <Router>
@@ -21,9 +23,8 @@ function App() {
         <Route path="/profile" element={<ProfilePage />} />
         <Route path="/about" element={<AboutPage />} />
         <Route path="/quiz" element={<QuizPage />} />
-        {/* Film Detay Rotası */}
+        <Route path="/contact" element={<ContactPage />} /> {/* İletişim sayfasını geri ekledim */}
         <Route path="/movie/:id" element={<MovieDetailsPage />} />
-        {/* Film Listesi Rotası */}
         <Route path="/movies" element={<MoviesPage />} />
       </Routes>
     </Router>
