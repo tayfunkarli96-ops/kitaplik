@@ -1,4 +1,5 @@
-import { HashRouter as Router, Routes, Route } from 'react-router-dom';
+
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Navbar from './components/app/Navbar'; 
 import HomePage from './pages/home/HomePage';
 import MoviesPage from './pages/movies/MoviesPage'; 
@@ -13,7 +14,6 @@ function App() {
           <Route path="/" element={<HomePage />} />
           <Route path="/movies" element={<MoviesPage />} />
           <Route path="/contacts" element={<ContactsPage />} />
-          {/* Diğer sayfaların varsa buraya ekle */}
         </Routes>
       </div>
     </Router>
