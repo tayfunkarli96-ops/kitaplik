@@ -1,144 +1,71 @@
-// index.js (Main Server File)
 const express = require('express');
 const cors = require('cors');
-const { ApolloServer } = require('@apollo/server'); // Correct import
-const { expressMiddleware } = require('@apollo/server/express4'); // Correct import
-const { ApolloServerPluginDrainHttpServer } = require('@apollo/server/plugin/drainHttpServer'); // Correct import
-const http = require('http');
-// Removed: const { graphqlUploadExpress } = require('graphql-upload');
-const { mergeSchemas } = require('@graphql-tools/schema'); // Import mergeSchemas
-const config = require('./config');
-const schema = require('./schema');
-const schemaFrontend = require('./schema-frontend');
-const { db } = require('./db');
 
-let serverlessHandler = null; // Store the handler
+const app = express();
 
-async function startApolloServer() {
-    const app = express();
-    const httpServer = http.createServer(app);
+// CORS ayarları (Frontend'in bu API'ye erişebilmesi için)
+app.use(cors());
+// Gelen JSON verilerini okuyabilmek için
+app.use(express.json());
 
-    // --- CORS Setup ---
-    // Apply CORS before Apollo middleware
-    const corsOptions = {
-        origin: [
-            'http://localhost:5173',
-            'http://localhost:5174',
-            'http://localhost:5175',
-            'https://movieeq.netlify.app',
-            'https://movieq-admin.netlify.app'
-        ],
-        credentials: true,
+// --- SAHTE VERİTABANIMIZ (Hafızada tutulan filmler) ---
+let movies = [
+    { id: 1, title: "Inception", year: 2010, genre: "Sci-Fi", rating: 8.8 },
+    { id: 2, title: "Interstellar", year: 2014, genre: "Sci-Fi", rating: 8.6 },
+    { id: 3, title: "The Dark Knight", year: 2008, genre: "Action", rating: 9.0 }
+];
+
+// 1. GET: Tüm filmleri getir (Listeleme)
+app.get('/api/movies', (req, res) => {
+    res.json(movies);
+});
+
+// 2. GET: Tek bir film detayını getir
+app.get('/api/movies/:id', (req, res) => {
+    const movie = movies.find(m => m.id === parseInt(req.params.id));
+    if (!movie) return res.status(404).json({ message: 'Film bulunamadı' });
+    res.json(movie);
+});
+
+// 3. POST: Yeni film ekle (Hocanın istediği ekleme metodu)
+app.post('/api/movies', (req, res) => {
+    const newMovie = {
+        id: movies.length > 0 ? movies[movies.length - 1].id + 1 : 1,
+        title: req.body.title,
+        year: req.body.year,
+        genre: req.body.genre,
+        rating: req.body.rating
     };
-    app.use(cors(corsOptions));
+    movies.push(newMovie);
+    res.status(201).json(newMovie);
+});
 
-    // Ensure body parsing middleware is applied *before* Apollo middleware
-    app.use(express.json()); // Needed for expressMiddleware
+// 4. PUT: Film bilgilerini güncelle
+app.put('/api/movies/:id', (req, res) => {
+    const movie = movies.find(m => m.id === parseInt(req.params.id));
+    if (!movie) return res.status(404).json({ message: 'Film bulunamadı' });
 
-    // --- Setup Apollo Server ---
-    // Merge the schemas
-    const mergedSchema = mergeSchemas({
-      schemas: [schema, schemaFrontend],
-    });
+    movie.title = req.body.title || movie.title;
+    movie.year = req.body.year || movie.year;
+    movie.genre = req.body.genre || movie.genre;
+    movie.rating = req.body.rating || movie.rating;
 
-    const server = new ApolloServer({
-        schema: mergedSchema, // Use the merged schema
-        plugins: [ApolloServerPluginDrainHttpServer({ httpServer })],
-        introspection: config.nodeEnv !== 'production',
-    });
+    res.json(movie);
+});
 
-    // --- Start the server ---
-    await server.start();
+// 5. DELETE: Film sil
+app.delete('/api/movies/:id', (req, res) => {
+    movies = movies.filter(m => m.id !== parseInt(req.params.id));
+    res.json({ message: "Film başarıyla silindi" });
+});
 
-    // Apply Apollo GraphQL middleware and context function
-    app.use(
-        '/graphql',
-        express.json(), // Ensure JSON body parsing for GraphQL requests
-        expressMiddleware(server, {
-            context: async ({ req }) => {
-                // Context is now simpler, only db and req
-                return {
-                    db,
-                    req,
-                };
-            },
-        }),
-    );
+// Vercel için uygulamayı dışa aktar
+module.exports = app;
 
-    return app; // Return the app instance
-}
-
-// Remove the direct call to start the server
-// startApolloServer().catch(error => {
-//     console.error('❌ Failed to start server:', error);
-//     process.exit(1);
-// });
-
-// Initialize the serverless handler asynchronously
-const initializeHandler = async () => {
-    if (serverlessHandler) {
-        return serverlessHandler;
-     }
-
-    try {
-        console.log("🚀 Initializing Apollo Server for serverless function...");
-        const app = await startApolloServer();
-        console.log("✅ Apollo Server initialized.");
-        serverlessHandler = serverless(app);
-        console.log("✅ Serverless handler created.");
-        return serverlessHandler;
-    } catch (error) {
-        console.error('❌ Failed to initialize serverless handler:', error);
-        // Throw the error so Netlify knows initialization failed
-        throw new Error(`Handler initialization failed: ${error.message}`);
-    }
-};
-
-
-// Export the handler for Netlify
-exports.handler = async (event, context) => {
-    try {
-        const handler = await initializeHandler();
-        // Log incoming event for debugging (optional)
-        // console.log('Incoming event:', JSON.stringify(event));
-        // console.log('Context:', JSON.stringify(context));
-
-        // Add a small delay if needed for cold starts, although usually not necessary
-        // await new Promise(resolve => setTimeout(resolve, 50));
-
-        const result = await handler(event, context);
-        // Log outgoing result for debugging (optional)
-        // console.log('Outgoing result:', JSON.stringify(result));
-        return result;
-    } catch (error) {
-        console.error('❌ Error executing handler:', error);
-        // Return a standard server error response
-        return {
-            statusCode: 500,
-            body: JSON.stringify({ error: 'Internal Server Error during handler execution', details: error.message }),
-        };
-    }
-};
-
-// Add this section for local development start
-// This block will execute when running `node src/index.js` directly,
-// but typically not in a deployed serverless environment.
-if (process.env.NODE_ENV !== 'production' && !process.env.AWS_LAMBDA_FUNCTION_NAME /* Add other potential serverless env vars if needed */) {
-    const PORT = process.env.PORT || 4000;
-
-    startApolloServer().then(app => {
-        // Create a standard HTTP server with the Express app configured by startApolloServer
-        const localHttpServer = http.createServer(app);
-
-        // Start listening on the specified port
-        localHttpServer.listen(PORT, () => {
-            console.log(`\n🚀 Local server ready at http://localhost:${PORT}`);
-            // The GraphQL endpoint is configured within startApolloServer
-            console.log(`   GraphQL endpoint: http://localhost:${PORT}/graphql\n`);
-        });
-
-    }).catch(error => {
-        console.error('❌ Failed to start local development server:', error);
-        process.exit(1);
+// Local'de test etmek için (Vercel'de bu kısım bypass edilir)
+const PORT = process.env.PORT || 3000;
+if (process.env.NODE_ENV !== 'production') {
+    app.listen(PORT, () => {
+        console.log(`🚀 Tayfun Karlı REST API çalışıyor: http://localhost:${PORT}`);
     });
 }
