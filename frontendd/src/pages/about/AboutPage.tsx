@@ -41,17 +41,10 @@ const AboutPage: React.FC = () => {
 
                     <section className="about-section">
                         <h2>{t('createdBy')}</h2>
-                        <div className='university'>
-                            <img src="/sdu.svg" alt="Suleyman Demirel University Logo" className="ab-logo" />
-                            {t('sduName')}
-                        </div>
-                        <ul>
-                            <li><a href='https://github.com/crusinistaken'>Semih Çantal</a></li>
-                            <li><a href='https://github.com/akifbnc'>Akif Tarık Binici</a></li>
-                            <li><a href='https://github.com/ylyas2004'>Ylyas Yylkybayev</a></li>
-                            <li><a href='https://github.com/moruex'>Furkan Sayar</a></li>
-                            <li><a href='https://github.com/akin1176'>Abdullah Kural</a></li>
-                        </ul>
+                        {/* Üniversite logosu ve listesi kaldırıldı, sadece senin ismin eklendi. */}
+                        <p style={{ fontSize: '20px', color: 'white', marginTop: '10px', fontWeight: 'bold' }}>
+                            Tayfun Karlı
+                        </p>
                     </section>
 
                 </div>
