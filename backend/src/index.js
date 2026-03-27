@@ -68,4 +68,4 @@ if (process.env.NODE_ENV !== 'production') {
     app.listen(PORT, () => {
         console.log(`🚀 Tayfun Karlı REST API çalışıyor: http://localhost:${PORT}`);
     });
-}
+}      
