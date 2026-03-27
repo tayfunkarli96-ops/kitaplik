@@ -1,5 +1,5 @@
 import { gql } from '@apollo/client';
-import client from '@src/config/apolloClient';
+import client from '@src/config/yeni-client';
 
 // Basic GraphQL client setup
 // You might use a more robust client like Apollo Client or urql in a real app
@@ -241,4 +241,4 @@ export const getCurrentUser = (): User | null => {
 
 export const getToken = (): string | null => {
   return localStorage.getItem('authToken');
-}; 
+};
