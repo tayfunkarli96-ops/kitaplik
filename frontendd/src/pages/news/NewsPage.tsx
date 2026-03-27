@@ -1,38 +1,88 @@
 import React from 'react';
 
 const NewsPage = () => {
-  const newsList = [
-    {
-      id: 1,
-      title: "Neon Şehir Sinemalarında Büyük Patlama: 'Cyber-Fatih' Geliyor!",
-      date: "27 Mart 2026",
-      summary: "Yerli yapım siber-punk film, IMDB'de 9.2 puanla açılış yaptı. Hoca bu haberi çok sevecek!",
-      neon: "pink"
-    },
-    {
-      id: 2,
-      title: "CornFlix'e Büyük Güncelleme: İzleme Listesi Tamamlandı!",
-      date: "26 Mart 2026",
-      summary: "Artık favori siber filmlerinizi listenize ekleyebilirsiniz. Backend entegrasyonu aktif.",
-      neon: "cyan"
-    }
-  ];
-
   return (
-    <div className="p-10 bg-black min-h-screen text-white">
-      <h1 className="text-4xl font-bold text-cyan-400 mb-10 shadow-neon">📰 Haber Bülteni</h1>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-        {newsList.map(news => (
-          <div key={news.id} className={`p-6 bg-gray-900 rounded-xl border ${news.neon === 'pink' ? 'border-pink-500' : 'border-cyan-500'}`}>
-            <h2 className="text-2xl font-bold mb-4">{news.title}</h2>
-            <p className="text-gray-400 mb-4">{news.summary}</p>
-            {/* OK İŞARETİ HATASINI BURADA ÇÖZDÜK: {"->"} şeklinde yazdık */}
-            <span className="text-pink-500 font-bold cursor-pointer">Devamını Oku {"->"}</span>
-          </div>
-        ))}
-      </div>
-    </div>
-  );
-};
-
-export default NewsPage;
+    <div className="news-page-container">
+      {/* İÇ CSS - HİÇBİR CONFIG GEREKTİRMEZ */}
+      <style>{`
+        @keyframes neon-flow {
+          0% { background-position: 0% 50%; }
+          50% { background-position: 100% 50%; }
+          100% { background-position: 0% 50%; }
+        }
+        @keyframes story-pulse {
+          0%, 100% { border-color: rgba(6, 182, 212, 0.4); box-shadow: 0 0 15px rgba(6, 182, 212, 0.3); }
+          50% { border-color: rgba(6, 182, 212, 0.8); box-shadow: 0 0 30px rgba(6, 182, 212, 0.6); }
+        }
+        @keyframes news-banner-flow {
+          0% { background-position: 100% 0; }
+          100% { background-position: -100% 0; }
+        }
+        .news-page-container {
+          background-color: #000;
+          color: #fff;
+          min-height: 100vh;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          padding: 20px;
+          font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+          overflow-x: hidden;
+        }
+        /* Instagram Story Tarzı Kart (image_2.png formatı) */
+        .story-card {
+          width: 380px; /* Yaklaşık telefon boyutu */
+          height: 680px;
+          background-color: #111;
+          border: 4px solid #06b6d4; /* Neon Cyan */
+          border-radius: 30px;
+          position: relative;
+          overflow: hidden;
+          animation: story-pulse 4s infinite;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+        }
+        /* Siber Şehir Gecesi Manzarası (image_2.png vibe'ı) */
+        .story-image-placeholder {
+          width: 100%;
+          height: 100%;
+          background: linear-gradient(135deg, #000 0%, #031c2c 50%, #1a011a 100%);
+          position: absolute;
+          top: 0;
+          left: 0;
+          z-index: 1;
+        }
+        .story-image-placeholder::after {
+          content: 'Siber Gecesi Manzarası';
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          transform: translate(-50%, -50%);
+          color: #222;
+          font-size: 20px;
+          font-weight: bold;
+          text-align: center;
+        }
+        /* Başlık (CORNFLIX HABERLER) */
+        .story-title {
+          font-size: 32px;
+          font-weight: 900;
+          text-align: center;
+          color: #fff;
+          margin-top: 80px;
+          margin-bottom: 5px;
+          text-shadow: 0 0 10px rgba(255, 255, 255, 0.7);
+          text-transform: uppercase;
+          position: relative;
+          z-index: 2;
+        }
+        /* Rengarenk Haber Bandı (image_2.png'deki bar) */
+        .news-banner-bar {
+          width: 250px;
+          height: 12px;
+          border-radius: 6px;
+          background: linear-gradient(to right, #ec4899, #8b5cf6, #06b6d4, #ec4899);
+          background-size: 200% auto;
+          animation: news-banner-flow 3s linear infinite;
+          position: relative;
