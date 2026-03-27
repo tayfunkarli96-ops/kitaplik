@@ -1,10 +1,8 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 
-// YOLLAR SENİN KLASÖR YAPINA GÖRE (src/pages/app/App.tsx) DÜZELTİLDİ:
-// Navbar için 2 kat yukarı çıkıyoruz (src/ klasörüne gitmek için)
+// DİKKAT: Yollar klasör yapına göre (../../) düzeltildi!
 import Navbar from '../../components/app/Navbar'; 
-// Diğer sayfalar için 1 kat yukarı çıkıp kendi klasörlerine giriyoruz
 import HomePage from '../home/HomePage';
 import NewsPage from '../news/NewsPage'; 
 import ProfilePage from '../profile/ProfilePage';
