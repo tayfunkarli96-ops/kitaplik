@@ -4,23 +4,17 @@ const AboutPage = () => {
   return (
     <div style={{ backgroundColor: '#05050a', minHeight: '100vh', color: 'white', padding: '120px 40px', fontFamily: 'sans-serif', textAlign: 'center' }}>
       <div style={{ maxWidth: '800px', margin: '0 auto' }}>
-        
-        <h1 style={{ color: '#00f3ff', textShadow: '0 0 10px #00f3ff, 0 0 20px #00f3ff', fontSize: '48px', marginBottom: '40px', fontWeight: '900' }}>
+        <h1 style={{ color: '#00f3ff', textShadow: '0 0 10px #00f3ff', fontSize: '48px', marginBottom: '40px', fontWeight: '900' }}>
           CORNFLIX HAKKINDA
         </h1>
-        
-        <div style={{ border: '2px solid #ff00ff', borderRadius: '12px', padding: '40px', background: 'rgba(25,0,15,0.7)', boxShadow: '0 0 15px rgba(255,0,255,0.4)', backdropFilter: 'blur(10px)' }}>
-          <p style={{ fontSize: '20px', lineHeight: '1.8', color: '#ccc', marginBottom: '30px' }}>
-            CornFlix, sinema kültürünü ve siberpunk estetiğini bir araya getiren bir vizyon projesidir. Amacımız, sıradan tasarımlardan sıyrılarak kullanıcılara neon ışıklar altında eşsiz bir film keşfetme deneyimi sunmaktır.
+        <div style={{ border: '2px solid #ff00ff', borderRadius: '12px', padding: '40px', background: 'rgba(25, 0, 15, 0.7)', boxShadow: '0 0 15px rgba(255, 0, 255, 0.4)' }}>
+          <p style={{ fontSize: '20px', lineHeight: '1.8', color: '#ccc' }}>
+            CornFlix, siberpunk estetiğini sinema tutkusuyla birleştiren bir vizyon projesidir.
           </p>
-          <div style={{ marginTop: '30px', paddingTop: '20px', borderTop: '1px solid rgba(255,255,255,0.1)' }}>
-            <p style={{ fontSize: '22px', color: '#fff' }}>
-              Sistem Kurucusu ve Baş Geliştirici: <br/>
-              <span style={{ color: '#00f3ff', fontWeight: 'bold', textShadow: '0 0 10px #00f3ff', fontSize: '32px' }}>TAYFUN KARLI</span>
-            </p>
-          </div>
+          <p style={{ fontSize: '24px', color: '#fff', marginTop: '30px' }}>
+            Sistem Kurucusu: <span style={{ color: '#00f3ff', fontWeight: 'bold' }}>TAYFUN KARLI</span>
+          </p>
         </div>
-
       </div>
     </div>
   );
