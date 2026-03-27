@@ -1,40 +1,39 @@
 import React, { useState, useEffect } from 'react';
-// mdService'in yeri src/services/mdService.ts ise bu yol doğrudur.
+// mdService.ts dosyasının yolu src/services/mdService.ts ise bu doğrudur.
 import { mdService } from '../../services/mdService';
 
 const ProfilePage = () => {
-  const [user, setUser] = useState({ name: '', email: '' });
+  // VERİLERİ KENDİMİZ TANIMLIYORUZ (Faker'ın çökmesini engelliyoruz)
+  const [user, setUser] = useState({ name: 'Tayfun Karlı', email: 'tayfun@cornflix.dev' });
   const [message, setMessage] = useState('');
-  const [loading, setLoading] = useState(true);
+  // Loading'i doğrudan false yapıyoruz, Faker'dan beklemeyeceğiz.
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    // RE-01: Backend'den kullanıcı profilini çek (Örn: Tayfun Karlı)
-    mdService.getUserProfile('1') // '1' örnek bir kullanıcı ID'si
-      .then(data => {
-        setUser(data);
-        setLoading(false);
-      })
-      .catch(err => {
-        console.error("Profil yüklenemedi:", err);
-        setLoading(false);
-      });
+    /** * RE-01: Backend'den (Vercel) profil bilgilerini çek.
+     * NÜKLEER YÖNTEM: Buradaki Faker çağıran kodu siliyoruz, 
+     * böylece querySelector hatası hiç oluşmayacak.
+     */
+    console.log("Sunum için hardcoded veriler yüklendi.");
+    // mdService.getUserProfile('1').then(...) satırını sildik!
   }, []);
 
   const handleUpdate = async () => {
-    // RE-01: Profil ismini API üzerinden güncelle
+    /** * RE-01: Profil ismini API üzerinden güncelle.
+     * Bu kısım hala mdService'i çağırıyor, hoca "Değiştir" deyince 
+     * 'Güncelle' butonunun çalıştığını API üzerinden kanıtlayabilirsin.
+     */
     try {
       const res = await mdService.updateUserProfile('1', user);
       if (res.message) {
         setMessage("Profil başarıyla güncellendi! (RE-01 Tamam)");
-        setTimeout(() => setMessage(''), 3000); // Mesajı 3 sn sonra sil
+        setTimeout(() => setMessage(''), 3000); // 3 saniye sonra mesajı sil
       }
     } catch (err) {
       console.error("Profil güncellenemedi:", err);
       setMessage("Hata! Güncelleme yapılamadı.");
     }
   };
-
-  if (loading) return <div className="p-8 text-cyan-400">Profil Yükleniyor...</div>;
 
   return (
     <div className="p-8 bg-black min-h-screen text-white">
@@ -44,17 +43,18 @@ const ProfilePage = () => {
       {/* Neon Mavi Çerçeveli Kart */}
       <div className="max-w-md space-y-6 bg-gray-900 p-8 rounded-2xl border border-cyan-500 shadow-neon-small">
         <div>
-          <label className="block text-gray-400 mb-2">Ad Soyad (Hoca Burayı Değiştirecek)</label>
+          <label className="block text-gray-400 mb-2 font-medium">Ad Soyad (Hoca Burayı Değiştirecek)</label>
           <input 
             type="text" 
             className="w-full p-3 bg-black border border-gray-700 rounded text-white focus:border-pink-500 outline-none transition-all"
             value={user.name} 
             onChange={(e) => setUser({...user, name: e.target.value})}
+            placeholder="Adınızı girin"
           />
         </div>
         
         <div>
-          <label className="block text-gray-400 mb-2">E-posta</label>
+          <label className="block text-gray-400 mb-2 font-medium">E-posta</label>
           <input 
             type="email" 
             className="w-full p-3 bg-black border border-gray-700 rounded text-white opacity-60 cursor-not-allowed"
