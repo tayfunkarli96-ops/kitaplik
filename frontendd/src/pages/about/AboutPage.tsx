@@ -1,35 +1,26 @@
 import React from 'react';
 
-const UnderConstruction = () => {
+const AboutPage = () => {
   return (
-    <div style={{
-      backgroundColor: '#05050a',
-      minHeight: '100vh',
-      display: 'flex',
-      flexDirection: 'column',
-      alignItems: 'center',
-      justifyContent: 'center',
-      color: 'white',
-      fontFamily: 'sans-serif',
-      textAlign: 'center',
-      padding: '20px'
-    }}>
-      <h1 style={{
-        fontSize: '50px',
-        color: '#00f3ff',
-        textShadow: '0 0 10px #00f3ff, 0 0 20px #00f3ff',
-        margin: '0 0 20px 0'
-      }}>
-        SİSTEM GÜNCELLENİYOR
-      </h1>
-      <p style={{ color: '#aaa', fontSize: '20px', maxWidth: '600px', lineHeight: '1.6' }}>
-        Bu modül siberpunk v2.0 güncellemesi için kısa süreliğine bakıma alınmıştır. Lütfen Filmler Arşivi üzerinden gezinmeye devam edin.
-      </p>
-      <div style={{ fontSize: '60px', marginTop: '30px', animation: 'pulse 2s infinite' }}>
-        🚧
+    <div style={{ backgroundColor: '#05050a', minHeight: '100vh', color: 'white', padding: '120px 40px', fontFamily: 'sans-serif' }}>
+      <div style={{ maxWidth: '800px', margin: '0 auto', textAlign: 'center' }}>
+        
+        <h1 style={{ color: '#00f3ff', textShadow: '0 0 10px #00f3ff', fontSize: '48px', marginBottom: '40px' }}>
+          CORNFLIX HAKKINDA
+        </h1>
+        
+        <div style={{ border: '2px solid #ff00ff', borderRadius: '12px', padding: '40px', background: 'rgba(25,0,15,0.7)', boxShadow: '0 0 15px rgba(255,0,255,0.4)' }}>
+          <p style={{ fontSize: '18px', lineHeight: '1.8', color: '#ccc', marginBottom: '20px' }}>
+            CornFlix, sinema kültürünü ve modern siberpunk estetiğini bir araya getiren Türkiye'nin en yenilikçi dijital film arşiv platformudur. Amacımız, sıradan tasarımlardan sıyrılarak kullanıcılara neon ışıklar altında, pürüzsüz bir arayüzle eşsiz bir film keşfetme deneyimi sunmaktır.
+          </p>
+          <p style={{ fontSize: '18px', lineHeight: '1.8', color: '#ccc' }}>
+            Sistem Kurucusu ve Baş Geliştirici: <span style={{ color: '#00f3ff', fontWeight: 'bold', textShadow: '0 0 5px #00f3ff' }}>Tayfun Karlı</span>
+          </p>
+        </div>
+
       </div>
     </div>
   );
 };
 
-export default UnderConstruction;
+export default AboutPage;
