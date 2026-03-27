@@ -3,47 +3,73 @@ import { Link } from 'react-router-dom';
 
 const Navbar = () => {
   return (
-    <div className="fixed left-0 top-0 h-full w-64 bg-black border-r border-gray-800 p-6 flex flex-col space-y-8 z-50">
-      <div className="text-3xl font-bold italic tracking-tighter">
-        <span className="text-pink-500 shadow-neon">Corn</span>
-        <span className="text-cyan-400">Flix</span>
+    <nav style={{ 
+      position: 'fixed', 
+      top: 0, 
+      left: 0, 
+      width: '100%', 
+      backgroundColor: '#0a0a0a', 
+      borderBottom: '1px solid #222', 
+      display: 'flex', 
+      justifyContent: 'space-between', 
+      alignItems: 'center', 
+      padding: '15px 40px', 
+      zIndex: 1000, 
+      fontFamily: 'sans-serif',
+      boxSizing: 'border-box',
+      boxShadow: '0 4px 15px rgba(0, 0, 0, 0.5)'
+    }}>
+      
+      {/* LOGO KISMI (Neon Pembe) */}
+      <Link to="/" style={{ 
+        fontSize: '28px', 
+        fontWeight: '900', 
+        color: '#ec4899', 
+        textDecoration: 'none', 
+        letterSpacing: '1px', 
+        textShadow: '0 0 10px rgba(236, 72, 153, 0.6)' 
+      }}>
+        CornFlix
+      </Link>
+
+      {/* MENÜ LİNKLERİ */}
+      <div style={{ display: 'flex', gap: '30px', alignItems: 'center' }}>
+        <Link to="/" style={linkStyle}>🏠 Ana Sayfa</Link>
+        <Link to="/movies" style={linkStyle}>🎬 Filmler</Link>
+        <Link to="/news" style={linkStyle}>📰 Haberler</Link>
+        <Link to="/profile" style={linkStyle}>👤 Profil</Link>
+        <Link to="/contact" style={linkStyle}>📞 İletişim</Link>
       </div>
 
-      <nav className="flex flex-col space-y-4">
-        <Link to="/" className="text-gray-300 hover:text-pink-500 text-lg font-medium transition-colors flex items-center space-x-3 group">
-          <span>🏠</span>
-          <span>Ana Sayfa</span>
-        </Link>
+      {/* GİRİŞ YAP BUTONU (Siber Yeşil) */}
+      <button style={{ 
+        backgroundColor: '#00e676', 
+        color: 'black', 
+        border: 'none', 
+        padding: '10px 24px', 
+        borderRadius: '6px', 
+        fontWeight: 'bold', 
+        cursor: 'pointer', 
+        fontSize: '14px', 
+        boxShadow: '0 0 12px rgba(0, 230, 118, 0.4)' 
+      }}>
+        Giriş Yap
+      </button>
 
-        <Link to="/movies" className="text-gray-300 hover:text-pink-500 text-lg font-medium transition-colors flex items-center space-x-3 group">
-          <span>🎬</span>
-          <span>Filmler</span>
-        </Link>
-
-        {/* RE-09: Haberler Butonu */}
-        <Link to="/news" className="text-white hover:text-cyan-400 text-lg font-bold transition-all flex items-center space-x-3 group border-l-4 border-transparent hover:border-cyan-400 pl-2">
-          <span>📰</span>
-          <span>Haberler</span>
-        </Link>
-
-        <Link to="/profile" className="text-gray-300 hover:text-pink-500 text-lg font-medium transition-colors flex items-center space-x-3 group">
-          <span>👤</span>
-          <span>Profil</span>
-        </Link>
-
-        <Link to="/contact" className="text-gray-300 hover:text-pink-500 text-lg font-medium transition-colors flex items-center space-x-3 group">
-          <span>📞</span>
-          <span>İletişim</span>
-        </Link>
-      </nav>
-
-      <div className="mt-auto">
-        <button className="w-full py-3 px-6 bg-transparent border-2 border-pink-500 text-pink-500 rounded-full font-bold hover:bg-pink-500 hover:text-white transition-all">
-          Giriş Yap
-        </button>
-      </div>
-    </div>
+    </nav>
   );
+};
+
+// Linklerin ortak stili (Kodu kalabalıklaştırmasın diye buraya aldım)
+const linkStyle = {
+  color: '#e2e8f0',
+  textDecoration: 'none',
+  fontSize: '15px',
+  fontWeight: '500',
+  display: 'flex',
+  alignItems: 'center',
+  gap: '6px',
+  transition: 'color 0.3s'
 };
 
 export default Navbar;
