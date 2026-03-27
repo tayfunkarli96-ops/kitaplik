@@ -1,12 +1,12 @@
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import Navbar from '../../components/app/Navbar'; 
-import HomePage from '../home/HomePage';
-import NewsPage from '../news/NewsPage'; 
-import ProfilePage from '../profile/ProfilePage'; // Üye girişi için bunu kullanacağız
-import AboutPage from '../about/AboutPage';
-import QuizPage from '../quiz/QuizPage';
-import MovieDetailsPage from '../movies/MovieDetailsPage';
-import MoviesPage from '../movies/MoviesPage'; 
+import { HashRouter as Router, Routes, Route } from 'react-router-dom'; // BrowserRouter yerine HashRouter
+import Navbar from './components/app/Navbar'; // Yollarını kendine göre kontrol et moruk
+import HomePage from './pages/home/HomePage';
+import NewsPage from './pages/news/NewsPage'; 
+import ProfilePage from './pages/profile/ProfilePage';
+import AboutPage from './pages/about/AboutPage';
+import QuizPage from './pages/quiz/QuizPage';
+import MovieDetailsPage from './pages/movies/MovieDetailsPage';
+import MoviesPage from './pages/movies/MoviesPage'; 
 
 function App() {
   return (
@@ -20,9 +20,6 @@ function App() {
           <Route path="/quiz" element={<QuizPage />} />
           <Route path="/movie/:id" element={<MovieDetailsPage />} />
           <Route path="/movies" element={<MoviesPage />} />
-          
-          {/* ÜYE GİRİŞİ İÇİN YOL EKLENDİ */}
-          {/* Şu an login sayfan olmadığı için profil sayfasına yönlendiriyoruz */}
           <Route path="/login" element={<ProfilePage />} />
           <Route path="/profile" element={<ProfilePage />} />
         </Routes>
