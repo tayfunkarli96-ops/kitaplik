@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 
-// --- 🎬 DEV SİBER ARŞİV (15 FİLM) ---
-// Hoca baksın da gözü gönlü açılsın moruk.
-export const moviesData = [
+// --- 🎬 YENİ VE DEV LİSTE (15 FİLM) ---
+// İsmini 'yeniFilmler' yaptım ki eskisiyle karışmasın moruk.
+const yeniFilmler = [
   { id: '1', title: "Fight Club", director: "David Fincher", year: "1999", genres: "Drama", imdb: "8.8", poster: "https://image.tmdb.org/t/p/w500/pB8BM7pdSp6B6Ih7QZ4DrQ3PmJK.jpg" },
   { id: '2', title: "Inception", director: "Christopher Nolan", year: "2010", genres: "Sci-Fi", imdb: "8.8", poster: "https://image.tmdb.org/t/p/w500/edv5bs1pUeeS0S1Ym6Q6o1pD9v5.jpg" },
   { id: '3', title: "The Matrix", director: "Wachowskis", year: "1999", genres: "Sci-Fi", imdb: "8.7", poster: "https://image.tmdb.org/t/p/w500/f89U3w7n4YAnChtv0bInB662NUE.jpg" },
@@ -24,15 +24,16 @@ export const moviesData = [
 const MoviesPage = () => {
   const [searchTerm, setSearchTerm] = useState("");
 
-  const filteredMovies = moviesData.filter((m) =>
+  // 🔍 Arama filtresi (yeniFilmler üzerinden çalışıyor)
+  const filteredMovies = yeniFilmler.filter((m) =>
     m.title.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   return (
-    <div style={{ backgroundColor: '#05050a', minHeight: '100vh', color: '#fff', padding: '100px 20px', fontFamily: 'sans-serif' }}>
+    <div style={{ backgroundColor: '#05050a', minHeight: '100vh', color: '#fff', padding: '100px 20px' }}>
       <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
         
-        {/* 🔍 image_1.png'deki Neon Mavi Arama Çubuğu */}
+        {/* 🌟 image_1.png'deki Neon Mavi Arama Çubuğu 🌟 */}
         <div style={{ 
           border: '2px solid #00f3ff', borderRadius: '12px', padding: '20px', 
           display: 'flex', gap: '15px', alignItems: 'center', marginBottom: '40px',
@@ -46,12 +47,9 @@ const MoviesPage = () => {
             onChange={(e) => setSearchTerm(e.target.value)}
             style={{ 
               flex: 1, background: 'transparent', border: '1px solid #00f3ff', 
-              color: '#fff', padding: '12px', borderRadius: '8px', outline: 'none',
-              minWidth: '200px'
+              color: '#fff', padding: '12px', borderRadius: '8px', outline: 'none'
             }}
           />
-          <div style={{ border: '1px solid #333', padding: '10px', borderRadius: '8px', color: '#888', fontSize: '12px' }}>Tür</div>
-          <div style={{ border: '1px solid #333', padding: '10px', borderRadius: '8px', color: '#888', fontSize: '12px' }}>Yıl</div>
           <button style={{ 
             backgroundColor: '#ff00ff', color: '#fff', border: 'none', 
             padding: '12px 30px', borderRadius: '25px', fontWeight: 'bold', 
@@ -59,31 +57,17 @@ const MoviesPage = () => {
           }}>Search</button>
         </div>
 
-        {/* 🎬 Film Sayacı */}
-        <p style={{ color: '#00f3ff', marginBottom: '20px', fontWeight: 'bold' }}>
-          {filteredMovies.length} film bulundu.
-        </p>
-
-        {/* 🎬 Film Listesi Grid (Responsive) */}
-        <div style={{ 
-          display: 'grid', 
-          gridTemplateColumns: 'repeat(auto-fill, minmax(220px, 1fr))', 
-          gap: '25px' 
-        }}>
+        {/* 🎬 Film Gridi */}
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(220px, 1fr))', gap: '25px' }}>
           {filteredMovies.map((movie) => (
-            <Link to={`/movie/${movie.id}`} key={movie.id} style={{ textDecoration: 'none' }}>
-              <div style={{ 
-                border: '1px solid #222', borderRadius: '12px', overflow: 'hidden', 
-                background: '#0a0a15', transition: '0.3s', position: 'relative'
-              }}>
-                <img src={movie.poster} alt={movie.title} style={{ width: '100%', height: '320px', objectFit: 'cover' }} />
-                <div style={{ padding: '15px' }}>
-                  <h3 style={{ color: '#fff', margin: '0 0 8px 0', fontSize: '18px' }}>{movie.title}</h3>
-                  <p style={{ color: '#666', fontSize: '13px', margin: 0 }}>{movie.year} • {movie.genres}</p>
-                  <div style={{ marginTop: '10px', color: '#f5c518', fontWeight: 'bold', fontSize: '14px' }}>⭐ {movie.imdb}</div>
-                </div>
+            <div key={movie.id} style={{ border: '1px solid #222', borderRadius: '12px', overflow: 'hidden', background: '#0a0a15' }}>
+              <img src={movie.poster} alt={movie.title} style={{ width: '100%', height: '320px', objectFit: 'cover' }} />
+              <div style={{ padding: '15px' }}>
+                <h3 style={{ color: '#fff', margin: '0', fontSize: '18px' }}>{movie.title}</h3>
+                <p style={{ color: '#666', fontSize: '13px' }}>{movie.year} • {movie.genres}</p>
+                <div style={{ color: '#f5c518', fontWeight: 'bold' }}>⭐ {movie.imdb}</div>
               </div>
-            </Link>
+            </div>
           ))}
         </div>
 
