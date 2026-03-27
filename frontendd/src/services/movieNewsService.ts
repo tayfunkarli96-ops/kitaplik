@@ -59,7 +59,7 @@ const GET_MOVIES_PAGE_QUERY = gql`
         id
         name
       }
-      cast(limit: 3) { # Fetch a few actors
+      cast(limit: 3) {
         person {
           id
           name
@@ -67,7 +67,7 @@ const GET_MOVIES_PAGE_QUERY = gql`
         }
         character_name
       }
-      crew(limit: 3) { # Fetch a few crew members, filter for directors later
+      crew(limit: 3) {
         person {
           id
           name
@@ -82,16 +82,16 @@ const GET_MOVIES_PAGE_QUERY = gql`
 
 const GET_MOVIES_PAGE_COUNT_QUERY = gql`
   query GetMoviesPageCount($filter: MovieFilterInput, $search: String) {
-    movieCount(filter: $filter, search: $search) # Matches backend query
+    movieCount(filter: $filter, search: $search)
   }
 `;
 
 const GET_ALL_GENRES_QUERY = gql`
   query GetAllGenres {
-    genres(limit: 100, isCollection: false) { # Fetching non-collection genres
+    genres(limit: 100, isCollection: false) {
       id
       name
-      slug # slug is available on backend Genre type
+      slug
     }
   }
 `;
@@ -107,14 +107,178 @@ const GET_RANDOM_MOVIES = gql`
       poster_url
       duration_minutes
       movieq_rating
-      genres { # Assuming MovieCard4 needs genres
+      genres {
         id
         name
       }
-      # Add any other fields from backend Movie type that MovieCard4 might need
     }
   }
 `;
 
 const GET_RECOMMENDATION_SECTIONS = gql`
-  query GetPublicRecommendationSections
+  query GetPublicRecommendationSections($activeOnly: Boolean, $limitSections: Int, $offsetSections: Int, $limitMoviesPerSection: Int) {
+    publicRecommendationSections(activeOnly: $activeOnly, limit: $limitSections, offset: $offsetSections) {
+      id
+      title
+      section_type
+      description
+      movies(limit: $limitMoviesPerSection) {
+        id
+        title
+        release_date
+        poster_url
+        movieq_rating
+        genres { id name } 
+      }
+    }
+  }
+`;
+
+// Types
+export interface Movie {
+  id: string;
+  title: string;
+  release_date: string | null;
+  plot_summary: string | null;
+  poster_url: string | null;
+  duration_minutes: number | null;
+  movieq_rating: number | null;
+  imdb_rating: number | null;
+  genres: { id: string; name: string }[] | null;
+  cast?: { person: { id: string; name: string; slug?: string | null; }; character_name: string | null; }[] | null;
+  crew?: { person: { id: string; name: string; slug?: string | null; }; job: string | null; department: string | null; }[] | null;
+  published_at: string | null;
+}
+
+export interface NewsItem {
+  id: string;
+  title: string;
+  short_content: string | null;
+  image_url: string | null;
+  published_at: string | null;
+}
+
+export interface NewsArticleDetail extends NewsItem {
+  content: string;
+  author?: {
+    id: string;
+    username: string;
+  } | null;
+  movies?: Movie[];
+}
+
+export interface Genre {
+  id: string;
+  name: string;
+  slug: string;
+}
+
+export interface MoviesPageParams {
+  filter?: any;
+  sortBy?: string;
+  search?: string;
+  limit?: number;
+  offset?: number;
+}
+
+export interface PublicRecommendationSection {
+  id: string;
+  title: string;
+  section_type: string;
+  description: string | null;
+  movies: Movie[];
+}
+
+// Service functions
+export const getMovies = async (): Promise<Movie[]> => {
+  const { data, errors } = await client.query<{ movies: Movie[] }>({
+    query: GET_MOVIES,
+    fetchPolicy: 'network-only',
+  });
+  if (errors) throw new Error(errors.map(e => e.message).join('\n'));
+  return data.movies;
+};
+
+export const getNews = async (limit?: number): Promise<NewsItem[]> => {
+  const { data, errors } = await client.query<{ newsArticles: NewsItem[] }>({
+    query: GET_NEWS,
+    variables: { limit },
+    fetchPolicy: 'network-only',
+  });
+  if (errors) {
+    console.error('GraphQL Errors fetching news:', errors);
+    throw new Error(errors.map(e => e.message).join('\n'));
+  }
+  return data.newsArticles;
+};
+
+export const getMoviesForPage = async (params: MoviesPageParams): Promise<Movie[]> => {
+  const { data, errors } = await client.query<{ movies: Movie[] }>({
+    query: GET_MOVIES_PAGE_QUERY,
+    variables: params,
+    fetchPolicy: 'network-only',
+  });
+  if (errors) {
+    console.error('GraphQL Errors fetching movies for page:', errors);
+    throw new Error(errors.map(e => e.message).join('\n'));
+  }
+  return data.movies || [];
+};
+
+export const getMoviesPageCount = async (params: { filter?: any; search?: string }): Promise<number> => {
+  const { data, errors } = await client.query<{ movieCount: number }>({
+    query: GET_MOVIES_PAGE_COUNT_QUERY,
+    variables: params,
+    fetchPolicy: 'network-only',
+  });
+  if (errors) {
+    console.error('GraphQL Errors fetching movies page count:', errors);
+    throw new Error(errors.map(e => e.message).join('\n'));
+  }
+  return data.movieCount || 0;
+};
+
+export const getAllGenres = async (): Promise<Genre[]> => {
+  const { data, errors } = await client.query<{ genres: Genre[] }>({
+    query: GET_ALL_GENRES_QUERY,
+    fetchPolicy: 'cache-first',
+  });
+  if (errors) {
+    console.error('GraphQL Errors fetching all genres:', errors);
+    throw new Error(errors.map(e => e.message).join('\n'));
+  }
+  return data.genres || [];
+};
+
+export const getRandomMoviesForRecPage = async (limit: number = 18): Promise<Movie[]> => {
+  try {
+    const { data, errors } = await client.query<{ randomMovies: Movie[] }>({
+      query: GET_RANDOM_MOVIES,
+      variables: { limit },
+      fetchPolicy: 'network-only',
+    });
+    if (errors) {
+      console.error('GraphQL Errors fetching random movies:', errors);
+      throw new Error(errors.map(e => e.message).join('\n'));
+    }
+    return data.randomMovies || [];
+  } catch (error) {
+    console.error('Error in getRandomMoviesForRecPage service:', error);
+    throw error;
+  }
+};
+
+export const getRecommendationSections = async (
+  activeOnly: boolean = true,
+  limitSections: number = 10,
+  offsetSections: number = 0,
+  limitMoviesPerSection: number = 6
+): Promise<PublicRecommendationSection[]> => {
+  try {
+    const { data, errors } = await client.query<{ publicRecommendationSections: PublicRecommendationSection[] }>({
+      query: GET_RECOMMENDATION_SECTIONS,
+      variables: { activeOnly, limitSections, offsetSections, limitMoviesPerSection },
+      fetchPolicy: 'network-only',
+    });
+    if (errors) {
+      console.
