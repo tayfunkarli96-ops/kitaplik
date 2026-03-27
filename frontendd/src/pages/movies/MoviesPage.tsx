@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 
-// --- 🎬 DEV SİBER ARŞİV (TAM 15 FİLM) ---
-const devArsiv = [
+// --- 🎬 EFSANE 15 FİLM LİSTESİ (İSMİ DEĞİŞTİ: tayfununArsivi) ---
+const tayfununArsivi = [
   { id: '1', title: "Fight Club", director: "David Fincher", year: "1999", genres: "Drama", imdb: "8.8", poster: "https://image.tmdb.org/t/p/w500/pB8BM7pdSp6B6Ih7QZ4DrQ3PmJK.jpg" },
   { id: '2', title: "Inception", director: "Christopher Nolan", year: "2010", genres: "Sci-Fi", imdb: "8.8", poster: "https://image.tmdb.org/t/p/w500/edv5bs1pUeeS0S1Ym6Q6o1pD9v5.jpg" },
   { id: '3', title: "The Matrix", director: "Wachowskis", year: "1999", genres: "Sci-Fi", imdb: "8.7", poster: "https://image.tmdb.org/t/p/w500/f89U3w7n4YAnChtv0bInB662NUE.jpg" },
@@ -21,56 +21,56 @@ const devArsiv = [
 ];
 
 const MoviesPage = () => {
-  const [searchTerm, setSearchTerm] = useState("");
+  const [aramaKelimesi, setAramaKelimesi] = useState("");
 
-  // Arama filtresi
-  const filteredMovies = devArsiv.filter((m) =>
-    m.title.toLowerCase().includes(searchTerm.toLowerCase())
+  // Arama filtresi (Hatasız ve dinamik rakamlı)
+  const filtrelenmisFilmler = tayfununArsivi.filter((m) =>
+    m.title.toLowerCase().includes(aramaKelimesi.toLowerCase())
   );
 
   return (
     <div style={{ backgroundColor: '#05050a', minHeight: '100vh', color: '#fff', padding: '100px 30px', fontFamily: 'sans-serif' }}>
       <style>{`
-        .neon-box-cyan { border: 2px solid #00f3ff; border-radius: 12px; background: rgba(0, 15, 25, 0.7); box-shadow: 0 0 15px #00f3ff; }
-        .neon-box-pink { border: 2px solid #ff00ff; border-radius: 12px; background: rgba(25, 0, 15, 0.7); box-shadow: 0 0 15px #ff00ff; }
-        .btn-search { background: #ff00ff; color: #fff; border: none; padding: 10px 30px; border-radius: 20px; font-weight: bold; cursor: pointer; }
+        .cyber-box-cyan { border: 2px solid #00f3ff; border-radius: 12px; background: rgba(0, 15, 25, 0.7); box-shadow: 0 0 15px #00f3ff; }
+        .cyber-box-pink { border: 2px solid #ff00ff; border-radius: 12px; background: rgba(25, 0, 15, 0.7); box-shadow: 0 0 15px #ff00ff; }
       `}</style>
 
       <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
         
-        {/* 🔍 ARAMA ÇUBUĞU (Ekran görüntündeki tasarım) */}
-        <div className="neon-box-cyan" style={{ padding: '20px', display: 'flex', gap: '15px', alignItems: 'center', marginBottom: '30px' }}>
+        {/* 🔍 YENİLENMİŞ ARAMA ÇUBUĞU */}
+        <div className="cyber-box-cyan" style={{ padding: '20px', display: 'flex', gap: '15px', alignItems: 'center', marginBottom: '30px' }}>
           <input 
             type="text" 
-            placeholder="Film Adı Ara..." 
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
+            placeholder="Film Adı Ara (Şov Zamanı Moruk)..." 
+            value={aramaKelimesi}
+            onChange={(e) => setAramaKelimesi(e.target.value)}
             style={{ flex: 1, background: 'transparent', border: '1px solid #333', color: '#fff', padding: '12px', borderRadius: '20px', outline: 'none' }}
           />
-          <button className="btn-search">Search</button>
+          <button style={{ background: '#ff00ff', color: '#fff', border: 'none', padding: '10px 30px', borderRadius: '20px', fontWeight: 'bold', cursor: 'pointer' }}>Search</button>
         </div>
 
         <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr', gap: '30px' }}>
           
           {/* SOL: FİLM LİSTESİ */}
           <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
-            {filteredMovies.map((movie, index) => (
-              <div key={movie.id} className={index % 2 === 0 ? "neon-box-pink" : "neon-box-cyan"} style={{ display: 'flex', padding: '15px', gap: '20px', alignItems: 'center' }}>
-                <img src={movie.poster} alt={movie.title} style={{ width: '100px', height: '140px', objectFit: 'cover', borderRadius: '8px' }} />
+            {filtrelenmisFilmler.map((f, i) => (
+              <div key={f.id} className={i % 2 === 0 ? "cyber-box-pink" : "cyber-box-cyan"} style={{ display: 'flex', padding: '15px', gap: '20px', alignItems: 'center' }}>
+                <img src={f.poster} alt={f.title} style={{ width: '100px', height: '140px', objectFit: 'cover', borderRadius: '8px' }} />
                 <div>
-                  <h2 style={{ margin: '0 0 10px 0', fontSize: '24px' }}>{movie.title}</h2>
-                  <p style={{ color: '#aaa', margin: 0 }}>Yönetmen: {movie.director} | Yıl: {movie.year}</p>
+                  <h2 style={{ margin: '0 0 10px 0', fontSize: '24px' }}>{f.title}</h2>
+                  <p style={{ color: '#aaa', margin: 0 }}>Yönetmen: {f.director} | Yıl: {f.year}</p>
                 </div>
               </div>
             ))}
           </div>
 
-          {/* SAĞ: STATS KUTUSU (Rakam artık otomatik değişecek!) */}
-          <div className="neon-box-pink" style={{ padding: '40px', textAlign: 'center', height: 'fit-content', position: 'sticky', top: '120px' }}>
-            <h3 style={{ color: '#00f3ff', margin: '0 0 20px 0' }}>Stats</h3>
-            <div style={{ fontSize: '32px', fontWeight: 'bold' }}>
-              {filteredMovies.length} Film Bulundu
+          {/* SAĞ: STATS KUTUSU (Rakam artık 'filtrelenmisFilmler.length' ile geliyor!) */}
+          <div className="cyber-box-pink" style={{ padding: '40px', textAlign: 'center', height: 'fit-content', position: 'sticky', top: '120px' }}>
+            <h3 style={{ color: '#00f3ff', margin: '0 0 20px 0', fontSize: '24px' }}>Stats</h3>
+            <div style={{ fontSize: '36px', fontWeight: 'bold', color: '#fff' }}>
+              {filtrelenmisFilmler.length} Film Bulundu
             </div>
+            <p style={{ color: '#888', marginTop: '10px' }}>CornFlix Veritabanı</p>
           </div>
 
         </div>
