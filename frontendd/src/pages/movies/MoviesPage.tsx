@@ -1,7 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 
-// 12 FİLMLİK DEV ARŞİV
 export const moviesData = [
   { id: '1', title: "Fight Club", director: "David Fincher", year: "1999", runtime: "149 min", genres: "Action, Thriller", imdb: "8.8", ltb: "9.9", miq: "9.9", summary: "Uykusuzluk çeken bir ofis çalışanı ve umursamaz bir sabun üreticisi, yeraltı dövüş kulübü kurarlar.", poster: "https://m.media-amazon.com/images/M/MV5BMmEzNTkxZDYtMWJmNy00NzEwLThlODAtNWhmZWY0NWVkYTJlXkEyXkFqcGc@._V1_SX300.jpg" },
   { id: '2', title: "Spider-Man: Into the Spider-Verse", director: "Bob Persichetti", year: "2018", runtime: "117 min", genres: "Animation, Action", imdb: "8.4", ltb: "9.8", miq: "9.8", summary: "Genç Miles Morales, kendi evreninin Örümcek Adam'ı olur.", poster: "https://m.media-amazon.com/images/M/MV5BMjMwNDkxMTgzOF5BMl5BanBnXkFtZTgwNTkwNTQ3NjM@._V1_SX300.jpg" },
@@ -10,78 +9,66 @@ export const moviesData = [
   { id: '5', title: "Interstellar", director: "Christopher Nolan", year: "2014", runtime: "169 min", genres: "Adventure, Sci-Fi", imdb: "8.7", ltb: "9.7", miq: "9.7", summary: "Bir kaşif ekibi uzaydaki bir solucan deliğinden geçer.", poster: "https://m.media-amazon.com/images/M/MV5BZjdkOTU3MDktN2IxOS00OGEyLWFmMjNjYjZlY2Y3YWBiZGIL2ltYWdlXkEyXkFqcGdeQXVyMTQxNzMzNDI@._V1_SX300.jpg" },
   { id: '6', title: "The Matrix", director: "Lana Wachowski", year: "1999", runtime: "136 min", genres: "Action, Sci-Fi", imdb: "8.7", ltb: "9.6", miq: "9.8", summary: "Bir bilgisayar korsanı, gerçeğin şok edici yüzünü keşfeder.", poster: "https://m.media-amazon.com/images/M/MV5BNzQzOTk3OTAtNDQ0Zi00ZTVkLWI0MTEtMDllZjNkYzNjNTc4L2ltYWdlXkEyXkFqcGdeQXVyNjU0OTQ0OTY@._V1_SX300.jpg" },
   { id: '7', title: "Inception", director: "Christopher Nolan", year: "2010", runtime: "148 min", genres: "Action, Sci-Fi", imdb: "8.8", ltb: "9.4", miq: "9.5", summary: "Kurumsal sırları çalan bir hırsıza yeni bir görev verilir.", poster: "https://m.media-amazon.com/images/M/MV5BMjAxMzY3NjcxNF5BMl5BanBnXkFtZTcwNTI5OTM0Mw@@._V1_SX300.jpg" },
-  { id: '8', title: "Pulp Fiction", director: "Quentin Tarantino", year: "1994", runtime: "154 min", genres: "Crime, Drama", imdb: "8.9", ltb: "9.8", miq: "9.6", summary: "Suç dünyasının farklı karakterlerinin hikayeleri kesişiyor.", poster: "https://m.media-amazon.com/images/M/MV5BNGNhMDIzZTItNDJhNi00Mzc1LTgwZWEtNzFlYmEzN2QwMjc1XkEyXkFqcGdeQXVyNjU0OTQ0OTY@._V1_SX300.jpg" },
-  { id: '9', title: "Goodfellas", director: "Martin Scorsese", year: "1990", runtime: "145 min", genres: "Biography, Crime", imdb: "8.7", ltb: "9.5", miq: "9.4", summary: "Mafya içindeki yaşamın efsanevi hikayesi.", poster: "https://m.media-amazon.com/images/M/MV5BY2NkZjEzMDgtN2RjYy00YzM1LWE4OWEtN2M1MTRlNzkyZDg1XkEyXkFqcGdeQXVyNzkwMjQ5NzM@._V1_SX300.jpg" },
-  { id: '10', title: "Se7en", director: "David Fincher", year: "1995", runtime: "127 min", genres: "Crime, Mystery", imdb: "8.6", ltb: "9.3", miq: "9.4", summary: "İki dedektif zeki bir seri katilin peşine düşer.", poster: "https://m.media-amazon.com/images/M/MV5BMTkyNzA0MDYxNV5BMl5BanBnXkFtZTcwNjA2NzQwNA@@._V1_SX300.jpg" },
-  { id: '11', title: "Gladiator", director: "Ridley Scott", year: "2000", runtime: "155 min", genres: "Action, Adventure", imdb: "8.5", ltb: "9.0", miq: "9.1", summary: "Eski bir general yozlaşmış imparatordan intikam alır.", poster: "https://m.media-amazon.com/images/M/MV5BMDliMmNhNDEtODUyOS00MjNlLTgxODItNTNjYjBlNzIyNDI1XkEyXkFqcGdeQXVyNTIzOTk5OQ@@._V1_SX300.jpg" },
-  { id: '12', title: "The Shawshank Redemption", director: "Frank Darabont", year: "1994", runtime: "142 min", genres: "Drama", imdb: "9.3", ltb: "9.9", miq: "9.9", summary: "İki mahkum yıllar boyunca ortak bir dostluk kurar.", poster: "https://m.media-amazon.com/images/M/MV5BNDE3ODcxYzMtY2YzZC00NmNlLWJiNDMtZDViZWM2MzIxZDYwXkEyXkFqcGdeQXVyNjAwNDUxODI@._V1_SX300.jpg" }
+  { id: '8', title: "Pulp Fiction", director: "Quentin Tarantino", year: "1994", runtime: "154 min", genres: "Crime, Drama", imdb: "8.9", ltb: "9.8", miq: "9.6", summary: "Suç dünyasının farklı karakterlerinin hikayeleri kesişiyor.", poster: "https://m.media-amazon.com/images/M/MV5BNGNhMDIzZTItNDJhNi00Mzc1LTgwZWEtNzFlYmEzN2QwMjc1XkEyXkFqcGdeQXVyNjU0OTQ0OTY@._V1_SX300.jpg" }
 ];
 
 const MoviesPage = () => {
   return (
-    <div className="bg-[#0f0f0f] min-h-screen text-white pt-24 pb-10 px-4 md:px-10 font-sans">
+    <div style={{ backgroundColor: '#0f0f0f', minHeight: '100vh', color: 'white', padding: '100px 40px', fontFamily: 'sans-serif' }}>
       
-      {/* ÜST FİLTRELEME ÇUBUĞU (Birebir Fotoğraftaki Gibi) */}
-      <div className="max-w-5xl mx-auto bg-[#1a1a1a] border border-[#2a2a2a] p-3 rounded-lg flex flex-wrap gap-3 items-center mb-6">
-        <input type="text" placeholder="Başlığa göre ara..." className="bg-[#0f0f0f] border border-[#333] p-2.5 rounded text-sm flex-1 min-w-[150px] outline-none focus:border-[#00e676] text-gray-200" />
+      {/* ÜST FİLTRELEME ÇUBUĞU (Kendi iç stiliyle, bozulmaz) */}
+      <div style={{ maxWidth: '1000px', margin: '0 auto 40px auto', backgroundColor: '#1a1a1a', border: '1px solid #2a2a2a', padding: '15px', borderRadius: '10px', display: 'flex', flexWrap: 'wrap', gap: '15px', alignItems: 'center' }}>
+        <input type="text" placeholder="Başlığa göre ara..." style={{ backgroundColor: '#0f0f0f', border: '1px solid #333', padding: '10px', borderRadius: '5px', color: 'white', flex: '1', minWidth: '150px' }} />
         
-        <div className="flex items-center gap-2">
-          <span className="text-sm text-gray-400">Sırala:</span>
-          <select className="bg-[#0f0f0f] border border-[#333] p-2.5 rounded text-sm text-gray-300 outline-none w-48">
+        <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+          <span style={{ fontSize: '14px', color: '#999' }}>Sırala:</span>
+          <select style={{ backgroundColor: '#0f0f0f', border: '1px solid #333', padding: '10px', borderRadius: '5px', color: '#ddd' }}>
             <option>Puan (Yüksekten Düşüğe)</option>
           </select>
         </div>
         
-        <input type="text" placeholder="Yıl (örn., 2023)" className="bg-[#0f0f0f] border border-[#333] p-2.5 rounded text-sm w-32 outline-none text-gray-200" />
-        <input type="text" placeholder="Min. Puan (1-10)" className="bg-[#0f0f0f] border border-[#333] p-2.5 rounded text-sm w-32 outline-none text-gray-200" />
+        <input type="text" placeholder="Yıl (örn., 2023)" style={{ backgroundColor: '#0f0f0f', border: '1px solid #333', padding: '10px', borderRadius: '5px', color: 'white', width: '120px' }} />
+        <input type="text" placeholder="Min. Puan" style={{ backgroundColor: '#0f0f0f', border: '1px solid #333', padding: '10px', borderRadius: '5px', color: 'white', width: '100px' }} />
         
-        <select className="bg-[#0f0f0f] border border-[#333] p-2.5 rounded text-sm text-gray-300 outline-none w-36">
+        <select style={{ backgroundColor: '#0f0f0f', border: '1px solid #333', padding: '10px', borderRadius: '5px', color: '#ddd' }}>
             <option>Tüm Türler</option>
         </select>
         
-        <button className="bg-[#00e676] hover:bg-[#00c853] text-black font-bold py-2.5 px-6 rounded text-sm transition-colors">
+        <button style={{ backgroundColor: '#00e676', border: 'none', padding: '10px 20px', borderRadius: '5px', color: 'black', fontWeight: 'bold', cursor: 'pointer' }}>
           Filtreleri Uygula
         </button>
       </div>
 
-      {/* YATAY FİLM LİSTESİ (Birebir Fotoğraftaki Gibi) */}
-      <div className="max-w-5xl mx-auto space-y-4">
+      {/* YATAY FİLM LİSTESİ (Kendi iç stiliyle, bozulmaz) */}
+      <div style={{ maxWidth: '1000px', margin: '0 auto', display: 'flex', flexDirection: 'column', gap: '20px' }}>
         {moviesData.map((movie) => (
-          <Link to={`/movie/${movie.id}`} key={movie.id} className="block group">
-            <div className="flex bg-[#121212] border border-[#222] rounded-xl overflow-hidden hover:bg-[#1a1a1a] transition-all">
+          <Link to={`/movie/${movie.id}`} key={movie.id} style={{ textDecoration: 'none', color: 'inherit', display: 'block' }}>
+            <div style={{ display: 'flex', backgroundColor: '#141414', border: '1px solid #222', borderRadius: '10px', overflow: 'hidden', cursor: 'pointer' }}>
               
               {/* Poster */}
-              <img src={movie.poster} alt={movie.title} className="w-[120px] h-[180px] object-cover flex-shrink-0" />
+              <img src={movie.poster} alt={movie.title} style={{ width: '130px', height: '190px', objectFit: 'cover' }} />
               
               {/* İçerik */}
-              <div className="flex-1 p-5 flex flex-col justify-center relative">
+              <div style={{ padding: '25px', display: 'flex', flexDirection: 'column', justifyContent: 'center', flex: 1 }}>
                 
-                {/* Üst Kısım: Başlık ve Puan Rozetleri */}
-                <div className="flex justify-between items-start mb-4">
-                  <h2 className="text-2xl font-bold text-white tracking-wide">{movie.title}</h2>
+                {/* Üst Kısım: Başlık ve Rozetler */}
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '15px' }}>
+                  <h2 style={{ fontSize: '24px', fontWeight: 'bold', margin: '0' }}>{movie.title}</h2>
                   
-                  {/* Fotoğraftaki Birebir Renkli Rozetler */}
-                  <div className="flex gap-2 text-[10px] font-bold">
-                    <span className="bg-[#f5c518] text-black px-2 py-1 rounded">IMDb: {movie.imdb}</span>
-                    <span className="bg-[#ef4444] text-white px-2 py-1 rounded">LTB: {movie.ltb}</span>
-                    <span className="bg-[#0f172a] text-[#38bdf8] border border-[#0f172a] px-2 py-1 rounded">M iQ: {movie.miq}</span>
+                  {/* Fotoğraftaki Renkli Rozetler */}
+                  <div style={{ display: 'flex', gap: '8px', fontSize: '11px', fontWeight: 'bold' }}>
+                    <span style={{ backgroundColor: '#f5c518', color: 'black', padding: '4px 8px', borderRadius: '4px' }}>IMDb: {movie.imdb}</span>
+                    <span style={{ backgroundColor: '#ef4444', color: 'white', padding: '4px 8px', borderRadius: '4px' }}>LTB: {movie.ltb}</span>
+                    <span style={{ backgroundColor: '#0f172a', color: '#38bdf8', border: '1px solid #1e293b', padding: '4px 8px', borderRadius: '4px' }}>M iQ: {movie.miq}</span>
                   </div>
                 </div>
 
-                {/* Alt Kısım: Detaylar (Fotoğraftaki İkonlarla Birebir) */}
-                <div className="space-y-1.5 text-xs text-gray-400">
-                  <p className="flex items-center gap-2">
-                    <span className="opacity-70">🎬</span> Director: {movie.director}
-                  </p>
-                  <p className="flex items-center gap-2">
-                    <span className="opacity-70">📅</span> Year: {movie.year}
-                  </p>
-                  <p className="flex items-center gap-2">
-                    <span className="opacity-70">🕒</span> Runtime: {movie.runtime}
-                  </p>
-                  <p className="flex items-center gap-2">
-                    <span className="opacity-70">🎭</span> Genres: {movie.genres}
-                  </p>
+                {/* Alt Kısım: Detaylar */}
+                <div style={{ fontSize: '13px', color: '#999', lineHeight: '1.8' }}>
+                  <p style={{ margin: '0' }}>🎬 Director: {movie.director}</p>
+                  <p style={{ margin: '0' }}>📅 Year: {movie.year}</p>
+                  <p style={{ margin: '0' }}>🕒 Runtime: {movie.runtime}</p>
+                  <p style={{ margin: '0' }}>🎭 Genres: {movie.genres}</p>
                 </div>
 
               </div>
