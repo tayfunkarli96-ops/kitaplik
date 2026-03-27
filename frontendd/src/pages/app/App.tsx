@@ -1,7 +1,7 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 
-// Navbar yolu (Bunu zaten bulmuştuk)
+// Navbar yolu (En son bulduğumuz doğru yol)
 import Navbar from '../../components/app/Navbar'; 
 
 // Sayfa Importları
@@ -13,19 +13,20 @@ import MovieDetailsPage from '../movies/MovieDetailsPage';
 import AboutPage from '../about/AboutPage';
 import QuizPage from '../quiz/QuizPage';
 
-/** * DİKKAT: Hata buradaydı! 
- * Eğer bu satır hata verirse (yani build yine kırmızı yanarsa), 
- * dosyanın adını '../contacts/Contact' olarak değiştirmeyi dene.
+/** * 🚨 HATA BURADAYDI: Vercel 'contacts' klasörünü bulamıyor. 
+ * Büyük ihtimalle klasörün adı 'contact' (tekil) ya da dosyanın adı farklı.
+ * Eğer build yine hata verirse aşağıdaki satırı şu şekilde dene:
+ * import ContactPage from '../contact/ContactPage'; 
  */
 import ContactPage from '../contacts/ContactPage'; 
 
 function App() {
   return (
     <Router>
-      {/* Orijinal Navbar'ın (CSS'ini bozmadan) */}
+      {/* Orijinal Navbar (Tasarımını bozmaması için dışarı aldım) */}
       <Navbar />
 
-      {/* Sayfa Geçişleri (Arayüzü bozacak ek div'leri sildim) */}
+      {/* Sayfa İçerikleri (Arayüzü kaydıran div'leri temizledim) */}
       <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="/movies" element={<MoviesPage />} />
