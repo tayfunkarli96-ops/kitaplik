@@ -82,11 +82,11 @@ const Navbar = () => {
     localStorage.setItem('i18nextLng', lang.code);
   };
 
+  // HABERLER (news) BURADAN SİLİNDİ
   const navLinks = [
     { title: t('home'), path: '/' },
     { title: t('movies'), path: '/movies' },
     { title: t('recommended'), path: '/recs' },
-    { title: t('news'), path: '/news' },
     { title: t('about'), path: '/about' },
     { title: t('contacts'), path: '/contacts' },
   ];
@@ -94,10 +94,10 @@ const Navbar = () => {
   const authLinks = [{ title: t('quiz'), path: '/quiz' }];
 
   return (
-    <header className={`navbar ${isScrolled ? 'scrolled' : ''}`}>
+    <header className={`navbar ${isScrolled ? 'scrolled' : ''}`} style={{ borderBottom: '1px solid rgba(255, 0, 191, 0.3)' }}>
       <div className="navbar-container">
         
-        {/* LOGO BÖLÜMÜ - CORNFLIX TABELASI */}
+        {/* NEON LOGO BÖLÜMÜ */}
         <Link 
           to="/" 
           className="navbar-brand" 
@@ -105,22 +105,24 @@ const Navbar = () => {
           style={{ 
             fontSize: '32px',
             fontWeight: '900',
-            color: '#ffffff',
+            color: '#ff00bf', // Neon Pembe
+            textShadow: '0 0 10px #ff00bf, 0 0 20px #ff00bf',
             textDecoration: 'none', 
             letterSpacing: '1px'    
           }}
         >
-          Corn<span style={{ color: '#F5B301' }}>Flix</span>
+          Corn<span style={{ color: '#00ffff', textShadow: '0 0 10px #00ffff, 0 0 20px #00ffff' }}>Flix</span>
         </Link>
 
-        {/* ARAMA BÖLÜMÜ */}
+        {/* NEON ARAMA BÖLÜMÜ */}
         <form className="search-form" onSubmit={handleSearchSubmit}>
-          <div className="search-container">
-            <SearchIcon className="search-icon" size={20} />
+          <div className="search-container" style={{ borderRadius: '25px', border: '1px solid #00ffff', boxShadow: '0 0 10px rgba(0, 255, 255, 0.2)' }}>
+            <SearchIcon className="search-icon" size={20} style={{ color: '#00ffff' }} />
             <input
               type="text"
               placeholder={t("searchMovies")}
               className="search-input"
+              style={{ color: '#ffffff' }}
               value={searchQuery}
               onChange={handleSearchChange}
             />
@@ -128,7 +130,7 @@ const Navbar = () => {
           </div>
         </form>
 
-        <IconButton onClick={toggleMenu} className="menu-toggle dhide">
+        <IconButton onClick={toggleMenu} className="menu-toggle dhide" style={{ color: '#ff00bf' }}>
           <MenuIcon />
         </IconButton>
 
@@ -136,20 +138,25 @@ const Navbar = () => {
           <ul className="nav-links">
             {navLinks.map((link) => (
               <li key={link.title}>
-                <Link to={link.path} className="nav-link" onClick={handleLinkClick}>
+                <Link 
+                  to={link.path} 
+                  className="nav-link" 
+                  onClick={handleLinkClick}
+                  style={{ transition: '0.3s' }}
+                >
                   {link.title}
                 </Link>
               </li>
             ))}
 
             <li ref={langDropdownRef} className="language-dropdown-container">
-              <button className="language-dropdown-button" onClick={toggleLangDropdown}>
+              <button className="language-dropdown-button" onClick={toggleLangDropdown} style={{ border: '1px solid rgba(0, 255, 255, 0.3)' }}>
                 <img src={selectedLanguage.flag} alt="flag" className="flag-icon" />
-                <span>{selectedLanguage.code.toUpperCase()}</span>
-                <ChevronDown size={16} className={`dropdown-arrow ${isLangDropdownOpen ? 'open' : ''}`} />
+                <span style={{ color: '#00ffff' }}>{selectedLanguage.code.toUpperCase()}</span>
+                <ChevronDown size={16} className={`dropdown-arrow ${isLangDropdownOpen ? 'open' : ''}`} style={{ color: '#00ffff' }} />
               </button>
               {isLangDropdownOpen && (
-                <ul className="language-dropdown-menu">
+                <ul className="language-dropdown-menu" style={{ background: '#121212', border: '1px solid #ff00bf' }}>
                   {languages.map((lang) => (
                     <li key={lang.code} onClick={() => selectLanguage(lang)} className="language-option">
                       <img src={lang.flag} alt="flag" className="flag-icon" />
@@ -162,7 +169,7 @@ const Navbar = () => {
 
             {isLoggedIn && authLinks.map((link) => (
               <li key={link.title}>
-                <Link to={link.path} className="nav-link auth-link" onClick={handleLinkClick}>
+                <Link to={link.path} className="nav-link auth-link" onClick={handleLinkClick} style={{ color: '#ff00bf', textShadow: '0 0 5px #ff00bf' }}>
                   {link.title}
                 </Link>
               </li>
@@ -171,12 +178,12 @@ const Navbar = () => {
 
           <div className="auth-actions">
             {!isLoggedIn ? (
-              <Link to="/login" className="sign-in-button" onClick={handleLinkClick}>
+              <Link to="/login" className="sign-in-button" onClick={handleLinkClick} style={{ background: '#ff00bf', boxShadow: '0 0 15px #ff00bf', color: '#fff', borderRadius: '20px', padding: '8px 20px', fontWeight: 'bold' }}>
                 {t('signIn')}
               </Link>
             ) : (
               <Link to="/profile" className="profile-link" onClick={handleLinkClick}>
-                <div className="nav-profile-avatar">
+                <div className="nav-profile-avatar" style={{ border: '2px solid #00ffff', boxShadow: '0 0 10px #00ffff' }}>
                   {user?.avatar_url ? (
                       <img src={user.avatar_url} alt="avatar" className="avatar-image" />
                   ) : (
