@@ -1,7 +1,7 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 
-// DİKKAT: Yollar klasör yapına göre (../../) düzeltildi!
+// YOLLARIN BAŞINDAKİ NOKTALARA DİKKAT: Navbar için iki kat yukarı (../../) çıkıyoruz!
 import Navbar from '../../components/app/Navbar'; 
 import HomePage from '../home/HomePage';
 import NewsPage from '../news/NewsPage'; 
