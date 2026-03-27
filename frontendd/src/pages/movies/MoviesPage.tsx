@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 
-// 🎬 15 FİLMLİK MEGA LİSTE (Kodun içine mıhlandı, API'ye gitmez, 4'te kalmaz!)
-const MEGA_ARSIV = [
+// 🎬 15 FİLMLİK MEGA LİSTE (Mıh gibi çaktım buraya!)
+const FILMLER = [
   { id: '1', title: "Fight Club", director: "David Fincher", year: "1999", imdb: "8.8", poster: "https://image.tmdb.org/t/p/w500/pB8BM7pdSp6B6Ih7QZ4DrQ3PmJK.jpg" },
   { id: '2', title: "Inception", director: "Christopher Nolan", year: "2010", imdb: "8.8", poster: "https://image.tmdb.org/t/p/w500/edv5bs1pUeeS0S1Ym6Q6o1pD9v5.jpg" },
   { id: '3', title: "Lord of the Rings", director: "Peter Jackson", year: "2003", imdb: "9.0", poster: "https://image.tmdb.org/t/p/w500/rCzpDGLbOoPwLjy3OAm5NUPOTrC.jpg" },
@@ -22,10 +22,10 @@ const MEGA_ARSIV = [
 
 const MoviesPage = () => {
   const [term, setTerm] = useState("");
-  const filtered = MEGA_ARSIV.filter(m => m.title.toLowerCase().includes(term.toLowerCase()));
+  const filtered = FILMLER.filter(m => m.title.toLowerCase().includes(term.toLowerCase()));
 
   return (
-    <div style={{ background: '#05050a', minHeight: '100vh', color: '#fff', padding: '100px 20px', fontFamily: 'sans-serif' }}>
+    <div style={{ backgroundColor: '#05050a', minHeight: '100vh', color: '#fff', padding: '100px 30px', fontFamily: 'sans-serif' }}>
       <style>{`
         .neon-box-cyan { border: 2px solid #00f3ff; border-radius: 12px; background: rgba(0, 15, 25, 0.7); box-shadow: 0 0 15px #00f3ff; margin-bottom: 20px; }
         .neon-box-pink { border: 2px solid #ff00ff; border-radius: 12px; background: rgba(25, 0, 15, 0.7); box-shadow: 0 0 15px #ff00ff; margin-bottom: 20px; }
@@ -35,14 +35,13 @@ const MoviesPage = () => {
 
       <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
         
-        {/* BU BAŞLIĞI GÖRÜYORSAN KOD GÜNCEL MORUK! */}
-        <h1 style={{ color: '#00f3ff', textAlign: 'center', textShadow: '0 0 10px #00f3ff', marginBottom: '40px' }}>⚡ CORNFLIX MEGA ARŞİV ⚡</h1>
+        {/* BU BAŞLIK ÇIKMIŞSA KOD GÜNCELDİR MORUK */}
+        <h1 style={{ color: '#00f3ff', textAlign: 'center', textShadow: '0 0 10px #00f3ff', marginBottom: '40px' }}>⚡ CORNFLIX ARŞİV GÜNCELLENDİ ⚡</h1>
 
-        {/* 🔍 ARAMA ÇUBUĞU */}
-        <div className="neon-box-cyan" style={{ padding: '20px', display: 'flex', gap: '15px' }}>
+        <div className="neon-box-cyan" style={{ padding: '20px', display: 'flex', gap: '15px', marginBottom: '30px' }}>
           <input 
             type="text" 
-            placeholder="Film Ara (Şu an 15 film yüklü)..." 
+            placeholder="Film Adı Ara..." 
             className="cyber-input" 
             value={term} 
             onChange={(e) => setTerm(e.target.value)} 
@@ -55,10 +54,10 @@ const MoviesPage = () => {
           {/* SOL TARAF: FİLM KARTLARI */}
           <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
             {filtered.map((m, i) => (
-              <div key={m.id} className={i % 2 === 0 ? "neon-box-pink" : "neon-box-cyan"} style={{ display: 'flex', padding: '15px', gap: '20px', alignItems: 'center', transition: '0.3s' }}>
+              <div key={m.id} className={i % 2 === 0 ? "neon-box-pink" : "neon-box-cyan"} style={{ display: 'flex', padding: '15px', gap: '20px', alignItems: 'center' }}>
                 <img src={m.poster} alt={m.title} style={{ width: '100px', height: '140px', objectFit: 'cover', borderRadius: '8px' }} />
                 <div>
-                  <h2 style={{ margin: '0 0 10px 0', fontSize: '26px' }}>{m.title}</h2>
+                  <h2 style={{ margin: '0 0 5px 0', fontSize: '26px' }}>{m.title}</h2>
                   <p style={{ color: '#ccc', margin: 0 }}>Yönetmen: {m.director} | Yıl: {m.year}</p>
                   <div style={{ marginTop: '10px', color: '#f5c518', fontWeight: 'bold' }}>⭐ {m.imdb}</div>
                 </div>
@@ -88,8 +87,8 @@ const MoviesPage = () => {
               <h3 style={{ color: '#00f3ff', marginTop: '0', borderBottom: '1px solid #111', paddingBottom: '10px', marginBottom: '15px' }}>Son Görüşler</h3>
               <div style={{ fontSize: '14px', color: '#ccc', display: 'flex', flexDirection: 'column', gap: '12px' }}>
                 <div>👤 "Arşiv resmen uçuyor moruk, helal!"</div>
-                <div>👤 "Siberpunk tasarım çok yakışmış."</div>
-                <div>👤 "Arama motoru akıyor."</div>
+                <div>👤 "Tayfun Karlı yönetmenliği bir başka."</div>
+                <div>👤 "Arama motoru sonunda canlanmış."</div>
               </div>
             </div>
 
