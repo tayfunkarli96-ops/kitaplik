@@ -281,4 +281,54 @@ export const getRecommendationSections = async (
       fetchPolicy: 'network-only',
     });
     if (errors) {
-      console.
+      console.error('GraphQL Errors fetching recommendation sections:', errors);
+      throw new Error(errors.map(e => e.message).join('\n'));
+    }
+    return data.publicRecommendationSections || [];
+  } catch (error) {
+    console.error('Error in getRecommendationSections service:', error);
+    throw error;
+  }
+};
+
+const GET_NEWS_ARTICLE_BY_ID = gql`
+  query GetNewsArticleById($id: ID!) {
+    newsArticle(id: $id) {
+      id
+      title
+      short_content
+      content
+      image_url
+      published_at
+      updated_at
+      author {
+        id
+        username
+      }
+      movies {
+        id
+        title
+        poster_url
+      }
+    }
+  }
+`;
+
+export const getNewsArticleById = async (id: string): Promise<NewsArticleDetail | null> => {
+  const { data, errors } = await client.query<{ newsArticle: NewsArticleDetail | null }>({
+    query: GET_NEWS_ARTICLE_BY_ID,
+    variables: { id },
+    fetchPolicy: 'network-only',
+  });
+
+  if (errors) {
+    console.error(`GraphQL Errors fetching news article with ID ${id}:`, errors);
+    throw new Error(errors.map(e => e.message).join('\n'));
+  }
+  
+  if (!data || !data.newsArticle) {
+    return null; 
+  }
+
+  return data.newsArticle;
+};
