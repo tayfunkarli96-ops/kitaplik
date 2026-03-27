@@ -1,6 +1,9 @@
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
-import App from '@pages/app/App';
+
+// BURASI KRİTİK: @pages yerine direkt ./pages/app/App yazıyoruz
+import App from './pages/app/App'; 
+
 import client from './config/yeni-client';
 import { ApolloProvider } from '@apollo/client';
 import './index.css';
