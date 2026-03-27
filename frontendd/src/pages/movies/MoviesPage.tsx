@@ -1,7 +1,8 @@
-import React, { useState } from 'react'; // <-- Bu olmazsa hata verir!
-import { Link } from 'react-router-dom'; // <-- Bu olmazsa sayfa açılmaz!
+import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 
-const YENI_ARSIV = [
+// --- 🎬 15 FİLMLİK DEV LİSTE (Yönetmenler ve Sayı Güncellendi) ---
+const devListe = [
   { id: '1', title: "Fight Club", director: "David Fincher", year: "1999", genres: "Drama", imdb: "8.8", poster: "https://image.tmdb.org/t/p/w500/pB8BM7pdSp6B6Ih7QZ4DrQ3PmJK.jpg" },
   { id: '2', title: "Inception", director: "Christopher Nolan", year: "2010", genres: "Sci-Fi", imdb: "8.8", poster: "https://image.tmdb.org/t/p/w500/edv5bs1pUeeS0S1Ym6Q6o1pD9v5.jpg" },
   { id: '3', title: "The Matrix", director: "Wachowskis", year: "1999", genres: "Sci-Fi", imdb: "8.7", poster: "https://image.tmdb.org/t/p/w500/f89U3w7n4YAnChtv0bInB662NUE.jpg" },
@@ -10,7 +11,7 @@ const YENI_ARSIV = [
   { id: '6', title: "Pulp Fiction", director: "Tarantino", year: "1994", genres: "Crime", imdb: "8.9", poster: "https://image.tmdb.org/t/p/w500/fIE3lYDrK4S5I56yAAnAn5CAndY.jpg" },
   { id: '7', title: "The Godfather", director: "Coppola", year: "1972", genres: "Crime", imdb: "9.2", poster: "https://image.tmdb.org/t/p/w500/3bhb76346b96b42b6a555986b.jpg" },
   { id: '8', title: "Lord of the Rings", director: "Peter Jackson", year: "2003", genres: "Adventure", imdb: "9.0", poster: "https://image.tmdb.org/t/p/w500/rCzpDGLbOoPwLjy3OAm5NUPOTrC.jpg" },
-  { id: '9', title: "Silence of the Lambs", director: "Jonathan Demme", year: "1991", genres: "Thriller", imdb: "8.6", poster: "https://image.tmdb.org/t/p/w500/rplLJ2hPcOQmkFhTqUte0MkEaO2.jpg" },
+  { id: '9', title: "Silence of the Lambs", director: "J. Demme", year: "1991", genres: "Thriller", imdb: "8.6", poster: "https://image.tmdb.org/t/p/w500/rplLJ2hPcOQmkFhTqUte0MkEaO2.jpg" },
   { id: '10', title: "Joker", director: "Todd Phillips", year: "2019", genres: "Drama", imdb: "8.4", poster: "https://image.tmdb.org/t/p/w500/udDcl707OTZ8AnAnAnAn.jpg" },
   { id: '11', title: "Parasite", director: "Bong Joon-ho", year: "2019", genres: "Thriller", imdb: "8.5", poster: "https://image.tmdb.org/t/p/w500/7IiTTjYlkAnAn5CAndAnCAndA.jpg" },
   { id: '12', title: "Seven", director: "David Fincher", year: "1995", genres: "Mystery", imdb: "8.6", poster: "https://image.tmdb.org/t/p/w500/69AnAnAnAnAnAnAnAn.jpg" },
@@ -20,53 +21,77 @@ const YENI_ARSIV = [
 ];
 
 const MoviesPage = () => {
-  const [arama, setArama] = useState("");
+  const [term, setTerm] = useState("");
 
-  const filtrele = YENI_ARSIV.filter(f => 
-    f.title.toLowerCase().includes(arama.toLowerCase())
+  const filtrelenenler = devListe.filter(f => 
+    f.title.toLowerCase().includes(term.toLowerCase())
   );
 
   return (
-    <div style={{ backgroundColor: '#05050a', minHeight: '100vh', color: '#fff', padding: '100px 20px', fontFamily: 'sans-serif' }}>
+    <div style={{ backgroundColor: '#05050a', minHeight: '100vh', color: '#fff', padding: '100px 30px', fontFamily: 'sans-serif' }}>
+      <style>{`
+        .neon-box-cyan { border: 2px solid #00f3ff; border-radius: 12px; background: rgba(0, 15, 25, 0.7); box-shadow: 0 0 15px #00f3ff; margin-bottom: 20px; }
+        .neon-box-pink { border: 2px solid #ff00ff; border-radius: 12px; background: rgba(25, 0, 15, 0.7); box-shadow: 0 0 15px #ff00ff; margin-bottom: 20px; }
+        .btn-pink { background: #ff00ff; color: #fff; border: none; padding: 10px 30px; border-radius: 25px; font-weight: bold; cursor: pointer; }
+        .cyber-input { background: transparent; border: 1px solid #00f3ff; color: #fff; border-radius: 8px; padding: 12px; outline: none; flex: 1; }
+      `}</style>
+
       <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
-        
-        {/* ARTIK BU KUTU image_1.png'DEKİ GİBİ ŞEKİLLİ */}
-        <div style={{ 
-          border: '2px solid #00f3ff', borderRadius: '12px', padding: '20px', 
-          display: 'flex', gap: '15px', alignItems: 'center', marginBottom: '40px',
-          boxShadow: '0 0 20px #00f3ff', background: 'rgba(0,15,25,0.8)'
-        }}>
+        <h1 style={{ color: '#00f3ff', textShadow: '0 0 10px #00f3ff', marginBottom: '30px' }}>🎬 CORNFLIX MEGA ARŞİV</h1>
+
+        {/* 🔍 ARAMA ÇUBUĞU */}
+        <div className="neon-box-cyan" style={{ padding: '20px', display: 'flex', gap: '15px' }}>
           <input 
             type="text" 
-            placeholder="Film Adı Ara..." 
-            value={arama}
-            onChange={(e) => setArama(e.target.value)}
-            style={{ flex: 1, background: 'transparent', border: '1px solid #333', color: '#fff', padding: '12px', borderRadius: '20px', outline: 'none' }}
+            placeholder="Film Ara (Şu an 15 film yüklü moruk)..." 
+            className="cyber-input" 
+            value={term}
+            onChange={(e) => setTerm(e.target.value)}
           />
-          <button style={{ background: '#ff00ff', color: '#fff', border: 'none', padding: '12px 30px', borderRadius: '25px', fontWeight: 'bold', cursor: 'pointer', boxShadow: '0 0 15px #ff00ff' }}>Search</button>
+          <button className="btn-pink">SEARCH</button>
         </div>
 
         <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr', gap: '30px' }}>
-          {/* LİSTE */}
+          
+          {/* SOL: FİLMLER */}
           <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
-            {filtrele.map((m) => (
-              <div key={m.id} style={{ border: '2px solid #00f3ff', borderRadius: '12px', padding: '15px', display: 'flex', gap: '20px', alignItems: 'center', boxShadow: '0 0 10px #00f3ff' }}>
+            {filtrelenenler.map((m, i) => (
+              <div key={m.id} className={i % 2 === 0 ? "neon-box-pink" : "neon-box-cyan"} style={{ display: 'flex', padding: '15px', gap: '20px', alignItems: 'center' }}>
                 <img src={m.poster} alt={m.title} style={{ width: '100px', height: '140px', objectFit: 'cover', borderRadius: '8px' }} />
                 <div>
-                  <h2 style={{ margin: '0' }}>{m.title}</h2>
-                  <p style={{ color: '#aaa' }}>{m.year} | {m.director}</p>
+                  <h2 style={{ margin: '0 0 10px 0', fontSize: '26px', color: '#fff' }}>{m.title}</h2>
+                  <p style={{ color: '#ccc', margin: 0 }}>Yönetmen: <span style={{color: '#00f3ff'}}>{m.director}</span> | Yıl: {m.year}</p>
+                  <div style={{ marginTop: '10px', color: '#f5c518', fontWeight: 'bold' }}>⭐ {m.imdb}</div>
                 </div>
               </div>
             ))}
           </div>
 
-          {/* STATS (BURASI DİNAMİK OLDU) */}
-          <div style={{ border: '2px solid #ff00ff', borderRadius: '12px', padding: '40px', textAlign: 'center', height: 'fit-content', boxShadow: '0 0 15px #ff00ff', position: 'sticky', top: '100px' }}>
-            <h3 style={{ color: '#00f3ff' }}>Stats</h3>
-            <div style={{ fontSize: '30px', fontWeight: 'bold' }}>{filtrele.length} Film Bulundu</div>
+          {/* SAĞ: STATS VE YORUMLAR (Geri geldi!) */}
+          <div style={{ position: 'sticky', top: '100px', height: 'fit-content' }}>
+            
+            <div className="neon-box-pink" style={{ padding: '30px', textAlign: 'center' }}>
+              <h3 style={{ color: '#00f3ff', fontSize: '22px' }}>Stats</h3>
+              <div style={{ fontSize: '36px', fontWeight: 'bold' }}>{filtrelenenler.length} Film Bulundu</div>
+            </div>
+
+            <div className="neon-box-pink" style={{ padding: '30px', textAlign: 'center' }}>
+              <h3 style={{ color: '#00f3ff', fontSize: '22px' }}>Comment</h3>
+              <p style={{ fontSize: '40px' }}>💬</p>
+              <p style={{ fontWeight: 'bold' }}>23 Görüş Bildirildi</p>
+              <button className="btn-pink" style={{ width: '100%', marginTop: '15px' }}>Görüş Bildir</button>
+            </div>
+
+            <div className="neon-box-cyan" style={{ padding: '20px' }}>
+              <h3 style={{ color: '#00f3ff' }}>Son Görüşler</h3>
+              <div style={{ fontSize: '13px', color: '#ccc', fontStyle: 'italic' }}>
+                <p>👤 "Arşiv resmen uçuşa geçmiş, helal!"</p>
+                <p>👤 "Siberpunk tasarım çok yakışmış."</p>
+              </div>
+            </div>
+
           </div>
         </div>
-
       </div>
     </div>
   );
