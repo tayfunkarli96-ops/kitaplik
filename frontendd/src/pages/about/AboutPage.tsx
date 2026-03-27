@@ -1,81 +1,52 @@
-// src/pages/about/AboutPage.tsx (Güncellenmiş)
 import React from 'react';
-import './AboutPage.css'; // Stil dosyasının bağlı olduğundan emin ol
-import Footer from '@components/app/Footer';
-import { useTranslation } from 'react-i18next';
 
-const AboutPage: React.FC = () => {
-    const { t } = useTranslation();
-    return (
-        <>
-            <div className="about-page">
-                {/* Arka plan devre deseni için bir katman (opsiyonel) */}
-                <div className="background-circuitry"></div>
+const AboutPage = () => {
+  return (
+    <div className="bg-black min-h-screen text-white p-10 font-sans">
+      <div className="max-w-4xl mx-auto">
+        
+        {/* Başlık */}
+        <h1 className="text-green-500 text-5xl font-bold text-center mb-12">
+          CornFlix Hakkında
+        </h1>
 
-                <div className="about-container">
-                    {/* Logo bölümü: Gglow sınıfı ekleyelim */}
-                    <div className="about-logo-section neon-pink-header">
-                        <span className="logo-n">N</span>
-                        <span className="logo-text">CornFlix</span>
-                    </div>
+        {/* Misyonumuz */}
+        <section className="mb-10">
+          <h2 className="text-green-500 text-3xl font-bold border-b border-gray-800 pb-2 mb-4">
+            Misyonumuz
+          </h2>
+          <p className="text-gray-300 text-lg leading-relaxed">
+            CornFlix, film tutkunları için tasarlanmış kullanıcı dostu bir film inceleme platformudur. 
+            Amacımız, sinema yolculuğunuzu keşfetmenize, tartışmanıza ve düzenlemenize yardımcı olacak bir alan yaratmaktır.
+          </p>
+        </section>
 
-                    <h1 className="about-heading neon-pink-header">{t('aboutMovieQ')}</h1>
+        {/* Neler Sunuyoruz */}
+        <section className="mb-10">
+          <h2 className="text-green-500 text-3xl font-bold border-b border-gray-800 pb-2 mb-4">
+            Neler Sunuyoruz
+          </h2>
+          <ul className="list-disc list-inside space-y-2 text-gray-300 text-lg">
+            <li>Hem yeni çıkışlar hem de klasik filmler hakkında güncel kalın.</li>
+            <li>Filmleri puanlayın ve diğer kullanıcıların yorumlarını okuyun.</li>
+            <li>Kendi yorumlarınızı bırakın ve tartışmalara katılın.</li>
+            <li>Kişisel izleme listenizi oluşturun ve yönetin.</li>
+            <li>Zaten izlediğiniz filmleri işaretleyin.</li>
+            <li>Favori filmlerinizin listesini oluşturun.</li>
+            <li>En son film haberlerini ve gelişmelerini takip edin.</li>
+            <li>Gelişmiş filtreleme sistemiyle filmleri kolayca bulun.</li>
+          </ul>
+          <p className="mt-6 text-gray-400 italic">
+            Eğer bir sinema tutkunuysanız, CornFlix'i değerli ve keyifli bir araç olarak bulacağınıza inanıyoruz!
+          </p>
+        </section>
 
-                    <section className="about-section">
-                        {/* Başlıklara neon sınıfı ekleyelim */}
-                        <h2 className="neon-pink-header">{t('ourMission')}</h2>
-                        <p className="light-grey-text">{t('aboutMissionText')}</p>
-                    </section>
-
-                    <section className="about-section">
-                        <h2 className="neon-pink-header">{t('whatWeOffer')}</h2>
-                        <ul className="light-grey-text">
-                            <li>{t('aboutOffer1')}</li>
-                            <li>{t('aboutOffer2')}</li>
-                            <li>{t('aboutOffer3')}</li>
-                            <li>{t('aboutOffer4')}</li>
-                            <li>{t('aboutOffer5')}</li>
-                            <li>{t('aboutOffer6')}</li>
-                            <li>{t('aboutOffer7')}</li>
-                            <li>{t('aboutOffer8')}</li>
-                        </ul>
-                        <p className="light-grey-text">{t('aboutEnjoyTool')}</p>
-                    </section>
-
-                    <section className="about-section">
-                        <h2 className="neon-pink-header">{t('projectDetails')}</h2>
-                        <p className="light-grey-text"><strong>{t('category')}</strong> {t('categoryValue')}</p>
-                        <p className="light-grey-text"><strong>{t('inspiredBy')}</strong> <a href="https://imdb.com" target="_blank" rel="noopener noreferrer">imdb.com</a>, <a href="https://rottentomatoes.com" target="_blank" rel="noopener noreferrer">rottentomatoes.com</a>, <a href="https://rezka.ag" target="_blank" rel="noopener noreferrer">rezka.ag</a></p>
-                        <p className="light-grey-text"><strong>{t('website')}</strong> COrnFliX.com.tr</p>
-                    </section>
-
-                    {/* Bu iki bölümü yan yana koymak için bir div açalım */}
-                    <div className="footer-columns">
-                        <section className="about-section">
-                            <h2 className="neon-pink-header">{t('createdBy')}</h2>
-                            {/* İsme neon turkuaz sınıfı ekleyelim */}
-                            <p className="neon-turquoise-name" style={{ fontSize: '24px', marginTop: '10px', fontWeight: 'bold' }}>
-                                Tayfun Karlı
-                            </p>
-                        </section>
-
-                        <section className="about-section categories-section">
-                            <h2 className="neon-pink-header">Kategoriler</h2>
-                            <ul className="light-grey-text">
-                                <li>imd.com: <a href='https://www.imd.com' target='_blank' rel='noopener noreferrer'>https://www.imd.com</a></li>
-                                <li>rottentomatoes.com: <a href='https://www.fatorn-universite' target='_blank' rel='noopener noreferrer'>https://www.fatorn-universite</a></li>
-                                <li>rottentomatoes.com: <a href='https://www.iarurcornflix/' target='_blank' rel='noopener noreferrer'>https://www.iarurcornflix/</a></li>
-                                <li>rottentomatoes.com: <a href='https://cornflwicwmiient.com/' target='_blank' rel='noopener noreferrer'>https://cornflwicwmiient.com/</a></li>
-                                <li>densuhon: <a href='#' target='_blank' rel='noopener noreferrer'>Süleyman Demirel Üniversitesi</a></li>
-                            </ul>
-                        </section>
-                    </div>
-
-                </div>
-            </div>
-            <Footer />
-        </>
-    );
-};
-
-export default AboutPage;
+        {/* Proje Detayları */}
+        <section className="mb-10">
+          <h2 className="text-green-500 text-3xl font-bold border-b border-gray-800 pb-2 mb-4">
+            Proje Detayları
+          </h2>
+          <div className="space-y-4">
+            <p><span className="font-bold text-white">Kategori:</span> Film Platformu ve Topluluğu</p>
+            <p>
+              <span className="font-bold text
