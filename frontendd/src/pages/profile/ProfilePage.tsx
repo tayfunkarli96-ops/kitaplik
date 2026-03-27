@@ -6,7 +6,7 @@ const ProfilePage = () => {
 
   const handleSave = () => {
     setMessage("Profil başarıyla güncellendi! (RE-01)");
-    setTimeout(() => setMessage(''), 3000);
+    setTimeout(() => setMessage(''), 3000); // 3 saniye sonra mesajı sil
   };
 
   return (
@@ -92,7 +92,7 @@ const ProfilePage = () => {
         .superstar-name {
           font-size: 60px;
           font-weight: bold;
-          background: linear-gradient(to r, #ec4899, #fff, #ec4899);
+          background: linear-gradient(to right, #ec4899, #fff, #ec4899);
           -webkit-background-clip: text;
           -webkit-text-fill-color: transparent;
           text-shadow: 0 0 10px rgba(236, 72, 153, 1), 0 0 20px rgba(236, 72, 153, 0.7);
