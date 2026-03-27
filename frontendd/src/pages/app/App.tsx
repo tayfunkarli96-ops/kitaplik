@@ -7,6 +7,8 @@ import AboutPage from './pages/about/AboutPage';
 import QuizPage from './pages/quiz/QuizPage';
 import MovieDetailsPage from './pages/movies/MovieDetailsPage';
 import MoviesPage from './pages/movies/MoviesPage'; 
+// --- YENİ EKLENEN KAPI ---
+import ContactsPage from './pages/contacts/ContactsPage'; 
 
 function App() {
   return (
@@ -22,6 +24,8 @@ function App() {
           <Route path="/movies" element={<MoviesPage />} />
           <Route path="/login" element={<ProfilePage />} />
           <Route path="/profile" element={<ProfilePage />} />
+          {/* --- İŞTE BU KADAR, SİSTEMİ BOZMAZ --- */}
+          <Route path="/contacts" element={<ContactsPage />} />
         </Routes>
       </div>
     </Router>
