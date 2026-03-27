@@ -1,5 +1,5 @@
 import { gql } from '@apollo/client';
-import client from '@src/config/apolloClient';
+import client from '@src/config/yeni-client';
 
 // Minimal Movie type for roles
 export interface MovieForRole {
@@ -205,4 +205,4 @@ export const personService = {
   getPersonDetails,
   getPersonActorRoles,
   getPersonDirectorRoles
-}; 
+};
