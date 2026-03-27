@@ -1,9 +1,7 @@
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
-
-// BURASI KRİTİK: @pages yerine direkt ./pages/app/App yazıyoruz
+// @pages yerine direkt dosya yolunu veriyoruz ki Netlify bulabilsin
 import App from './pages/app/App'; 
-
 import client from './config/yeni-client';
 import { ApolloProvider } from '@apollo/client';
 import './index.css';
