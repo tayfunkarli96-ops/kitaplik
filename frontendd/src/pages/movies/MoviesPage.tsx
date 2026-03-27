@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-const ARSIV = [
+const MEGA_ARSIV = [
   { id: '1', title: "Fight Club", director: "David Fincher", year: "1999", imdb: "8.8", poster: "https://image.tmdb.org/t/p/w500/pB8BM7pdSp6B6Ih7QZ4DrQ3PmJK.jpg" },
   { id: '2', title: "Inception", director: "Christopher Nolan", year: "2010", imdb: "8.8", poster: "https://image.tmdb.org/t/p/w500/edv5bs1pUeeS0S1Ym6Q6o1pD9v5.jpg" },
   { id: '3', title: "Lord of the Rings", director: "Peter Jackson", year: "2003", imdb: "9.0", poster: "https://image.tmdb.org/t/p/w500/rCzpDGLbOoPwLjy3OAm5NUPOTrC.jpg" },
@@ -20,33 +20,61 @@ const ARSIV = [
 
 export default function MoviesPage() {
   const [ara, setAra] = useState("");
-  const sonuclar = ARSIV.filter(m => m.title.toLowerCase().includes(ara.toLowerCase()));
+  const sonuclar = MEGA_ARSIV.filter(m => m.title.toLowerCase().includes(ara.toLowerCase()));
 
   return (
-    <div style={{ background: '#05050a', minHeight: '100vh', color: '#fff', padding: '100px 20px' }}>
+    <div style={{ background: '#05050a', minHeight: '100vh', color: '#fff', padding: '100px 20px', fontFamily: 'sans-serif' }}>
       <style>{`
-        .box-cyan { border: 2px solid #00f3ff; border-radius: 12px; background: rgba(0, 15, 25, 0.7); box-shadow: 0 0 15px #00f3ff; margin-bottom: 20px; padding: 20px; }
-        .box-pink { border: 2px solid #ff00ff; border-radius: 12px; background: rgba(25, 0, 15, 0.7); box-shadow: 0 0 15px #ff00ff; margin-bottom: 20px; padding: 20px; }
-        .inp { background: #111; border: 1px solid #00f3ff; color: #fff; border-radius: 20px; padding: 12px; width: 100%; outline: none; margin-bottom: 20px; }
-        .btn-pink { background: #ff00ff; color: #fff; border: none; padding: 10px 30px; border-radius: 20px; font-weight: bold; cursor: pointer; }
+        .neon-mavi { border: 2px solid #00f3ff; border-radius: 12px; background: rgba(0, 15, 25, 0.7); box-shadow: 0 0 15px #00f3ff; margin-bottom: 20px; padding: 20px; }
+        .neon-pembe { border: 2px solid #ff00ff; border-radius: 12px; background: rgba(25, 0, 15, 0.7); box-shadow: 0 0 15px #ff00ff; margin-bottom: 20px; padding: 20px; }
+        .inp-cyber { background: transparent; border: 1px solid #00f3ff; color: #fff; border-radius: 25px; padding: 12px 20px; width: 100%; outline: none; margin-bottom: 30px; }
+        .btn-pembe { background: #ff00ff; color: #fff; border: none; padding: 12px 30px; border-radius: 25px; font-weight: bold; cursor: pointer; width: 100%; box-shadow: 0 0 10px #ff00ff; }
       `}</style>
+
       <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
-        <h1 style={{ textAlign: 'center', color: '#00f3ff', textShadow: '0 0 10px #00f3ff' }}>MEGA ARŞİV V5</h1>
-        <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr', gap: '30px' }}>
+        <h1 style={{ textAlign: 'center', color: '#00f3ff', textShadow: '0 0 10px #00f3ff', marginBottom: '40px' }}>🎬 CORNFLIX MEGA ARŞİV</h1>
+        
+        <div style={{ display: 'grid', gridTemplateColumns: '2.5fr 1fr', gap: '30px' }}>
+          
+          {/* SOL: FİLMLER */}
           <div>
-            <input className="inp" placeholder="Film Ara..." value={ara} onChange={(e) => setAra(e.target.value)} />
+            <input className="inp-cyber" placeholder="Film Ara..." value={ara} onChange={(e) => setAra(e.target.value)} />
             {sonuclar.map((m, i) => (
-              <div key={m.id} className={i % 2 === 0 ? "box-pink" : "box-cyan"} style={{ display: 'flex', gap: '20px', alignItems: 'center' }}>
-                <img src={m.poster} style={{ width: '80px', borderRadius: '8px' }} alt="" />
-                <div><h2>{m.title}</h2><p>{m.director} | {m.year}</p><b>⭐ {m.imdb}</b></div>
+              <div key={m.id} className={i % 2 === 0 ? "neon-pembe" : "neon-mavi"} style={{ display: 'flex', gap: '20px', alignItems: 'center' }}>
+                <img src={m.poster} style={{ width: '100px', height: '140px', objectFit: 'cover', borderRadius: '10px' }} alt={m.title} />
+                <div>
+                  <h2 style={{ margin: 0 }}>{m.title}</h2>
+                  <p style={{ color: '#ccc' }}>{m.director} | {m.year}</p>
+                  <b style={{ color: '#f5c518' }}>⭐ {m.imdb}</b>
+                </div>
               </div>
             ))}
           </div>
-          <div>
-            <div className="box-pink" style={{ textAlign: 'center' }}><h3>Stats</h3><p style={{ fontSize: '24px' }}>{sonuclar.length} Film</p></div>
-            <div className="box-pink" style={{ textAlign: 'center' }}><h3>Comment</h3><p style={{ fontSize: '40px' }}>💬</p><button className="btn-pink">Görüş Bildir</button></div>
-            <div className="box-cyan"><h3>Son Görüşler</h3><p style={{ fontSize: '13px' }}>👤 "Arşiv uçuyor!"</p></div>
+
+          {/* SAĞ: DASHBOARD (İŞTE BURADALAR!) */}
+          <div style={{ position: 'sticky', top: '100px', height: 'fit-content' }}>
+            <div className="neon-pembe" style={{ textAlign: 'center' }}>
+              <h3 style={{ color: '#00f3ff', marginTop: 0 }}>Stats</h3>
+              <div style={{ fontSize: '32px', fontWeight: 'bold' }}>{sonuclar.length} Film Aktif</div>
+            </div>
+
+            <div className="neon-pembe" style={{ textAlign: 'center' }}>
+              <h3 style={{ color: '#00f3ff', marginTop: 0 }}>Comment</h3>
+              <div style={{ fontSize: '50px' }}>💬</div>
+              <p style={{ fontWeight: 'bold' }}>23 Görüş Bildirildi</p>
+              <button className="btn-pembe">Görüş Bildir</button>
+            </div>
+
+            <div className="neon-mavi">
+              <h3 style={{ color: '#00f3ff', marginTop: 0 }}>Son Görüşler</h3>
+              <div style={{ fontSize: '14px', color: '#ccc', lineHeight: '1.6' }}>
+                <p>👤 "Arşiv resmen uçuyor moruk!"</p>
+                <p>👤 "Siberpunk tasarım akıyor."</p>
+                <p>👤 "Tayfun Karlı her yerde!"</p>
+              </div>
+            </div>
           </div>
+
         </div>
       </div>
     </div>
