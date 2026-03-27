@@ -32,10 +32,13 @@ const Navbar = () => {
         CornFlix
       </Link>
 
-      {/* TERTEMİZ MENÜ LİNKLERİ (Sadece çalışanlar kaldı) */}
+      {/* TÜM MENÜ LİNKLERİ GERİ GELDİ */}
       <div style={{ display: 'flex', gap: '30px', alignItems: 'center' }}>
         <Link to="/" style={linkStyle}>🏠 Ana Sayfa</Link>
         <Link to="/movies" style={linkStyle}>🎬 Filmler Arşivi</Link>
+        <Link to="/news" style={linkStyle}>📰 Haberler</Link>
+        <Link to="/about" style={linkStyle}>ℹ️ Hakkında</Link>
+        <Link to="/contact" style={linkStyle}>📞 İletişim</Link>
       </div>
 
       {/* GİRİŞ YAP BUTONU */}
@@ -60,11 +63,11 @@ const Navbar = () => {
 const linkStyle = {
   color: '#e2e8f0',
   textDecoration: 'none',
-  fontSize: '16px',
+  fontSize: '15px',
   fontWeight: '500',
   display: 'flex',
   alignItems: 'center',
-  gap: '8px',
+  gap: '6px',
   transition: 'color 0.3s',
   textShadow: '0 0 5px rgba(255,255,255,0.2)'
 };
