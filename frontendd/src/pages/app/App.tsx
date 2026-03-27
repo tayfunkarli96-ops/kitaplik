@@ -1,8 +1,8 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 
-// Yolu harf harfine kontrol et: c küçük, N büyük!
-import Navbar from '../../components/Navbar'; 
+// İsmi Nav olarak güncelledik, Vercel'in inadı burada kırılacak:
+import Navbar from '../../components/Nav'; 
 
 import HomePage from '../home/HomePage';
 import MoviesPage from '../movies/MoviesPage';
@@ -14,8 +14,11 @@ function App() {
   return (
     <Router>
       <div className="flex bg-black min-h-screen">
+        {/* Sol Menü */}
         <Navbar />
-        <main className="flex-1 ml-64 p-8 text-white">
+
+        {/* Ana İçerik */}
+        <main className="flex-1 ml-64 p-8 text-white min-h-screen">
           <Routes>
             <Route path="/" element={<HomePage />} />
             <Route path="/movies" element={<MoviesPage />} />
