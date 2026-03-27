@@ -1,38 +1,46 @@
 import React from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 
 // Navbar yolu
 import Navbar from '../../components/app/Navbar'; 
 
-// Sayfa Importları
+// Ana Sayfa Importları
 import HomePage from '../home/HomePage';
-import MoviesPage from '../movies/MoviesPage';
 import NewsPage from '../news/NewsPage'; 
 import ProfilePage from '../profile/ProfilePage';
-import MovieDetailsPage from '../movies/MovieDetailsPage';
 import AboutPage from '../about/AboutPage';
 import QuizPage from '../quiz/QuizPage';
+import MovieDetailsPage from '../movies/MovieDetailsPage';
 
-// İŞTE DÜZELTİLEN SATIR: 'ContactsPage' (S harfi eklendi)
-import ContactPage from '../contacts/ContactsPage'; 
+// --- FİLM YÖNETİMİ (NESTED) IMPORTLARI ---
+import MoviesLayout from '../movies/MoviesLayout'; // Ana Düzen
+import MoviesManagement from '../movies/nested/MoviesManagement'; // Film Listesi/Yönetimi
+import AddMovie from '../movies/nested/AddMovie'; // Film Ekleme (Placeholder)
+import MoviesStats from '../movies/nested/MoviesStats'; // İstatistikler (Placeholder)
 
 function App() {
   return (
     <Router>
-      {/* Arayüzü bozan 'flex' ve 'ml-64' gibi her şeyi sildim. 
-          Senin orijinal CSS düzenin neyse site tam olarak öyle görünecek.
-      */}
+      {/* Senin orijinal Navbar'ın (CSS'ini bozmadan) */}
       <Navbar />
 
+      {/* Rotalar */}
       <Routes>
         <Route path="/" element={<HomePage />} />
-        <Route path="/movies" element={<MoviesPage />} />
         <Route path="/news" element={<NewsPage />} />
         <Route path="/profile" element={<ProfilePage />} />
         <Route path="/about" element={<AboutPage />} />
-        <Route path="/contact" element={<ContactPage />} />
         <Route path="/quiz" element={<QuizPage />} />
         <Route path="/movie/:id" element={<MovieDetailsPage />} />
+
+        {/* --- İŞTE O FORMATIN TEMELİ: İÇ İÇE ROTALAR --- */}
+        <Route path="/movies" element={<MoviesLayout />}>
+          {/* /movies yazınca doğrudan yönetime gitsin */}
+          <Route index element={<Navigate to="management" replace />} /> 
+          <Route path="management" element={<MoviesManagement />} />
+          <Route path="add" element={<AddMovie />} />
+          <Route path="stats" element={<MoviesStats />} />
+        </Route>
       </Routes>
     </Router>
   );
