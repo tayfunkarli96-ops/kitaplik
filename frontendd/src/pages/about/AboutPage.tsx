@@ -2,8 +2,8 @@ import React from 'react';
 
 const AboutPage = () => {
   return (
-    <div style={{ backgroundColor: '#05050a', minHeight: '100vh', color: 'white', padding: '120px 40px', fontFamily: 'sans-serif', textAlign: 'center' }}>
-      <div style={{ maxWidth: '800px', margin: '0 auto' }}>
+    <div style={{ backgroundColor: '#05050a', minHeight: '100vh', color: 'white', padding: '120px 40px', fontFamily: 'sans-serif' }}>
+      <div style={{ maxWidth: '800px', margin: '0 auto', textAlign: 'center' }}>
         
         <h1 style={{ color: '#00f3ff', textShadow: '0 0 10px #00f3ff', fontSize: '48px', marginBottom: '40px', fontWeight: '900' }}>
           CORNFLIX HAKKINDA
