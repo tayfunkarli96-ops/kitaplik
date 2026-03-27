@@ -1,0 +1,49 @@
+/* Genel Sayfa Ayarları */
+body {
+    background-color: #000000; /* Arka planı tamamen siyah yapar */
+    color: white;
+    font-family: 'Arial', sans-serif;
+    margin: 0;
+    padding: 20px;
+}
+
+/* Sol Menü Listesi */
+ul {
+    list-style-type: none; /* Yanlardaki noktaları kaldırır */
+    padding: 0;
+    margin-top: 30px;
+}
+
+li {
+    margin-bottom: 15px; /* Menü elemanları arasına boşluk koyar */
+}
+
+/* Linklerin Görünümü */
+li a {
+    text-decoration: none; /* Alt çizgiyi kaldırır */
+    color: #ffffff;        /* Yazıyı beyaz yapar */
+    font-size: 18px;
+    transition: 0.3s ease; /* Renk değişimi yumuşak olsun */
+}
+
+/* Üzerine gelince (Hover) yapılacaklar */
+li a:hover {
+    color: #FFC107;        /* Logondaki sarı renk */
+    padding-left: 8px;     /* Hafif yana kayma efekti */
+}
+
+/* Arama Çubuğu (Input) Düzenlemesi */
+input[type="text"] {
+    background-color: #1a1a1a; /* Koyu gri arka plan */
+    border: 1px solid #333;    /* İnce çerçeve */
+    color: white;
+    padding: 10px 15px;
+    border-radius: 25px;       /* Kenarları yuvarlar */
+    width: 200px;
+    outline: none;
+    margin-bottom: 10px;
+}
+
+input[type="text"]:focus {
+    border-color: #FFC107;     /* Tıklayınca sarı parlasın */
+}
