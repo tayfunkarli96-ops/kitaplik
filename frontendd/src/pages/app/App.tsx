@@ -1,7 +1,10 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-// BURASI ÇOK KRİTİK: Navbar ismini ve yolunu düzelttim
+
+// DİKKAT: Klasör adın küçük "components", dosya adın büyük "Navbar"
+// Eğer hata devam ederse, klasörün ilk harfini büyük yapıp dene: "../../Components/Navbar"
 import Navbar from '../../components/Navbar'; 
+
 import HomePage from '../home/HomePage';
 import MoviesPage from '../movies/MoviesPage';
 import NewsPage from '../news/NewsPage'; 
@@ -11,9 +14,12 @@ import MovieDetailsPage from '../movies/MovieDetailsPage';
 function App() {
   return (
     <Router>
-      <div className="flex bg-black min-h-screen">
+      <div className="flex bg-black min-h-screen overflow-x-hidden">
+        {/* Navbar */}
         <Navbar />
-        <main className="flex-1 ml-64 p-4 text-white">
+
+        {/* Ana İçerik Alanı */}
+        <main className="flex-1 ml-64 p-8 text-white min-h-screen">
           <Routes>
             <Route path="/" element={<HomePage />} />
             <Route path="/movies" element={<MoviesPage />} />
