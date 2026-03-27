@@ -1,12 +1,12 @@
 import { HashRouter as Router, Routes, Route } from 'react-router-dom';
-import Navbar from '../../components/app/Navbar'; 
-import HomePage from '../home/HomePage';
-import NewsPage from '../news/NewsPage'; 
-import ProfilePage from '../profile/ProfilePage';
-import AboutPage from '../about/AboutPage';
-import QuizPage from '../quiz/QuizPage';
-import MovieDetailsPage from '../movies/MovieDetailsPage';
-import MoviesPage from '../movies/MoviesPage'; 
+import Navbar from './components/app/Navbar'; 
+import HomePage from './pages/home/HomePage';
+import NewsPage from './pages/news/NewsPage'; 
+import ProfilePage from './pages/profile/ProfilePage';
+import AboutPage from './pages/about/AboutPage';
+import QuizPage from './pages/quiz/QuizPage';
+import MovieDetailsPage from './pages/movies/MovieDetailsPage';
+import MoviesPage from './pages/movies/MoviesPage'; 
 
 function App() {
   return (
