@@ -1,7 +1,7 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 
-// YOLLARIN BAŞINDAKİ NOKTALARA DİKKAT: Navbar için iki kat yukarı (../../) çıkıyoruz!
+// YOLLAR: Klasör isimlerinin büyük/küçük harf durumuna ÇOK dikkat et!
 import Navbar from '../../components/app/Navbar'; 
 import HomePage from '../home/HomePage';
 import NewsPage from '../news/NewsPage'; 
