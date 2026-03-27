@@ -1,8 +1,12 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 
-// İsmi Nav olarak güncelledik, Vercel'in inadı burada kırılacak:
-import Navbar from '../../components/Nav'; 
+/** * MORUK DİKKAT: 
+ * Eğer Navbar hala hata verirse, bu satırı silip şunu dene:
+ * import Navbar from '../../Navbar.tsx'; 
+ * (Yani Navbar belki bir klasörün içinde değil de src'nin içindedir)
+ */
+import Navbar from '../../components/Navbar.tsx'; 
 
 import HomePage from '../home/HomePage';
 import MoviesPage from '../movies/MoviesPage';
@@ -14,11 +18,8 @@ function App() {
   return (
     <Router>
       <div className="flex bg-black min-h-screen">
-        {/* Sol Menü */}
         <Navbar />
-
-        {/* Ana İçerik */}
-        <main className="flex-1 ml-64 p-8 text-white min-h-screen">
+        <main className="flex-1 ml-64 p-8 text-white">
           <Routes>
             <Route path="/" element={<HomePage />} />
             <Route path="/movies" element={<MoviesPage />} />
