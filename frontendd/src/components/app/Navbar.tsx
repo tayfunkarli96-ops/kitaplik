@@ -8,7 +8,7 @@ const Navbar = () => {
       top: 0, 
       left: 0, 
       width: '100%', 
-      backgroundColor: '#0a0a0a', 
+      backgroundColor: '#05050a', 
       borderBottom: '1px solid #222', 
       display: 'flex', 
       justifyContent: 'space-between', 
@@ -17,10 +17,10 @@ const Navbar = () => {
       zIndex: 1000, 
       fontFamily: 'sans-serif',
       boxSizing: 'border-box',
-      boxShadow: '0 4px 15px rgba(0, 0, 0, 0.5)'
+      boxShadow: '0 4px 15px rgba(0, 0, 0, 0.8)'
     }}>
       
-      {/* LOGO KISMI (Neon Pembe) */}
+      {/* LOGO */}
       <Link to="/" style={{ 
         fontSize: '28px', 
         fontWeight: '900', 
@@ -32,16 +32,13 @@ const Navbar = () => {
         CornFlix
       </Link>
 
-      {/* MENÜ LİNKLERİ */}
+      {/* TERTEMİZ MENÜ LİNKLERİ (Sadece çalışanlar kaldı) */}
       <div style={{ display: 'flex', gap: '30px', alignItems: 'center' }}>
         <Link to="/" style={linkStyle}>🏠 Ana Sayfa</Link>
-        <Link to="/movies" style={linkStyle}>🎬 Filmler</Link>
-        <Link to="/news" style={linkStyle}>📰 Haberler</Link>
-        <Link to="/profile" style={linkStyle}>👤 Profil</Link>
-        <Link to="/contact" style={linkStyle}>📞 İletişim</Link>
+        <Link to="/movies" style={linkStyle}>🎬 Filmler Arşivi</Link>
       </div>
 
-      {/* GİRİŞ YAP BUTONU (Siber Yeşil) */}
+      {/* GİRİŞ YAP BUTONU */}
       <button style={{ 
         backgroundColor: '#00e676', 
         color: 'black', 
@@ -53,23 +50,23 @@ const Navbar = () => {
         fontSize: '14px', 
         boxShadow: '0 0 12px rgba(0, 230, 118, 0.4)' 
       }}>
-        Giriş Yap
+        Üye Girişi
       </button>
 
     </nav>
   );
 };
 
-// Linklerin ortak stili (Kodu kalabalıklaştırmasın diye buraya aldım)
 const linkStyle = {
   color: '#e2e8f0',
   textDecoration: 'none',
-  fontSize: '15px',
+  fontSize: '16px',
   fontWeight: '500',
   display: 'flex',
   alignItems: 'center',
-  gap: '6px',
-  transition: 'color 0.3s'
+  gap: '8px',
+  transition: 'color 0.3s',
+  textShadow: '0 0 5px rgba(255,255,255,0.2)'
 };
 
 export default Navbar;
