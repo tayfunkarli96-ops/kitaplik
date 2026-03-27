@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom';
 export const moviesData = [
   { id: '1', title: "Fight Club", director: "David Fincher", year: "1999", runtime: "149 min", genres: "Action, Thriller", imdb: "8.8", ltb: "9.9", miq: "9.9", summary: "Uykusuzluk çeken bir ofis çalışanı ve umursamaz bir sabun üreticisi, yeraltı dövüş kulübü kurarlar.", poster: "https://m.media-amazon.com/images/M/MV5BMmEzNTkxZDYtMWJmNy00NzEwLThlODAtNWhmZWY0NWVkYTJlXkEyXkFqcGc@._V1_SX300.jpg" },
   { id: '2', title: "Spider-Man: Into the Spider-Verse", director: "Bob Persichetti", year: "2018", runtime: "117 min", genres: "Animation, Action", imdb: "8.4", ltb: "9.8", miq: "9.8", summary: "Genç Miles Morales, kendi evreninin Örümcek Adam'ı olur.", poster: "https://m.media-amazon.com/images/M/MV5BMjMwNDkxMTgzOF5BMl5BanBnXkFtZTgwNTkwNTQ3NjM@._V1_SX300.jpg" },
-  { id: '3', title: "The Lord of the Rings", director: "Peter Jackson", year: "2003", runtime: "201 min", genres: "Adventure, Drama", imdb: "9.0", ltb: "9.2", miq: "9.2", summary: "Gandalf ve Aragorn, İnsanlık Dünyası'na liderlik ederler.", poster: "https://m.media-amazon.com/images/M/MV5BMTZkN2ZlYmEtN2RjNi00Zjk5LWFhN2ItYjBkNmI1ZDFiYzBhXkEyXkFqcGc@._V1_SX300.jpg" },
+  { id: '3', title: "The Lord of the Rings: The Return of the King", director: "Peter Jackson", year: "2003", runtime: "201 min", genres: "Adventure, Drama", imdb: "9.0", ltb: "9.2", miq: "9.2", summary: "Gandalf ve Aragorn, İnsanlık Dünyası'na liderlik ederler.", poster: "https://m.media-amazon.com/images/M/MV5BMTZkN2ZlYmEtN2RjNi00Zjk5LWFhN2ItYjBkNmI1ZDFiYzBhXkEyXkFqcGc@._V1_SX300.jpg" },
   { id: '4', title: "The Dark Knight", director: "Christopher Nolan", year: "2008", runtime: "152 min", genres: "Action, Crime", imdb: "9.0", ltb: "9.5", miq: "9.5", summary: "Joker olarak bilinen tehdit, Gotham halkına kaos getirir.", poster: "https://m.media-amazon.com/images/M/MV5BMTMxNTMwODM0NF5BMl5BanBnXkFtZTcwODAyMTk2Mw@@._V1_SX300.jpg" },
   { id: '5', title: "Interstellar", director: "Christopher Nolan", year: "2014", runtime: "169 min", genres: "Adventure, Sci-Fi", imdb: "8.7", ltb: "9.7", miq: "9.7", summary: "Bir kaşif ekibi uzaydaki bir solucan deliğinden geçer.", poster: "https://m.media-amazon.com/images/M/MV5BZjdkOTU3MDktN2IxOS00OGEyLWFmMjNjYjZlY2Y3YWBiZGIL2ltYWdlXkEyXkFqcGdeQXVyMTQxNzMzNDI@._V1_SX300.jpg" },
   { id: '6', title: "The Matrix", director: "Lana Wachowski", year: "1999", runtime: "136 min", genres: "Action, Sci-Fi", imdb: "8.7", ltb: "9.6", miq: "9.8", summary: "Bir bilgisayar korsanı, gerçeğin şok edici yüzünü keşfeder.", poster: "https://m.media-amazon.com/images/M/MV5BNzQzOTk3OTAtNDQ0Zi00ZTVkLWI0MTEtMDllZjNkYzNjNTc4L2ltYWdlXkEyXkFqcGdeQXVyNjU0OTQ0OTY@._V1_SX300.jpg" },
@@ -19,44 +19,71 @@ export const moviesData = [
 
 const MoviesPage = () => {
   return (
-    <div className="bg-[#0a0a0a] min-h-screen text-white pt-24 pb-10 px-4 md:px-10">
+    <div className="bg-[#0f0f0f] min-h-screen text-white pt-24 pb-10 px-4 md:px-10 font-sans">
       
-      {/* ÜST FİLTRELEME ÇUBUĞU */}
-      <div className="max-w-6xl mx-auto bg-[#141414] border border-gray-800 p-4 rounded-xl flex flex-wrap gap-4 items-center mb-8 shadow-lg">
-        <input type="text" placeholder="Başlığa göre ara..." className="bg-black border border-gray-700 p-2 rounded text-sm flex-1 min-w-[150px] outline-none focus:border-cyan-500" />
+      {/* ÜST FİLTRELEME ÇUBUĞU (Birebir Fotoğraftaki Gibi) */}
+      <div className="max-w-5xl mx-auto bg-[#1a1a1a] border border-[#2a2a2a] p-3 rounded-lg flex flex-wrap gap-3 items-center mb-6">
+        <input type="text" placeholder="Başlığa göre ara..." className="bg-[#0f0f0f] border border-[#333] p-2.5 rounded text-sm flex-1 min-w-[150px] outline-none focus:border-[#00e676] text-gray-200" />
+        
         <div className="flex items-center gap-2">
           <span className="text-sm text-gray-400">Sırala:</span>
-          <select className="bg-black border border-gray-700 p-2 rounded text-sm text-gray-300 outline-none"><option>Puan (Yüksekten Düşüğe)</option></select>
+          <select className="bg-[#0f0f0f] border border-[#333] p-2.5 rounded text-sm text-gray-300 outline-none w-48">
+            <option>Puan (Yüksekten Düşüğe)</option>
+          </select>
         </div>
-        <input type="text" placeholder="Yıl (örn., 2023)" className="bg-black border border-gray-700 p-2 rounded text-sm w-32 outline-none" />
-        <input type="text" placeholder="Min. Puan" className="bg-black border border-gray-700 p-2 rounded text-sm w-24 outline-none" />
-        <select className="bg-black border border-gray-700 p-2 rounded text-sm text-gray-300 outline-none"><option>Tüm Türler</option></select>
         
-        <button className="bg-[#00e676] hover:bg-[#00c853] text-black font-bold py-2 px-6 rounded transition-colors text-sm shadow-[0_0_10px_rgba(0,230,118,0.4)]">
+        <input type="text" placeholder="Yıl (örn., 2023)" className="bg-[#0f0f0f] border border-[#333] p-2.5 rounded text-sm w-32 outline-none text-gray-200" />
+        <input type="text" placeholder="Min. Puan (1-10)" className="bg-[#0f0f0f] border border-[#333] p-2.5 rounded text-sm w-32 outline-none text-gray-200" />
+        
+        <select className="bg-[#0f0f0f] border border-[#333] p-2.5 rounded text-sm text-gray-300 outline-none w-36">
+            <option>Tüm Türler</option>
+        </select>
+        
+        <button className="bg-[#00e676] hover:bg-[#00c853] text-black font-bold py-2.5 px-6 rounded text-sm transition-colors">
           Filtreleri Uygula
         </button>
       </div>
 
-      {/* YATAY FİLM LİSTESİ */}
-      <div className="max-w-6xl mx-auto space-y-4">
+      {/* YATAY FİLM LİSTESİ (Birebir Fotoğraftaki Gibi) */}
+      <div className="max-w-5xl mx-auto space-y-4">
         {moviesData.map((movie) => (
           <Link to={`/movie/${movie.id}`} key={movie.id} className="block group">
-            <div className="flex bg-[#111] border border-gray-800 rounded-xl overflow-hidden hover:border-cyan-500 transition-all shadow-lg p-1">
-              <img src={movie.poster} alt={movie.title} className="w-28 h-40 object-cover flex-shrink-0" />
-              <div className="flex-1 p-5 relative">
-                <div className="flex flex-col md:flex-row justify-between items-start mb-4">
-                  <h2 className="text-2xl font-bold text-white group-hover:text-cyan-300 transition-colors">{movie.title}</h2>
-                  <div className="flex gap-2 text-[11px] font-bold mt-2 md:mt-0">
+            <div className="flex bg-[#121212] border border-[#222] rounded-xl overflow-hidden hover:bg-[#1a1a1a] transition-all">
+              
+              {/* Poster */}
+              <img src={movie.poster} alt={movie.title} className="w-[120px] h-[180px] object-cover flex-shrink-0" />
+              
+              {/* İçerik */}
+              <div className="flex-1 p-5 flex flex-col justify-center relative">
+                
+                {/* Üst Kısım: Başlık ve Puan Rozetleri */}
+                <div className="flex justify-between items-start mb-4">
+                  <h2 className="text-2xl font-bold text-white tracking-wide">{movie.title}</h2>
+                  
+                  {/* Fotoğraftaki Birebir Renkli Rozetler */}
+                  <div className="flex gap-2 text-[10px] font-bold">
                     <span className="bg-[#f5c518] text-black px-2 py-1 rounded">IMDb: {movie.imdb}</span>
                     <span className="bg-[#ef4444] text-white px-2 py-1 rounded">LTB: {movie.ltb}</span>
-                    <span className="bg-[#1e1b4b] text-cyan-400 border border-cyan-800 px-2 py-1 rounded">M iQ: {movie.miq}</span>
+                    <span className="bg-[#0f172a] text-[#38bdf8] border border-[#0f172a] px-2 py-1 rounded">M iQ: {movie.miq}</span>
                   </div>
                 </div>
-                <div className="space-y-1 text-sm text-gray-400 font-mono">
-                  <p><span className="text-gray-500">📺 Director:</span> {movie.director}</p>
-                  <p><span className="text-gray-500">📅 Year:</span> {movie.year} | <span className="text-gray-500">🕒 Runtime:</span> {movie.runtime}</p>
-                  <p><span className="text-gray-500">🎭 Genres:</span> {movie.genres}</p>
+
+                {/* Alt Kısım: Detaylar (Fotoğraftaki İkonlarla Birebir) */}
+                <div className="space-y-1.5 text-xs text-gray-400">
+                  <p className="flex items-center gap-2">
+                    <span className="opacity-70">🎬</span> Director: {movie.director}
+                  </p>
+                  <p className="flex items-center gap-2">
+                    <span className="opacity-70">📅</span> Year: {movie.year}
+                  </p>
+                  <p className="flex items-center gap-2">
+                    <span className="opacity-70">🕒</span> Runtime: {movie.runtime}
+                  </p>
+                  <p className="flex items-center gap-2">
+                    <span className="opacity-70">🎭</span> Genres: {movie.genres}
+                  </p>
                 </div>
+
               </div>
             </div>
           </Link>
