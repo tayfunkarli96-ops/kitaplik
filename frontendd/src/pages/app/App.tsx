@@ -1,10 +1,7 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 
-/** * DİKKAT: Vercel hata verirse GitHub'a girip bak:
- * 1. Eğer klasörün adı "Components" (büyük C) ise aşağıyı öyle düzelt.
- * 2. Eğer dosyanın adı "navbar.tsx" (küçük n) ise aşağıyı öyle düzelt.
- */
+// Yolu harf harfine kontrol et: c küçük, N büyük!
 import Navbar from '../../components/Navbar'; 
 
 import HomePage from '../home/HomePage';
@@ -16,11 +13,8 @@ import MovieDetailsPage from '../movies/MovieDetailsPage';
 function App() {
   return (
     <Router>
-      <div className="flex bg-black min-h-screen overflow-x-hidden">
-        {/* Sol Menü */}
+      <div className="flex bg-black min-h-screen">
         <Navbar />
-
-        {/* İçerik Alanı */}
         <main className="flex-1 ml-64 p-8 text-white">
           <Routes>
             <Route path="/" element={<HomePage />} />
