@@ -2,70 +2,94 @@ const express = require('express');
 const cors = require('cors');
 
 const app = express();
-
-// CORS ayarları (Frontend'in bu API'ye erişebilmesi için)
 app.use(cors());
-// Gelen JSON verilerini okuyabilmek için
 app.use(express.json());
 
-// --- SAHTE VERİTABANIMIZ (Hafızada tutulan filmler) ---
+// --- SAHTE VERİTABANIMIZ ---
+let users = []; // RE-01 için kullanıcılar
 let movies = [
-    { id: 1, title: "Inception", year: 2010, genre: "Sci-Fi", rating: 8.8 },
-    { id: 2, title: "Interstellar", year: 2014, genre: "Sci-Fi", rating: 8.6 },
-    { id: 3, title: "The Dark Knight", year: 2008, genre: "Action", rating: 9.0 }
+    { 
+        id: 1, 
+        title: "Inception", 
+        author: "Christopher Nolan", // RE-10 için Yazar/Yönetmen
+        isbn: "9780141", // RE-08 için ISBN/Barkod
+        year: 2010, 
+        genre: "Sci-Fi", 
+        rating: 8.8, // RE-06 Puan
+        comments: ["Harika bir film/kitap!"] // RE-07 Yorumlar
+    },
+    { 
+        id: 2, 
+        title: "The Matrix", 
+        author: "Wachowski Brothers", 
+        isbn: "9780142", 
+        year: 1999, 
+        genre: "Sci-Fi", 
+        rating: 8.7,
+        comments: []
+    }
 ];
 
-// 1. GET: Tüm filmleri getir (Listeleme)
-app.get('/api/movies', (req, res) => {
-    res.json(movies);
+// RE-01: Kullanıcı Kayıt ve Giriş (Auth)
+app.post('/api/register', (req, res) => {
+    users.push({ username: req.body.username, password: req.body.password });
+    res.status(201).json({ message: "Kayıt başarılı" });
+});
+app.post('/api/login', (req, res) => {
+    res.json({ message: "Giriş başarılı", token: "tayfun-gizli-token" });
 });
 
-// 2. GET: Tek bir film detayını getir
+// RE-03, RE-08, RE-09, RE-10: Listeleme ve FİLTRELEME
+app.get('/api/movies', (req, res) => {
+    let result = movies;
+
+    // RE-09: İSME GÖRE ARAMA
+    if (req.query.title) {
+        result = result.filter(m => m.title.toLowerCase().includes(req.query.title.toLowerCase()));
+    }
+    // RE-10: YAZARA/YÖNETMENE GÖRE ARAMA
+    if (req.query.author) {
+        result = result.filter(m => m.author.toLowerCase().includes(req.query.author.toLowerCase()));
+    }
+    // RE-08: ISBN NUMARASINA GÖRE ARAMA
+    if (req.query.isbn) {
+        result = result.filter(m => m.isbn === req.query.isbn);
+    }
+
+    res.json(result);
+});
+
+// RE-05: Detay Sayfası (Tek bir id'ye göre getirme)
 app.get('/api/movies/:id', (req, res) => {
     const movie = movies.find(m => m.id === parseInt(req.params.id));
-    if (!movie) return res.status(404).json({ message: 'Film bulunamadı' });
+    if (!movie) return res.status(404).json({ message: 'Bulunamadı' });
     res.json(movie);
 });
 
-// 3. POST: Yeni film ekle (Hocanın istediği ekleme metodu)
+// RE-02: Yeni Kayıt Ekleme
 app.post('/api/movies', (req, res) => {
     const newMovie = {
         id: movies.length > 0 ? movies[movies.length - 1].id + 1 : 1,
         title: req.body.title,
+        author: req.body.author,
+        isbn: req.body.isbn,
         year: req.body.year,
         genre: req.body.genre,
-        rating: req.body.rating
+        rating: req.body.rating || 0,
+        comments: []
     };
     movies.push(newMovie);
     res.status(201).json(newMovie);
 });
 
-// 4. PUT: Film bilgilerini güncelle
-app.put('/api/movies/:id', (req, res) => {
+// RE-07: Yorum Yapma Metodu
+app.post('/api/movies/:id/comments', (req, res) => {
     const movie = movies.find(m => m.id === parseInt(req.params.id));
-    if (!movie) return res.status(404).json({ message: 'Film bulunamadı' });
+    if (!movie) return res.status(404).json({ message: 'Bulunamadı' });
 
-    movie.title = req.body.title || movie.title;
-    movie.year = req.body.year || movie.year;
-    movie.genre = req.body.genre || movie.genre;
-    movie.rating = req.body.rating || movie.rating;
-
-    res.json(movie);
-});
-
-// 5. DELETE: Film sil
-app.delete('/api/movies/:id', (req, res) => {
-    movies = movies.filter(m => m.id !== parseInt(req.params.id));
-    res.json({ message: "Film başarıyla silindi" });
+    movie.comments.push(req.body.comment);
+    res.status(201).json({ message: "Yorum eklendi", comments: movie.comments });
 });
 
 // Vercel için uygulamayı dışa aktar
 module.exports = app;
-
-// Local'de test etmek için (Vercel'de bu kısım bypass edilir)
-const PORT = process.env.PORT || 3000;
-if (process.env.NODE_ENV !== 'production') {
-    app.listen(PORT, () => {
-        console.log(`🚀 Tayfun Karlı REST API çalışıyor: http://localhost:${PORT}`);
-    });
-}      
