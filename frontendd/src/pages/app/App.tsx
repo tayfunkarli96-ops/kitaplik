@@ -1,11 +1,12 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import Navbar from './components/Sidebar'; // Sidebar dosyanın adıyla aynı olduğundan emin ol
-import HomePage from './pages/home/HomePage';
-import MoviesPage from './pages/movies/MoviesPage';
-import NewsPage from './pages/news/NewsPage'; // İşte o yeni haberler sayfan
-import ProfilePage from './pages/profile/ProfilePage';
-import MovieDetailsPage from './pages/movies/MovieDetailsPage';
+// Dosya yollarını senin klasör yapına göre (../../) olarak güncelledim:
+import Navbar from '../../components/Sidebar'; 
+import HomePage from '../home/HomePage';
+import MoviesPage from '../movies/MoviesPage';
+import NewsPage from '../news/NewsPage'; 
+import ProfilePage from '../profile/ProfilePage';
+import MovieDetailsPage from '../movies/MovieDetailsPage';
 
 function App() {
   return (
@@ -31,8 +32,6 @@ function App() {
 
             {/* RE-02/03/10: Film Detay Sayfası */}
             <Route path="/movie/:id" element={<MovieDetailsPage />} />
-            
-            {/* Eğer başka sayfaların varsa buraya ekleyebilirsin */}
           </Routes>
         </main>
       </div>
