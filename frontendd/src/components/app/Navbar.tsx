@@ -32,7 +32,7 @@ const Navbar = () => {
         CornFlix
       </Link>
 
-      {/* TÜM MENÜ LİNKLERİ GERİ GELDİ */}
+      {/* MENÜ LİNKLERİ */}
       <div style={{ display: 'flex', gap: '30px', alignItems: 'center' }}>
         <Link to="/" style={linkStyle}>🏠 Ana Sayfa</Link>
         <Link to="/movies" style={linkStyle}>🎬 Filmler Arşivi</Link>
@@ -41,20 +41,27 @@ const Navbar = () => {
         <Link to="/contact" style={linkStyle}>📞 İletişim</Link>
       </div>
 
-      {/* GİRİŞ YAP BUTONU */}
-      <button style={{ 
-        backgroundColor: '#00e676', 
-        color: 'black', 
-        border: 'none', 
-        padding: '10px 24px', 
-        borderRadius: '6px', 
-        fontWeight: 'bold', 
-        cursor: 'pointer', 
-        fontSize: '14px', 
-        boxShadow: '0 0 12px rgba(0, 230, 118, 0.4)' 
-      }}>
-        Üye Girişi
-      </button>
+      {/* ÜYE GİRİŞİ BUTONU (TIKLANABİLİR YAPILDI) */}
+      <Link to="/login" style={{ textDecoration: 'none' }}>
+        <button 
+          onMouseOver={(e) => e.target.style.boxShadow = '0 0 20px rgba(0, 230, 118, 0.8)'}
+          onMouseOut={(e) => e.target.style.boxShadow = '0 0 12px rgba(0, 230, 118, 0.4)'}
+          style={{ 
+            backgroundColor: '#00e676', 
+            color: 'black', 
+            border: 'none', 
+            padding: '10px 24px', 
+            borderRadius: '6px', 
+            fontWeight: 'bold', 
+            cursor: 'pointer', 
+            fontSize: '14px', 
+            boxShadow: '0 0 12px rgba(0, 230, 118, 0.4)',
+            transition: 'all 0.3s ease'
+          }}
+        >
+          Üye Girişi
+        </button>
+      </Link>
 
     </nav>
   );
