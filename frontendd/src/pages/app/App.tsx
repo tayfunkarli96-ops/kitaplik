@@ -13,16 +13,15 @@ import MovieDetailsPage from '../movies/MovieDetailsPage';
 import AboutPage from '../about/AboutPage';
 import QuizPage from '../quiz/QuizPage';
 
-/** * 🚨 KATİL BURADA OLABİLİR: 
- * Eğer Vercel yine "Could not resolve" derse, aşağıdaki satırı 
- * '../contacts/Contact' (Page yazısını silerek) olarak dene.
- */
-import ContactPage from '../contacts/ContactPage'; 
+// İŞTE DÜZELTİLEN SATIR: 'ContactsPage' (S harfi eklendi)
+import ContactPage from '../contacts/ContactsPage'; 
 
 function App() {
   return (
     <Router>
-      {/* Tasarımını bozmamak için Navbar'ı tek başına bıraktım */}
+      {/* Arayüzü bozan 'flex' ve 'ml-64' gibi her şeyi sildim. 
+          Senin orijinal CSS düzenin neyse site tam olarak öyle görünecek.
+      */}
       <Navbar />
 
       <Routes>
