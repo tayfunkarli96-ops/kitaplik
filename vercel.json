@@ -1,12 +1,6 @@
 {
   "version": 2,
-  "functions": {
-    "backend/src/index.js": {
-      "runtime": "vercel-node@latest"
-    }
-  },
-  "routes": [
-    { "src": "/api/(.*)", "dest": "backend/src/index.js" },
-    { "src": "/(.*)", "dest": "backend/src/index.js" }
+  "rewrites": [
+    { "source": "/(.*)", "destination": "/" }
   ]
 }
