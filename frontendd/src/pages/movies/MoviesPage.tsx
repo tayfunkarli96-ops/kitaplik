@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 
-const FILM_ARSIVI = [
+// 🎬 15 FİLMLİK DEV LİSTE (Veri burada, hata payı sıfır!)
+const ARSIV = [
   { id: '1', title: "Fight Club", director: "Tayfun Karlı", year: "1999", genres: "Action", imdb: "8.8", poster: "https://image.tmdb.org/t/p/w500/pB8BM7pdSp6B6Ih7QZ4DrQ3PmJK.jpg" },
   { id: '2', title: "Inception", director: "Tayfun Karlı", year: "2010", genres: "Sci-Fi", imdb: "8.8", poster: "https://image.tmdb.org/t/p/w500/edv5bs1pUeeS0S1Ym6Q6o1pD9v5.jpg" },
   { id: '3', title: "Lord of the Rings", director: "Tayfun Karlı", year: "2003", genres: "Adventure", imdb: "9.0", poster: "https://image.tmdb.org/t/p/w500/rCzpDGLbOoPwLjy3OAm5NUPOTrC.jpg" },
@@ -21,54 +22,73 @@ const FILM_ARSIVI = [
 
 const MoviesPage = () => {
   const [term, setTerm] = useState("");
-  const filtered = FILM_ARSIVI.filter(m => m.title.toLowerCase().includes(term.toLowerCase()));
+  const filtered = ARSIV.filter(f => f.title.toLowerCase().includes(term.toLowerCase()));
 
   return (
-    <div style={{ backgroundColor: '#05050a', minHeight: '100vh', color: '#fff', padding: '100px 20px', fontFamily: 'sans-serif' }}>
+    <div style={{ backgroundColor: '#05050a', minHeight: '100vh', color: '#fff', padding: '100px 30px', fontFamily: 'sans-serif' }}>
       <style>{`
         .neon-box-cyan { border: 2px solid #00f3ff; border-radius: 12px; background: rgba(0, 15, 25, 0.7); box-shadow: 0 0 15px #00f3ff; margin-bottom: 20px; }
         .neon-box-pink { border: 2px solid #ff00ff; border-radius: 12px; background: rgba(25, 0, 15, 0.7); box-shadow: 0 0 15px #ff00ff; margin-bottom: 20px; }
         .cyber-input { background: transparent; border: 1px solid #00f3ff; color: #fff; border-radius: 20px; padding: 12px; outline: none; flex: 1; }
-        .btn-pink { background: #ff00ff; color: #fff; border: none; padding: 10px 30px; border-radius: 25px; font-weight: bold; cursor: pointer; }
+        .btn-pink { background: #ff00ff; color: #fff; border: none; padding: 10px 30px; border-radius: 25px; font-weight: bold; cursor: pointer; box-shadow: 0 0 15px #ff00ff; }
       `}</style>
 
       <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
+        
+        {/* ARAMA ÇUBUĞU */}
         <div className="neon-box-cyan" style={{ padding: '20px', display: 'flex', gap: '15px' }}>
-          <input type="text" placeholder="Film Ara..." className="cyber-input" value={term} onChange={(e) => setTerm(e.target.value)} />
+          <input 
+            type="text" 
+            placeholder="Film Ara (Tayfun Karlı Arşivi)..." 
+            className="cyber-input" 
+            value={term} 
+            onChange={(e) => setTerm(e.target.value)} 
+          />
           <button className="btn-pink">SEARCH</button>
         </div>
 
         <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr', gap: '30px', marginTop: '30px' }}>
+          
+          {/* SOL: FİLM LİSTESİ */}
           <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
             {filtered.map((m, i) => (
-              <Link to={`/movie/${m.id}`} key={m.id} style={{ textDecoration: 'none', color: 'inherit' }}>
-                <div className={i % 2 === 0 ? "neon-box-pink" : "neon-box-cyan"} style={{ display: 'flex', padding: '15px', gap: '20px', alignItems: 'center' }}>
-                  <img src={m.poster} alt={m.title} style={{ width: '100px', height: '140px', objectFit: 'cover', borderRadius: '8px' }} />
-                  <div>
-                    <h2 style={{ margin: '0 0 5px 0' }}>{m.title}</h2>
-                    <p style={{ color: '#ccc' }}>Yönetmen: {m.director} | Yıl: {m.year}</p>
-                  </div>
+              <div key={m.id} className={i % 2 === 0 ? "neon-box-pink" : "neon-box-cyan"} style={{ display: 'flex', padding: '15px', gap: '20px', alignItems: 'center' }}>
+                <img src={m.poster} alt={m.title} style={{ width: '100px', height: '140px', objectFit: 'cover', borderRadius: '8px' }} />
+                <div>
+                  <h2 style={{ margin: '0 0 10px 0', fontSize: '26px' }}>{m.title}</h2>
+                  <p style={{ color: '#ccc' }}>Yönetmen: {m.director} | Yıl: {m.year}</p>
+                  <div style={{ marginTop: '10px', color: '#f5c518', fontWeight: 'bold' }}>⭐ {m.imdb}</div>
                 </div>
-              </Link>
+              </div>
             ))}
           </div>
 
+          {/* SAĞ: STATS VE YORUMLAR (BURADALAR MORUK!) */}
           <div style={{ position: 'sticky', top: '100px', height: 'fit-content', display: 'flex', flexDirection: 'column', gap: '20px' }}>
+            
+            {/* Stats */}
             <div className="neon-box-pink" style={{ padding: '30px', textAlign: 'center' }}>
               <h3 style={{ color: '#00f3ff' }}>Stats</h3>
-              <div style={{ fontSize: '32px', fontWeight: 'bold' }}>{filtered.length} Film Mevcut</div>
+              <div style={{ fontSize: '32px', fontWeight: 'bold' }}>{filtered.length} Film Bulundu</div>
             </div>
+
+            {/* Comment */}
             <div className="neon-box-pink" style={{ padding: '30px', textAlign: 'center' }}>
               <h3 style={{ color: '#00f3ff' }}>Comment</h3>
               <p style={{ fontSize: '40px' }}>💬</p>
-              <p>23 Görüş Bildirildi</p>
-              <button className="btn-pink" style={{ width: '100%' }}>Görüş Bildir</button>
+              <p style={{ fontWeight: 'bold' }}>23 Görüş Bildirildi</p>
+              <button className="btn-pink" style={{ width: '100%', marginTop: '15px' }}>Görüş Bildir</button>
             </div>
+
+            {/* Son Görüşler */}
             <div className="neon-box-cyan" style={{ padding: '20px' }}>
-              <h3 style={{ color: '#00f3ff' }}>Son Görüşler</h3>
-              <p>👤 "Arayüz akıyor moruk!"</p>
-              <p>👤 "Tayfun Karlı yine yapmış."</p>
+              <h3 style={{ color: '#00f3ff', marginBottom: '15px' }}>Son Görüşler</h3>
+              <div style={{ fontSize: '14px', color: '#ccc' }}>
+                <p>👤 "Arayüz resmen yanıyor moruk!"</p>
+                <p>👤 "Tayfun Karlı yine yapmış yapacağını."</p>
+              </div>
             </div>
+
           </div>
         </div>
       </div>
