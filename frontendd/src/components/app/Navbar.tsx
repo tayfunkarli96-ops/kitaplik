@@ -4,58 +4,83 @@ import { Link } from 'react-router-dom';
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
 
+  // Linke tıklayınca mobil menüyü otomatik kapatır
+  const closeMenu = () => setIsOpen(false);
+
   return (
-    <nav style={{ 
-      background: 'rgba(5, 5, 10, 0.95)', 
-      borderBottom: '2px solid #00f3ff', 
-      position: 'fixed', 
-      top: 0, 
-      width: '100%', 
-      zIndex: 1000, 
-      boxShadow: '0 0 15px rgba(0, 243, 255, 0.3)',
-      fontFamily: 'sans-serif'
-    }}>
-      <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '0 20px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', height: '70px' }}>
+    <nav className="cyber-navbar">
+      <div className="nav-container">
         
-        {/* LOGO */}
-        <Link to="/" style={{ color: '#ff00ff', fontSize: '24px', fontWeight: 'bold', textDecoration: 'none', textShadow: '0 0 10px #ff00ff' }}>
+        {/* SOL TARAF: LOGO */}
+        <Link to="/" className="nav-logo" onClick={closeMenu}>
           CORNFLIX
         </Link>
 
-        {/* DESKTOP MENU */}
-        <div style={{ display: 'none', gap: '30px' }} className="desktop-nav">
+        {/* ORTA/SAĞ TARAF: BİLGİSAYAR MENÜSÜ */}
+        <div className="desktop-menu">
           <Link to="/" className="nav-link">Ana Sayfa</Link>
           <Link to="/movies" className="nav-link">Filmler Arşivi</Link>
+          <Link to="/news" className="nav-link">Haberler</Link>
+          <Link to="/about" className="nav-link">Hakkında</Link>
           <Link to="/contacts" className="nav-link">İletişim</Link>
-          {/* Diğer linklerin varsa buraya ekle */}
         </div>
 
-        {/* MOBILE TOGGLE (HAMBURGER) */}
-        <button onClick={() => setIsOpen(!isOpen)} style={{ background: 'none', border: 'none', color: '#00f3ff', fontSize: '28px', cursor: 'pointer' }} className="mobile-toggle">
+        {/* SAĞ TARAF: MOBİL HAMBURGER BUTONU */}
+        <button className="mobile-btn" onClick={() => setIsOpen(!isOpen)}>
           {isOpen ? '✕' : '☰'}
         </button>
       </div>
 
-      {/* MOBILE MENU */}
+      {/* ALT KISIM: MOBİL AÇILIR MENÜ */}
       {isOpen && (
-        <div style={{ background: '#05050a', borderBottom: '2px solid #ff00ff', padding: '20px', display: 'flex', flexDirection: 'column', gap: '20px', textAlign: 'center' }}>
-          <Link to="/" onClick={() => setIsOpen(false)} style={{ color: '#fff', textDecoration: 'none', fontWeight: 'bold' }}>Ana Sayfa</Link>
-          <Link to="/movies" onClick={() => setIsOpen(false)} style={{ color: '#fff', textDecoration: 'none', fontWeight: 'bold' }}>Filmler Arşivi</Link>
-          <Link to="/contacts" onClick={() => setIsOpen(false)} style={{ color: '#fff', textDecoration: 'none', fontWeight: 'bold' }}>İletişim</Link>
+        <div className="mobile-menu">
+          <Link to="/" className="mobile-link" onClick={closeMenu}>Ana Sayfa</Link>
+          <Link to="/movies" className="mobile-link" onClick={closeMenu}>Filmler Arşivi</Link>
+          <Link to="/news" className="mobile-link" onClick={closeMenu}>Haberler</Link>
+          <Link to="/about" className="mobile-link" onClick={closeMenu}>Hakkında</Link>
+          <Link to="/contacts" className="mobile-link" onClick={closeMenu}>İletişim</Link>
         </div>
       )}
 
+      {/* SİBERPUNK CSS (DIŞARIYA BAĞIMLI DEĞİL, HATA VERMEZ) */}
       <style>{`
-        .nav-link { color: #fff; text-decoration: none; font-weight: bold; transition: 0.3s; }
-        .nav-link:hover { color: #00f3ff; text-shadow: 0 0 10px #00f3ff; }
-        
-        @media (min-width: 769px) {
-          .desktop-nav { display: flex !important; }
-          .mobile-toggle { display: none !important; }
+        .cyber-navbar {
+          background: rgba(5, 5, 10, 0.95);
+          border-bottom: 2px solid #00f3ff;
+          position: fixed;
+          top: 0;
+          left: 0;
+          width: 100%;
+          z-index: 9999; /* Formların altında kalmasını engeller */
+          box-shadow: 0 0 15px rgba(0, 243, 255, 0.3);
+          font-family: 'sans-serif';
         }
-      `}</style>
-    </nav>
-  );
-};
-
-export default Navbar;
+        .nav-container {
+          max-width: 1200px;
+          margin: 0 auto;
+          padding: 0 20px;
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          height: 70px;
+        }
+        .nav-logo {
+          color: #ff00ff;
+          font-size: 26px;
+          font-weight: bold;
+          text-decoration: none;
+          text-shadow: 0 0 10px #ff00ff;
+          letter-spacing: 2px;
+        }
+        
+        /* BİLGİSAYAR LİNKLERİ */
+        .desktop-menu {
+          display: none;
+          gap: 25px;
+        }
+        .nav-link {
+          color: #fff;
+          text-decoration: none;
+          font-weight: bold;
+          font-size: 15px;
+          transition: 0.3s;
