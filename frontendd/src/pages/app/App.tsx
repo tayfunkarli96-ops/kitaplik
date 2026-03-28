@@ -1,9 +1,11 @@
 import { HashRouter as Router, Routes, Route } from 'react-router-dom';
-import Navbar from './components/app/Navbar'; 
-import HomePage from './pages/home/HomePage';
-import MoviesPage from './pages/movies/MoviesPage'; 
-import ContactsPage from './pages/contacts/ContactsPage'; 
-// Varsa NewsPage, AboutPage falan onları da buraya import et
+
+// 🚨 YOLLAR DÜZELTİLDİ! Senin dosya yapına özel:
+import Navbar from '../../components/app/Navbar'; 
+import HomePage from '../home/HomePage';
+import MoviesPage from '../movies/MoviesPage'; 
+import ContactsPage from '../contacts/ContactsPage'; 
+// (Eğer NewsPage falan varsa onları da "../news/NewsPage" diye ekle)
 
 function App() {
   return (
@@ -13,9 +15,8 @@ function App() {
         <Routes>
           <Route path="/" element={<HomePage />} />
           <Route path="/movies" element={<MoviesPage />} />
-          {/* İŞTE İLETİŞİM SAYFASININ KİLİDİ BURASI */}
           <Route path="/contacts" element={<ContactsPage />} />
-          {/* Diğer Route'larını da buraya ekle */}
+          {/* Varsa diğer rotaların */}
         </Routes>
       </div>
     </Router>
