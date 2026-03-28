@@ -1,82 +1,61 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 
 const Navbar = () => {
+  const [isOpen, setIsOpen] = useState(false);
+
   return (
     <nav style={{ 
+      background: 'rgba(5, 5, 10, 0.95)', 
+      borderBottom: '2px solid #00f3ff', 
       position: 'fixed', 
       top: 0, 
-      left: 0, 
       width: '100%', 
-      backgroundColor: '#05050a', 
-      borderBottom: '1px solid #222', 
-      display: 'flex', 
-      justifyContent: 'space-between', 
-      alignItems: 'center', 
-      padding: '15px 40px', 
       zIndex: 1000, 
-      fontFamily: 'sans-serif',
-      boxSizing: 'border-box',
-      boxShadow: '0 4px 15px rgba(0, 0, 0, 0.8)'
+      boxShadow: '0 0 15px rgba(0, 243, 255, 0.3)',
+      fontFamily: 'sans-serif'
     }}>
-      
-      {/* LOGO */}
-      <Link to="/" style={{ 
-        fontSize: '28px', 
-        fontWeight: '900', 
-        color: '#ec4899', 
-        textDecoration: 'none', 
-        letterSpacing: '1px', 
-        textShadow: '0 0 10px rgba(236, 72, 153, 0.6)' 
-      }}>
-        CornFlix
-      </Link>
+      <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '0 20px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', height: '70px' }}>
+        
+        {/* LOGO */}
+        <Link to="/" style={{ color: '#ff00ff', fontSize: '24px', fontWeight: 'bold', textDecoration: 'none', textShadow: '0 0 10px #ff00ff' }}>
+          CORNFLIX
+        </Link>
 
-      {/* MENÜ LİNKLERİ */}
-      <div style={{ display: 'flex', gap: '30px', alignItems: 'center' }}>
-        <Link to="/" style={linkStyle}>🏠 Ana Sayfa</Link>
-        <Link to="/movies" style={linkStyle}>🎬 Filmler Arşivi</Link>
-        <Link to="/news" style={linkStyle}>📰 Haberler</Link>
-        <Link to="/about" style={linkStyle}>ℹ️ Hakkında</Link>
-        <Link to="/contact" style={linkStyle}>📞 İletişim</Link>
+        {/* DESKTOP MENU */}
+        <div style={{ display: 'none', gap: '30px' }} className="desktop-nav">
+          <Link to="/" className="nav-link">Ana Sayfa</Link>
+          <Link to="/movies" className="nav-link">Filmler Arşivi</Link>
+          <Link to="/contacts" className="nav-link">İletişim</Link>
+          {/* Diğer linklerin varsa buraya ekle */}
+        </div>
+
+        {/* MOBILE TOGGLE (HAMBURGER) */}
+        <button onClick={() => setIsOpen(!isOpen)} style={{ background: 'none', border: 'none', color: '#00f3ff', fontSize: '28px', cursor: 'pointer' }} className="mobile-toggle">
+          {isOpen ? '✕' : '☰'}
+        </button>
       </div>
 
-      {/* ÜYE GİRİŞİ BUTONU (TIKLANABİLİR YAPILDI) */}
-      <Link to="/login" style={{ textDecoration: 'none' }}>
-        <button 
-          onMouseOver={(e) => e.target.style.boxShadow = '0 0 20px rgba(0, 230, 118, 0.8)'}
-          onMouseOut={(e) => e.target.style.boxShadow = '0 0 12px rgba(0, 230, 118, 0.4)'}
-          style={{ 
-            backgroundColor: '#00e676', 
-            color: 'black', 
-            border: 'none', 
-            padding: '10px 24px', 
-            borderRadius: '6px', 
-            fontWeight: 'bold', 
-            cursor: 'pointer', 
-            fontSize: '14px', 
-            boxShadow: '0 0 12px rgba(0, 230, 118, 0.4)',
-            transition: 'all 0.3s ease'
-          }}
-        >
-          Üye Girişi
-        </button>
-      </Link>
+      {/* MOBILE MENU */}
+      {isOpen && (
+        <div style={{ background: '#05050a', borderBottom: '2px solid #ff00ff', padding: '20px', display: 'flex', flexDirection: 'column', gap: '20px', textAlign: 'center' }}>
+          <Link to="/" onClick={() => setIsOpen(false)} style={{ color: '#fff', textDecoration: 'none', fontWeight: 'bold' }}>Ana Sayfa</Link>
+          <Link to="/movies" onClick={() => setIsOpen(false)} style={{ color: '#fff', textDecoration: 'none', fontWeight: 'bold' }}>Filmler Arşivi</Link>
+          <Link to="/contacts" onClick={() => setIsOpen(false)} style={{ color: '#fff', textDecoration: 'none', fontWeight: 'bold' }}>İletişim</Link>
+        </div>
+      )}
 
+      <style>{`
+        .nav-link { color: #fff; text-decoration: none; font-weight: bold; transition: 0.3s; }
+        .nav-link:hover { color: #00f3ff; text-shadow: 0 0 10px #00f3ff; }
+        
+        @media (min-width: 769px) {
+          .desktop-nav { display: flex !important; }
+          .mobile-toggle { display: none !important; }
+        }
+      `}</style>
     </nav>
   );
-};
-
-const linkStyle = {
-  color: '#e2e8f0',
-  textDecoration: 'none',
-  fontSize: '15px',
-  fontWeight: '500',
-  display: 'flex',
-  alignItems: 'center',
-  gap: '6px',
-  transition: 'color 0.3s',
-  textShadow: '0 0 5px rgba(255,255,255,0.2)'
 };
 
 export default Navbar;
