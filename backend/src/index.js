@@ -6,7 +6,10 @@ app.use(express.json());
 
 // --- VERİTABANI (RE-09 Haberler Dahil) ---
 let movies = [
-    { id: 1, title: "Inception", author: "Nolan", genre: "Sci-Fi", rating: 8.8, year: 2010, isbn: "123-ABC", language: "TR/EN" }
+    { id: 1, title: "Inception", author: "Nolan", genre: "Sci-Fi", rating: 8.8, year: 2010, isbn: "123-ABC", language: "TR/EN" },
+    { id: 2, title: "Interstellar", author: "Nolan", genre: "Sci-Fi", rating: 8.6, year: 2014, isbn: "456-DEF", language: "TR/EN" },
+    { id: 3, title: "The Dark Knight", author: "Nolan", genre: "Action", rating: 9.0, year: 2008, isbn: "789-GHI", language: "TR/EN" },
+    { id: 4, title: "Tenet", author: "Nolan", genre: "Sci-Fi", rating: 7.4, year: 2020, isbn: "012-JKL", language: "TR/EN" }
 ];
 
 let news = [
@@ -30,12 +33,19 @@ app.put('/api/news/:id', (req, res) => {
 
 // --- FİLM ROUTE'LARI ---
 app.get('/api/movies', (req, res) => res.json(movies));
-app.get('/api/movies/:id', (req, res) => res.json(movies.find(m => m.id === parseInt(req.params.id)) || movies[0]));
+app.get('/api/movies/:id', (req, res) => {
+    const movie = movies.find(m => m.id === parseInt(req.params.id));
+    return movie ? res.json(movie) : res.status(404).json({ message: "Film bulunamadı" });
+});
 
 // --- DİĞER GEREKSİNİMLER (PROFIL, YORUM VB.) ---
 app.put('/api/profile/:id', (req, res) => res.json({ message: "Profil güncellendi" }));
 app.post('/api/comments', (req, res) => res.json({ message: "Yorum eklendi" }));
 
 app.get('*', (req, res) => res.json({ status: "API Online", news_count: news.length }));
-
+// --- SUNUCUYU ATEŞLE (HİÇBİR ŞEYİ BOZMADAN) ---
+const PORT = 5000;
+app.listen(PORT, () => {
+    console.log(`🚀 SİBER SUNUCU AKTİF: http://localhost:${PORT}`);
+});
 module.exports = app;
