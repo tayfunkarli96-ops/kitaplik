@@ -1,6 +1,6 @@
 **Domain:** https://kitaplik-iota.vercel.app/
 
 
-PROJE VİDEOSU
+Frontend Vİdeosu 
 
-https://youtu.be/-XECt3scmZg
+https://youtu.be/QXj3T00VPtE
