@@ -1,53 +1,77 @@
 import React, { useState, useEffect } from 'react';
 
-// Film verisinin tipini (TypeScript için) belirliyoruz
+// Film tipi tanımı
 interface Movie {
   id: number;
   title: string;
   year: number;
+  genre: string; // Premium için tür ekledik
 }
 
 const MovieList = () => {
-  // Değişkenlerimizi tanımlıyoruz: Biri filmler listesi, diğeri yüklenme durumu
   const [movies, setMovies] = useState<Movie[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
-  // Sayfa ilk açıldığında çalışacak arka plan görevi
   useEffect(() => {
-    // API'den veri çekmeyi simüle etmek için 2 saniyelik (2000ms) bir gecikme ekliyoruz
+    // API simülasyonu (daha zengin veri)
     setTimeout(() => {
       const apiData = [
-        { id: 1, title: 'Inception', year: 2010 },
-        { id: 2, title: 'The Matrix', year: 1999 },
-        { id: 3, title: 'Interstellar', year: 2014 },
+        { id: 1, title: 'Inception', year: 2010, genre: 'Sci-Fi' },
+        { id: 2, title: 'The Matrix', year: 1999, genre: 'Action' },
+        { id: 3, title: 'Interstellar', year: 2014, genre: 'Drama' },
+        { id: 4, title: 'The Dark Knight', year: 2008, genre: 'Action' },
       ];
       setMovies(apiData);
-      setIsLoading(false); // Veri geldiğinde loading durumunu kapatıyoruz
-    }, 2000);
+      setIsLoading(false);
+    }, 1500); // Yüklenme süresini biraz daha gerçekçi yaptık
   }, []);
 
-  // Eğer veri hala yükleniyorsa ekranda bu kısım görünür
+  // Premium Loading Animasyonu Simülasyonu
   if (isLoading) {
     return (
-      <div style={{ padding: '20px', textAlign: 'center', marginTop: '50px' }}>
-        <h2>⏳ Cornflix İçerikleri Hazırlanıyor...</h2>
+      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', minHeight: '300px', color: '#808080' }}>
+        <div style={{ width: '50px', height: '50px', border: '5px solid #333', borderTop: '5px solid #e50914', borderRadius: '50%', animation: 'spin 1s linear infinite' }}></div>
+        <style>{`@keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }`}</style>
+        <p style={{ marginTop: '15px', fontSize: '14px', letterSpacing: '1px' }}>İçerikler Yükleniyor...</p>
       </div>
     );
   }
 
-  // Veri yüklendiğinde asıl film listemiz görünür
   return (
-    <div style={{ padding: '20px', backgroundColor: '#f4f4f4', borderRadius: '8px' }}>
-      <h1 style={{ color: '#e50914' }}>Cornflix Film Listesi</h1>
-      <p>Mevcut kütüphanemizdeki popüler filmler:</p>
+    <div style={{ marginTop: '80px' /* Header'ın altında kalmaması için */ }}>
+      <h2 style={{ color: 'white', borderLeft: '4px solid #e50914', paddingLeft: '10px', fontSize: '20px' }}>
+        Kütüphanedeki Filmler
+      </h2>
       
-      <ul style={{ listStyleType: 'none', padding: 0 }}>
-        {movies.map((movie) => (
-          <li key={movie.id} style={{ margin: '10px 0', padding: '15px', background: '#fff', borderLeft: '5px solid #e50914', boxShadow: '0 2px 4px rgba(0,0,0,0.1)' }}>
-            <strong>{movie.title}</strong> <span style={{ color: 'gray' }}>({movie.year})</span>
-          </li>
-        ))}
-      </ul>
+      {movies.map((movie) => (
+        <div key={movie.id} style={{ 
+          backgroundColor: '#1a1a1a', 
+          borderRadius: '8px', 
+          margin: '15px 0', 
+          display: 'flex', 
+          alignItems: 'center',
+          padding: '10px',
+          boxShadow: '0 4px 10px rgba(0,0,0,0.5)',
+          transition: 'transform 0.2s',
+          cursor: 'pointer'
+        }}>
+          {/* Film Poster Simülasyonu (Kırmızı bir kutu) */}
+          <div style={{ width: '60px', height: '90px', backgroundColor: '#333', borderRadius: '4px', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#e50914', fontSize: '30px', fontWeight: 'bold' }}>
+            {movie.title.substring(0, 1)}
+          </div>
+
+          {/* Film Bilgileri */}
+          <div style={{ marginLeft: '15px', flex: 1 }}>
+            <div style={{ color: 'white', fontSize: '18px', fontWeight: 'bold', marginBottom: '5px' }}>{movie.title}</div>
+            <div style={{ color: '#aaa', fontSize: '14px' }}>
+              <span style={{ marginRight: '10px' }}>📅 {movie.year}</span>
+              <span style={{ backgroundColor: '#333', color: '#e50914', padding: '2px 6px', borderRadius: '4px', textTransform: 'uppercase', fontSize: '10px', fontWeight: 'bold' }}>{movie.genre}</span>
+            </div>
+          </div>
+          
+          <div style={{ color: '#e50914', fontSize: '24px' }}>▸</div>
+        </div>
+      ))}
     </div>
   );
 };
