@@ -3,18 +3,20 @@ import React from 'react';
 const Header = () => {
   return (
     <div style={{
-      backgroundColor: '#e50914', // Cornflix kırmızısı
-      color: 'white',
-      padding: '15px 20px',
-      fontSize: '24px',
-      fontWeight: 'bold',
+      background: 'linear-gradient(180deg, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0) 100%)', // Üstte hafif koyuluk
+      color: '#e50914', // Cornflix kırmızısı
+      padding: '20px 0',
       textAlign: 'center',
-      boxShadow: '0 4px 6px rgba(0,0,0,0.1)',
-      position: 'sticky',
+      position: 'fixed', // Ekranın en üstüne sabitledik
       top: 0,
-      zIndex: 100
+      width: '100%',
+      zIndex: 1000,
+      fontFamily: "'Anton', sans-serif", // Daha agresif, film tarzı bir font simülasyonu
+      letterSpacing: '2px',
     }}>
-      🍿 Cornflix
+      <span style={{ fontSize: '32px', fontWeight: '900', textShadow: '2px 2px 4px rgba(0,0,0,0.5)' }}>
+        CORNFLIX
+      </span>
     </div>
   );
 };
