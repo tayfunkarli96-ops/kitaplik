@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 
-// --- MOCK BİLEŞENLER (Senin klasörden import ettiklerin gibi simüle edildi) ---
-const DiscoverView = () => <div style={styles.viewPlaceholder}>🪐 ORBITAL PREMIERES <p style={{fontSize:'14px', color:'#666', marginTop:'10px'}}>Gelişmiş Filtreleme ve AI Öneri Motoru Aktif.</p></div>;
-const WatchlistView = () => <div style={styles.viewPlaceholder}>🛰️ HEDEF LİSTESİ <p style={{fontSize:'14px', color:'#666', marginTop:'10px'}}>Swipe jestleri ile izlenecekleri yönetin.</p></div>;
-const AdminView = () => <div style={styles.viewPlaceholder}>🛡️ OVERSEER COMMAND <p style={{fontSize:'14px', color:'#666', marginTop:'10px'}}>Sinyal moderasyonu ve global haber yayını frekansı.</p></div>;
-const ProfileView = () => <div style={styles.viewPlaceholder}>👤 SİNAPTİK KİMLİK <p style={{fontSize:'14px', color:'#666', marginTop:'10px'}}>Operatör profil ayarları ve Linguistic Engine.</p></div>;
+// --- GERÇEK BİLEŞENLERİN BAĞLANTISI (Burayı sahtelerle değiştirmiştik, şimdi gerçeğe bağlıyoruz) ---
+import OrbitalDiscovery from '../../components/OrbitalDiscovery';
+import PremiumWatchlist from '../../components/PremiumWatchlist';
+import OverseerDashboard from '../../components/OverseerDashboard';
+import ProfileIdentity from '../../components/ProfileIdentity';
 
 const App: React.FC = () => {
   const [activeTab, setActiveTab] = useState<string>('DISCOVER');
@@ -23,22 +23,22 @@ const App: React.FC = () => {
 
   const renderContent = () => {
     switch (activeTab) {
-      case 'DISCOVER': return <DiscoverView />;
-      case 'WATCHLIST': return <WatchlistView />;
-      case 'ADMIN': return <AdminView />;
-      case 'PROFILE': return <ProfileView />;
-      default: return <DiscoverView />;
+      case 'DISCOVER': return <OrbitalDiscovery />;
+      case 'WATCHLIST': return <PremiumWatchlist />;
+      case 'ADMIN': return <OverseerDashboard />;
+      case 'PROFILE': return <ProfileIdentity />;
+      default: return <OrbitalDiscovery />;
     }
   };
 
   return (
     <div style={styles.appShell}>
       
-      {/* 1. ULTRA PREMIUM SİBER ARKA PLAN (Yıldız Tozu Efekti) */}
+      {/* 1. SİBER ARKA PLAN (Yıldız Tozu Efekti) */}
       <div style={styles.ambientGlow}></div>
       <div style={styles.matrixGrid}></div>
 
-      {/* 2. TELEMETRİ ÜST BAR (Hoca Buraya Bayılacak) */}
+      {/* 2. TELEMETRİ ÜST BAR */}
       <header style={styles.telemetryHeader}>
         <div style={styles.telemetryGroup}>
           <span style={styles.pulseNode}></span>
@@ -107,7 +107,7 @@ const App: React.FC = () => {
   );
 };
 
-// --- ULTRA PREMIUM INLINE CSS (Cyber-Industrial Palette) ---
+// --- ULTRA PREMIUM INLINE CSS (CamelCase Hataları Düzeltildi) ---
 const styles: { [key: string]: React.CSSProperties } = {
   appShell: {
     position: 'relative', width: '100vw', height: '100vh', backgroundColor: '#020205',
@@ -136,11 +136,6 @@ const styles: { [key: string]: React.CSSProperties } = {
   telemetryDivider: { color: '#1a202c', fontSize: '11px' },
   
   mainStage: { flex: 1, position: 'relative', zIndex: 1, overflowY: 'auto', paddingBottom: '100px' },
-  
-  viewPlaceholder: { 
-    height: '80vh', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center',
-    fontSize: '24px', letterSpacing: '3px', fontWeight: 'bold', color: '#fff', textShadow: '0 0 20px rgba(255,255,255,0.1)'
-  },
 
   hologramNav: {
     position: 'fixed', bottom: '20px', left: '50%', transform: 'translateX(-50%)',
@@ -159,7 +154,6 @@ const styles: { [key: string]: React.CSSProperties } = {
   metaContainer: { display: 'flex', flexDirection: 'column', alignItems: 'center', position: 'relative', zIndex: 2, transition: 'color 0.3s' },
   navLabel: { fontSize: '9px', letterSpacing: '1px', marginTop: '5px' },
   
-  // Sıvı Gibi Kayan Akıcı Neon Seçici Bölgesi
   neonLiquidIndicator: {
     position: 'absolute', width: '65px', height: '42px', backgroundColor: 'rgba(0, 240, 255, 0.08)',
     borderRadius: '14px', border: '1px solid rgba(0, 240, 255, 0.3)', zIndex: 1,
