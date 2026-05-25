@@ -1,12 +1,14 @@
-/**
+
+  /**
  * ============================================================================
- * CORNFLIX CORE OPERATING SYSTEM // PROFILE & SYNAPTIC IDENTITY MODULE
+ * CORNFLIX CORE OPERATING SYSTEM // PROFILE & SYNAPTIC IDENTITY MODULE v4.0
  * ============================================================================
  * LEAD ARCHITECT: Tayfun Karlı
  * UNIVERSITY: Süleyman Demirel Üniversitesi (SDÜ) - Bilgisayar Mühendisliği
- * * RESOLVED SYSTEM REQUIREMENTS:
- * - REQ 1: Synaptic Identity / Official Operator Profile Card
- * - REQ 10: Advanced Linguistic Engine (Zero-Latency Real-Time Translation)
+ * * * BUGFIX REPORT: 
+ * - Modal State Crash Resolved (Variable misreference fixed)
+ * - Safe Initials Computation Added (Bulletproof string parsing)
+ * - Enhanced LocalStorage Error Boundary (Prevents JSON parse crashes)
  * ============================================================================
  */
 
@@ -14,7 +16,7 @@ import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 // ----------------------------------------------------------------------------
-// 1. TİP TANIMLAMALARI VE INTERFACE'LER (MÜHENDİSLİK STANDARDI)
+// 1. KESİN TİP TANIMLAMALARI (TYPE SAFETY)
 // ----------------------------------------------------------------------------
 interface ProfileData {
   name: string;
@@ -40,13 +42,13 @@ interface SessionItem {
 }
 
 // ----------------------------------------------------------------------------
-// 2. REQ 10: LINGUISTIC ENGINE DATA MATRIX (GELİŞMİŞ SÖZLÜK)
+// 2. REQ 10: SIFIR GECİKMELİ LİNGUİSTİK MOTOR (DICTIONARY MATRIX)
 // ----------------------------------------------------------------------------
 const linguisticDatabase = {
   TR: {
     pageTitle: 'SİNAPTİK KİMLİK & KONTROL MERKEZİ',
-    reqBadge: 'REQ 1, 10 // IDENTITY',
-    langSelector: 'DİL FREKANSI MODÜLASYONU (LINGUISTIC ENGINE)',
+    reqBadge: 'REQ 1, 10 // IDENTITY & I18N',
+    langSelector: 'DİL FREKANSI MODÜLASYONU',
     idCardHeader: 'RESMİ OPERATÖR KARTI // CLASSIFIED TIER 1',
     skillsTitle: 'NÖRAL YETENEK MATRİSİ',
     terminalTitle: 'SİSTEM GÜVENLİK & TERMİNAL LOGLARI',
@@ -55,7 +57,7 @@ const linguisticDatabase = {
     editBtn: 'KİMLİK PROTOKOLÜNÜ GÜNCELLE',
     saveBtn: 'VERİLERİ ŞİFRELE VE KAYDET',
     cancelBtn: 'İŞLEMİ İPTAL ET',
-    validationError: 'HATA: Operatör ismi boş bırakılamaz!',
+    validationError: 'HATA: Operatör ismi boş bırakılamaz. Protokol reddedildi!',
     labels: {
       name: 'Operatör Resmi Adı',
       role: 'Sistem Atanmış Rütbesi',
@@ -68,13 +70,13 @@ const linguisticDatabase = {
       "> [BIOMETRIC] Retina ve DNA eşleşmesi onaylandı: TAYFUN KARLI.",
       "> [NETWORK] SDÜ Command Mainframe bağlantı hızı: 12ms (Optimum).",
       "> [AUTH] Kök (root) düzeyinde erişim yetkileri Baş Mimar'a devredildi.",
-      "> [SYSTEM] Çevresel tarama tamamlandı. Cornflix OS v2.0 stabil."
+      "> [SYSTEM] Çevresel tarama tamamlandı. Core OS v2.0 stabil."
     ]
   },
   EN: {
     pageTitle: 'SYNAPTIC IDENTITY & CONTROL CENTER',
-    reqBadge: 'REQ 1, 10 // IDENTITY',
-    langSelector: 'LANGUAGE FREQUENCY MODULATION (LINGUISTIC ENGINE)',
+    reqBadge: 'REQ 1, 10 // IDENTITY & I18N',
+    langSelector: 'LANGUAGE FREQUENCY MODULATION',
     idCardHeader: 'OFFICIAL OPERATOR CARD // CLASSIFIED TIER 1',
     skillsTitle: 'NEURAL SKILL MATRIX',
     terminalTitle: 'SYSTEM SECURITY & TERMINAL LOGS',
@@ -83,7 +85,7 @@ const linguisticDatabase = {
     editBtn: 'UPDATE IDENTITY PROTOCOL',
     saveBtn: 'ENCRYPT & SAVE SYSTEM DATA',
     cancelBtn: 'ABORT OPERATION',
-    validationError: 'ERROR: Operator name cannot be blank!',
+    validationError: 'ERROR: Operator name cannot be blank. Protocol denied!',
     labels: {
       name: 'Operator Official Name',
       role: 'System Assigned Rank',
@@ -96,13 +98,13 @@ const linguisticDatabase = {
       "> [BIOMETRIC] Retinal and DNA scan verified: TAYFUN KARLI.",
       "> [NETWORK] Connection to SDU Command Mainframe: 12ms (Optimum).",
       "> [AUTH] Root-level access rights transferred to Lead Architect.",
-      "> [SYSTEM] Environmental scan completed. Cornflix OS v2.0 stable."
+      "> [SYSTEM] Environmental scan completed. Core OS v2.0 stable."
     ]
   }
 };
 
 // ----------------------------------------------------------------------------
-// 3. STATİK VEYA TELEMETRİK MOCK VERİLER
+// 3. STATİK BİLGİ AĞLARI
 // ----------------------------------------------------------------------------
 const skillMatrixData: SkillItem[] = [
   { id: 'sk-01', name: 'React 19 & Spatial Archi', level: 98, color: '#00f0ff' },
@@ -118,7 +120,7 @@ const initialSessions: SessionItem[] = [
 ];
 
 // ============================================================================
-// 4. SUB-COMPONENT 1: LIVE TERMINAL CONSOLE
+// 4. SUB-COMPONENT: KESİNTİSİZ CANLI TERMİNAL (LIVE TERMINAL)
 // ============================================================================
 const LiveTerminalConsole: React.FC<{ logBuffer: string[] }> = ({ logBuffer }) => {
   const [streamedLogs, setStreamedLogs] = useState<string[]>([]);
@@ -146,7 +148,7 @@ const LiveTerminalConsole: React.FC<{ logBuffer: string[] }> = ({ logBuffer }) =
           <span style={{ ...styles.windowDot, backgroundColor: '#f59e0b' }}></span>
           <span style={{ ...styles.windowDot, backgroundColor: '#00ffaa' }}></span>
         </div>
-        <span style={styles.terminalTitleText}>operator@cornflix_core_os:~</span>
+        <span style={styles.terminalTitleText}>operator@cornflix_core_os:~/secure_logs</span>
       </div>
       <div style={styles.terminalBodyArea}>
         <AnimatePresence>
@@ -179,13 +181,14 @@ const LiveTerminalConsole: React.FC<{ logBuffer: string[] }> = ({ logBuffer }) =
 };
 
 // ============================================================================
-// 5. MAIN CORE COMPONENT: PROFILE IDENTITY
+// 5. ANA KÖK BİLEŞEN: PROFILE IDENTITY (KIRILMAZ MİMARİ)
 // ============================================================================
 const ProfileIdentity: React.FC = () => {
+  // 5.1. Dil Motoru State'i
   const [currentLanguage, setCurrentLanguage] = useState<'TR' | 'EN'>('TR');
   const t = linguisticDatabase[currentLanguage];
 
-  // Profil Veritabanı State Yönetimi
+  // 5.2. Profil State'leri (Hata Çözümü Burada Başlıyor)
   const [isEditModalOpen, setIsEditModalOpen] = useState<boolean>(false);
   const [profileState, setProfileState] = useState<ProfileData>({
     name: 'Tayfun Karlı',
@@ -194,25 +197,29 @@ const ProfileIdentity: React.FC = () => {
     bio: 'Cornflix Core OS v2.0 Baş Geliştiricisi. İleri düzey yazılım mimarisi, GPU render optimizasyonu ve uzamsal UI mekanikleri uzmanı.',
     securityClearance: 'LEVEL_ALPHA_9'
   });
+  
+  // DİKKAT: State ismini `formInputState` olarak mühürledik. Modal içinde SADECE bu kullanılacak.
   const [formInputState, setFormInputState] = useState<ProfileData>(profileState);
 
-  // Kırılmaz Baş Harf Hesaplama Motoru (Try-Catch Korumalı)
+  // 5.3. Kırılmaz Baş Harf Hesaplayıcı (Try-Catch Kalkanı)
   const computeSafeInitials = (targetName: string): string => {
     try {
-      if (!targetName || targetName.trim() === '') return 'TK';
-      const nameTokens = targetName.trim().split(' ');
+      if (!targetName || typeof targetName !== 'string') return 'TK';
+      const trimmed = targetName.trim();
+      if (trimmed === '') return 'TK';
+      const nameTokens = trimmed.split(' ');
       if (nameTokens.length === 1) return nameTokens[0].substring(0, 2).toUpperCase();
       return (nameTokens[0][0] + nameTokens[nameTokens.length - 1][0]).toUpperCase();
     } catch (crashException) {
-      console.error("Biyometrik Baş Harf Hesaplama Motoru Hatası Bypass Edildi:", crashException);
-      return 'TK';
+      console.warn("Initials Parsing Bypass:", crashException);
+      return 'TK'; // Sistem çökmek yerine güvenli formata döner
     }
   };
 
-  // LocalStorage Entegrasyon Döngüsü
+  // 5.4. LocalStorage Güvenli Okuma Döngüsü
   useEffect(() => {
     try {
-      const activeProfileSignal = localStorage.getItem('cornflix_secured_profile_v3');
+      const activeProfileSignal = localStorage.getItem('cornflix_secured_profile_v4');
       if (activeProfileSignal) {
         const decodedProfile = JSON.parse(activeProfileSignal);
         if (decodedProfile && decodedProfile.name) {
@@ -221,22 +228,23 @@ const ProfileIdentity: React.FC = () => {
         }
       }
     } catch (storageReadingError) {
-      console.error("Profil Şifreli Bellek Okuma Hatası:", storageReadingError);
+      console.error("Local Storage Verisi Bozuk. Varsayılanlar Korumaya Alındı.", storageReadingError);
+      // Hata durumunda sistem kendi statik state'ini kullanmaya devam eder.
     }
   }, []);
 
-  // Profil Güncelleme ve Doğrulama Protokolü
+  // 5.5. Profil Şifreleme ve Kaydetme Protokolü
   const triggerProfileEncryptionProtocol = () => {
     if (!formInputState.name || formInputState.name.trim() === '') {
       alert(t.validationError);
       return;
     }
     setProfileState(formInputState);
-    localStorage.setItem('cornflix_secured_profile_v3', JSON.stringify(formInputState));
+    localStorage.setItem('cornflix_secured_profile_v4', JSON.stringify(formInputState));
     setIsEditModalOpen(false);
   };
 
-  // Framer Motion Animasyon Paketleri
+  // 5.6. Framer Motion Animasyon Paketleri
   const layoutStaggerVariants = {
     hidden: { opacity: 0 },
     display: { opacity: 1, transition: { staggerChildren: 0.12 } }
@@ -259,10 +267,10 @@ const ProfileIdentity: React.FC = () => {
         <span style={styles.badgeRequirement}>{t.reqBadge}</span>
       </div>
 
-      {/* CORE FRAME LAYOUT */}
+      {/* CORE FRAME LAYOUT STACK */}
       <motion.div variants={layoutStaggerVariants} initial="hidden" animate="display">
         
-        {/* REQ 10: LINGUISTIC ENGINE FREKANS SEÇİCİ PANEL */}
+        {/* REQ 10: DİL MOTORU PANELİ */}
         <motion.div variants={adaptiveCardVariants} style={styles.neuralControlPanel}>
           <div style={styles.panelHeaderRow}>
             <span style={styles.activeGlowPulseNode}></span>
@@ -279,19 +287,25 @@ const ProfileIdentity: React.FC = () => {
               onClick={() => setCurrentLanguage('EN')} 
               style={{ ...styles.frequencyBtn, ...(currentLanguage === 'EN' ? styles.frequencyBtnActive : {}) }}
             >
-              ENGLISH [SYS_EN]
+              ENGLISH [GLOBAL]
             </button>
           </div>
         </motion.div>
 
-        {/* REQ 1: RESMİ OPERATÖR SİNAPTİK KİMLİK KARTI */}
+        {/* REQ 1: RESMİ OPERATÖR KİMLİK KARTI (HERO SECTION) */}
         <motion.div variants={adaptiveCardVariants} style={styles.synapticIdCardContainer}>
           <div style={styles.matrixBackgroundGrid}></div>
           <div style={styles.chromaRadialGlow}></div>
 
           <div style={styles.idCardHeaderRow}>
             <span style={styles.idCardHeaderClassified}>{t.idCardHeader}</span>
-            <button onClick={() => { setFormInputState(profileState); setIsEditModalOpen(true); }} style={styles.actionModifyBtn}>
+            <button 
+              onClick={() => { 
+                setFormInputState(profileState); // Modalı açarken mevcut veriyi form state'ine kopyala
+                setIsEditModalOpen(true); 
+              }} 
+              style={styles.actionModifyBtn}
+            >
               <span style={{ marginRight: '6px' }}>⚙️</span> {t.editBtn}
             </button>
           </div>
@@ -308,7 +322,7 @@ const ProfileIdentity: React.FC = () => {
               <p style={styles.operatorLocationText}>🌐 {profileState.location}</p>
               <p style={styles.operatorBioParagraph}>"{profileState.bio}"</p>
               
-              {/* Güvenlik Kodu Görsel Barkod Simülasyonu */}
+              {/* Siberpunk Görsel Barkod Simülasyonu */}
               <div style={styles.visualBarcodeStream}>
                 {Array.from({ length: 32 }).map((_, barIndex) => (
                   <div key={barIndex} style={{
@@ -323,7 +337,7 @@ const ProfileIdentity: React.FC = () => {
           </div>
         </motion.div>
 
-        {/* NÖRAL YETENEK MATRİSİ PANELİ */}
+        {/* NÖRAL YETENEK MATRİSİ AĞACI */}
         <motion.div variants={adaptiveCardVariants} style={styles.standardMetricsCard}>
           <h3 style={styles.subModuleSectionTitle}>{t.skillsTitle}</h3>
           <div style={styles.skillsStackContainer}>
@@ -378,7 +392,7 @@ const ProfileIdentity: React.FC = () => {
           <LiveTerminalConsole logBuffer={t.logs} />
         </motion.div>
 
-        {/* BAĞLANTI KESME PANEL BUTONU */}
+        {/* BAĞLANTI KESME SİSTEM BUTONU */}
         <motion.button 
           variants={adaptiveCardVariants} 
           whileTap={{ scale: 0.96 }} 
@@ -390,7 +404,7 @@ const ProfileIdentity: React.FC = () => {
       </motion.div>
 
       {/* ============================================================================
-       * REQ 1: DİNAMİK BİYOMETRİK VERİ GÜNCELLEME MODALI (OVERLAY INTERACTIVE)
+       * GÜVENLİ BİYOMETRİK DÜZENLEME MODALI (OVERLAY INTERACTIVE)
        * ============================================================================ */}
       <AnimatePresence>
         {isEditModalOpen && (
@@ -404,11 +418,12 @@ const ProfileIdentity: React.FC = () => {
             >
               <h3 style={styles.modalHeadingTitle}>KİMLİK VERİLERİ ŞİFRELEME ODASI</h3>
               
+              {/* STATE GÜVENLİĞİ: Tüm value'lar 'formInputState' objesinden gelir */}
               <div style={styles.modalFormInputGroup}>
                 <label style={styles.modalFormLabel}>{t.labels.name}</label>
                 <input 
-                  value={editFormInputState.name} 
-                  onChange={e => setFormInputState({ ...editFormInputState, name: e.target.value })} 
+                  value={formInputState.name} 
+                  onChange={e => setFormInputState({ ...formInputState, name: e.target.value })} 
                   style={styles.modalInputField} 
                 />
               </div>
@@ -416,8 +431,8 @@ const ProfileIdentity: React.FC = () => {
               <div style={styles.modalFormInputGroup}>
                 <label style={styles.modalFormLabel}>{t.labels.role}</label>
                 <input 
-                  value={editFormInputState.role} 
-                  onChange={e => setFormInputState({ ...editFormInputState, role: e.target.value })} 
+                  value={formInputState.role} 
+                  onChange={e => setFormInputState({ ...formInputState, role: e.target.value })} 
                   style={styles.modalInputField} 
                 />
               </div>
@@ -425,8 +440,8 @@ const ProfileIdentity: React.FC = () => {
               <div style={styles.modalFormInputGroup}>
                 <label style={styles.modalFormLabel}>{t.labels.loc}</label>
                 <input 
-                  value={editFormInputState.location} 
-                  onChange={e => setFormInputState({ ...editFormInputState, location: e.target.value })} 
+                  value={formInputState.location} 
+                  onChange={e => setFormInputState({ ...formInputState, location: e.target.value })} 
                   style={styles.modalInputField} 
                 />
               </div>
@@ -434,8 +449,8 @@ const ProfileIdentity: React.FC = () => {
               <div style={styles.modalFormInputGroup}>
                 <label style={styles.modalFormLabel}>{t.labels.bio}</label>
                 <textarea 
-                  value={editFormInputState.bio} 
-                  onChange={e => setFormInputState({ ...editFormInputState, bio: e.target.value })} 
+                  value={formInputState.bio} 
+                  onChange={e => setFormInputState({ ...formInputState, bio: e.target.value })} 
                   style={styles.modalTextAreaField} 
                 />
               </div>
@@ -459,7 +474,7 @@ const ProfileIdentity: React.FC = () => {
 };
 
 // ----------------------------------------------------------------------------
-// 6. DEVAASA VE MİLİMETRİK PREMIUM CSS PROPERTİES MATRİSİ
+// 6. 500 SATIRLIK MÜHENDİSLİĞİ DESTEKLEYEN DEVASA CSS MİMARİSİ
 // ----------------------------------------------------------------------------
 const styles: { [key: string]: React.CSSProperties } = {
   viewportWrapper: { padding: '20px', color: '#fff', fontFamily: '"Share Tech Mono", monospace', paddingBottom: '120px' },
@@ -473,13 +488,13 @@ const styles: { [key: string]: React.CSSProperties } = {
   // Dil Paneli
   neuralControlPanel: { backgroundColor: '#050a14', border: '1px solid #112240', borderRadius: '16px', padding: '20px', marginBottom: '30px', boxShadow: '0 6px 25px rgba(0,0,0,0.45)' },
   panelHeaderRow: { display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '16px' },
-  activeGlowPulseNode: { width: '8px', height: '8px', backgroundColor: '#00ffaa', borderRadius: '50%', boxShadow: '0 0 12px #00ffaa' },
+  activeGlowPulseNode: { width: '8px', height: '8px', backgroundColor: '#00ffaa', borderRadius: '50%', boxShadow: '0 0 12px #00ffaa', animation: 'blink 1.5s infinite' },
   panelHeaderLabel: { margin: 0, fontSize: '11px', color: '#64748b', letterSpacing: '1px' },
   dualToggleGroup: { display: 'flex', gap: '16px' },
-  langBtn: { flex: 1, padding: '14px', backgroundColor: 'transparent', border: '1px solid #1a202c', color: '#64748b', borderRadius: '12px', cursor: 'pointer', fontSize: '12px', fontWeight: 'bold', transition: 'all 0.3s ease', fontFamily: '"Share Tech Mono", monospace' },
-  langBtnActive: { backgroundColor: 'rgba(0, 240, 255, 0.08)', borderColor: '#00f0ff', color: '#00f0ff', boxShadow: '0 0 20px rgba(0,240,255,0.15)' },
+  frequencyBtn: { flex: 1, padding: '14px', backgroundColor: 'transparent', border: '1px solid #1a202c', color: '#64748b', borderRadius: '12px', cursor: 'pointer', fontSize: '12px', fontWeight: 'bold', transition: 'all 0.3s ease', fontFamily: '"Share Tech Mono", monospace' },
+  frequencyBtnActive: { backgroundColor: 'rgba(0, 240, 255, 0.08)', borderColor: '#00f0ff', color: '#00f0ff', boxShadow: '0 0 20px rgba(0,240,255,0.15)' },
   
-  // Operatör Kartı Stilleri
+  // Operatör Kartı (Kimlik)
   synapticIdCardContainer: { backgroundColor: 'rgba(9, 13, 22, 0.82)', backdropFilter: 'blur(12px)', border: '1px solid rgba(0, 240, 255, 0.28)', borderRadius: '24px', padding: '30px', marginBottom: '35px', position: 'relative', overflow: 'hidden', boxShadow: '0 16px 45px rgba(0,240,255,0.08)' },
   matrixBackgroundGrid: { position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', backgroundImage: 'linear-gradient(rgba(255, 255, 255, 0.015) 1px, transparent 1px), linear-gradient(90deg, rgba(255, 255, 255, 0.015) 1px, transparent 1px)', backgroundSize: '20px 20px', pointerEvents: 'none', zIndex: 0 },
   chromaRadialGlow: { position: 'absolute', right: '-15%', bottom: '-15%', width: '160px', height: '160px', background: 'radial-gradient(circle, rgba(0,240,255,0.18) 0%, transparent 70%)', filter: 'blur(25px)', zIndex: 0 },
@@ -497,7 +512,7 @@ const styles: { [key: string]: React.CSSProperties } = {
   operatorBioParagraph: { margin: '0 0 16px 0', fontSize: '12px', color: '#cbd5e1', fontStyle: 'italic', lineHeight: '1.65' },
   visualBarcodeStream: { display: 'flex', alignItems: 'center', opacity: 0.65 },
   
-  // Yetenek Matrisi Stilleri
+  // Yetenek Matrisi
   standardMetricsCard: { marginBottom: '35px' },
   skillsStackContainer: { display: 'flex', flexDirection: 'column', gap: '18px' },
   skillNodeLayout: { display: 'flex', flexDirection: 'column', gap: '8px' },
@@ -515,7 +530,7 @@ const styles: { [key: string]: React.CSSProperties } = {
   sessionNodeText: { color: '#64748b', fontSize: '11px' },
   sessionStatusBadge: { fontSize: '10px', padding: '5px 10px', borderRadius: '6px', fontWeight: 'bold', border: '1px solid', letterSpacing: '0.5px' },
   
-  // Terminal Alanı
+  // Live Terminal
   terminalContainer: { backgroundColor: '#020205', border: '1px solid #112240', borderRadius: '16px', overflow: 'hidden', marginBottom: '35px', boxShadow: '0 12px 30px rgba(0,0,0,0.6)' },
   terminalHeaderBar: { backgroundColor: '#0a1526', padding: '14px 20px', display: 'flex', alignItems: 'center', borderBottom: '1px solid #112240' },
   terminalWindowButtons: { display: 'flex', gap: '8px', marginRight: '20px' },
@@ -525,16 +540,16 @@ const styles: { [key: string]: React.CSSProperties } = {
   terminalLogLine: { fontSize: '12px', fontFamily: '"Share Tech Mono", monospace', letterSpacing: '0.5px', lineHeight: '1.5' },
   terminalCursorTick: { width: '9px', height: '14px', backgroundColor: '#00ffaa', display: 'inline-block', marginTop: '4px' },
   
-  // Disconnect Butonu
+  // Çıkış Butonu
   systemCoreDisconnectBtn: { width: '100%', padding: '20px', backgroundColor: 'rgba(255, 51, 102, 0.08)', border: '1px solid #ff3366', color: '#ff3366', borderRadius: '16px', fontSize: '14px', fontWeight: 'bold', cursor: 'pointer', fontFamily: '"Share Tech Mono", monospace', letterSpacing: '2px', transition: 'all 0.3s ease', boxShadow: '0 0 25px rgba(255,51,102,0.12)' },
   
-  // İnteraktif Düzenleme Modalı Stilleri
+  // İnteraktif Modal (Form)
   modalViewportOverlay: { position: 'fixed', top: 0, left: 0, width: '100vw', height: '100vh', backgroundColor: 'rgba(2, 2, 5, 0.94)', backdropFilter: 'blur(12px)', zIndex: 9999, display: 'flex', justifyContent: 'center', alignItems: 'center', padding: '20px' },
   modalContentWrapper: { width: '100%', maxWidth: '460px', backgroundColor: '#050a14', borderRadius: '24px', padding: '30px', border: '1px solid #00f0ff', boxShadow: '0 25px 65px rgba(0,240,255,0.16)', display: 'flex', flexDirection: 'column' },
   modalHeadingTitle: { color: '#00f0ff', margin: '0 0 25px 0', fontSize: '18px', borderBottom: '1px solid rgba(0,240,255,0.25)', paddingBottom: '16px', letterSpacing: '1px', textTransform: 'uppercase' },
   modalFormInputGroup: { marginBottom: '16px', display: 'flex', flexDirection: 'column' },
   modalFormLabel: { fontSize: '11px', color: '#64748b', marginBottom: '8px', letterSpacing: '0.5px' },
-  modalInputField: { width: '100%', padding: '14px', backgroundColor: '#020205', border: '1px solid #112240', borderRadius: '10px', color: '#fff', fontSize: '13px', boxSizing: 'border-box', fontFamily: '"Share Tech Mono", monospace', outline: 'none', colorScheme: 'dark' },
+  modalInputField: { width: '100%', padding: '14px', backgroundColor: '#020205', border: '1px solid #112240', borderRadius: '10px', color: '#fff', fontSize: '13px', boxSizing: 'border-box', fontFamily: '"Share Tech Mono", monospace', outline: 'none' },
   modalTextAreaField: { width: '100%', height: '85px', padding: '14px', backgroundColor: '#020205', border: '1px solid #112240', borderRadius: '10px', color: '#fff', fontSize: '13px', boxSizing: 'border-box', fontFamily: '"Share Tech Mono", monospace', outline: 'none', resize: 'none' },
   modalActionButtonsRow: { display: 'flex', gap: '16px', marginTop: '25px' },
   modalSaveExecutionBtn: { flex: 1, padding: '16px', backgroundColor: 'rgba(0, 255, 170, 0.12)', border: '1px solid #00ffaa', color: '#00ffaa', borderRadius: '12px', fontWeight: 'bold', cursor: 'pointer', fontSize: '12px', transition: 'all 0.3s ease', fontFamily: '"Share Tech Mono", monospace' },
