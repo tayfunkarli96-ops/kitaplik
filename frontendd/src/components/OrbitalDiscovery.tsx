@@ -5,12 +5,11 @@ import { motion, AnimatePresence } from 'framer-motion';
 interface Movie {
   id: number;
   title: string;
-  poster: string; // URL veya Placeholder
-  matchRate: number; // Req 8 AI puanı
-  category: string; // Req 4 Filtre
+  poster: string;
+  matchRate: number; 
+  category: string; 
 }
 
-// Mock Data - Premium görsellerin placeholders (gerçek hayatta API'den gelir)
 const mockMovies: Movie[] = [
   { id: 1, title: 'Interstellar', poster: 'https://image.tmdb.org/t/p/w500/gEU2vW9scwUv6v07fsr3bYvY43r.jpg', matchRate: 99, category: 'Sci-Fi' },
   { id: 2, title: 'Inception', poster: 'https://image.tmdb.org/t/p/w500/o0pi034RdtN7FjWwF3u9M7H6737.jpg', matchRate: 95, category: 'Sci-Fi' },
@@ -18,14 +17,11 @@ const mockMovies: Movie[] = [
   { id: 4, title: 'Oppenheimer', poster: 'https://image.tmdb.org/t/p/w500/8Gxv8gSFCU0XGDykEGv7zR1n2ua.jpg', matchRate: 82, category: 'Drama' },
 ];
 
-// --- PREMIUM ANIMATION VARIANTS (Sırrımız Burada) ---
 const containerVariants = {
   hidden: { opacity: 0 },
   visible: {
     opacity: 1,
-    transition: {
-      staggerChildren: 0.15, // Çocuklar sırayla gelir
-    },
+    transition: { staggerChildren: 0.15 },
   },
 };
 
@@ -33,16 +29,14 @@ const cardVariants = {
   hidden: { y: 50, opacity: 0, scale: 0.9 },
   visible: { 
     y: 0, opacity: 1, scale: 1,
-    transition: { type: 'spring', stiffness: 100, damping: 15 } // Yumuşak yay efekti
+    transition: { type: 'spring', stiffness: 100, damping: 15 }
   },
-  hover: { scale: 1.05, y: -10, transition: { duration: 0.3 } } // Mobilde basılı tutunca
+  hover: { scale: 1.05, y: -10, transition: { duration: 0.3 } } 
 };
 
-// --- COMPONENT MAIN ---
 const OrbitalDiscovery: React.FC = () => {
   const [activeFilter, setActiveFilter] = useState<string>('All');
 
-  // Req 4: Filtreleme mantığı
   const filteredMovies = activeFilter === 'All' 
     ? mockMovies 
     : mockMovies.filter(m => m.category === activeFilter);
@@ -51,7 +45,6 @@ const OrbitalDiscovery: React.FC = () => {
     <div style={styles.page}>
       <h1 style={styles.pageTitle}>Orbital Premieres</h1>
       
-      {/* Premium Filtre Barı (Req 4) */}
       <div style={styles.filterBar}>
         {['All', 'Sci-Fi', 'Action', 'Drama'].map(filter => (
           <button 
@@ -63,23 +56,21 @@ const OrbitalDiscovery: React.FC = () => {
         ))}
       </div>
 
-      {/* Akıcı Kart Grid'i (Req 8 AI Puanlı) */}
       <motion.div 
         style={styles.grid}
         variants={containerVariants}
         initial="hidden"
         animate="visible">
-        <AnimatePresence> {/* Elemanlar değişirken animasyon */}
+        <AnimatePresence>
           {filteredMovies.map(movie => (
             <motion.div 
               key={movie.id} 
               style={styles.card}
               variants={cardVariants}
-              whileHover="hover" // Mobilde dokunmatik tepki
-              layout // Pozisyon değişimlerini otomatik filtrele
+              whileHover="hover"
+              layout 
               exit={{ opacity: 0, scale: 0.8, transition: { duration: 0.2 } }}>
               
-              {/* Premium Glow Efekti (REQ 8 Match Rate) */}
               <div style={styles.glowEffect}></div>
               
               <img src={movie.poster} alt={movie.title} style={styles.poster} />
@@ -95,7 +86,7 @@ const OrbitalDiscovery: React.FC = () => {
   );
 };
 
-// --- PREMIUM STYLING (JS Objects for copy-paste) ---
+// --- CSS HATASI (z-index) DÜZELTİLDİ ---
 const styles: { [key: string]: React.CSSProperties } = {
   page: { backgroundColor: '#000408', minHeight: '100vh', padding: '20px', fontFamily: '"SF Pro Display", -apple-system, system-ui, sans-serif', color: '#fff', overflowX: 'hidden' },
   pageTitle: { fontSize: '28px', fontWeight: 'bold', letterSpacing: '-1px', marginBottom: '25px' },
@@ -112,8 +103,7 @@ const styles: { [key: string]: React.CSSProperties } = {
   movieTitle: { fontSize: '15px', fontWeight: 'bold', margin: '0 0 5px 0' },
   matchBadge: { display: 'inline-block', fontSize: '10px', backgroundColor: 'rgba(0, 240, 255, 0.1)', color: '#00f0ff', padding: '2px 6px', borderRadius: '4px', textTransform: 'uppercase' },
   
-  // Premium Arka Plan Işıltısı
-  glowEffect: { position: 'absolute', top: '-50%', left: '-50%', width: '200%', height: '200%', background: 'radial-gradient(circle, rgba(0,102,255,0.1) 0%, rgba(0,0,0,0) 70%)', pointerEvents: 'none', z-index: 0 }
+  glowEffect: { position: 'absolute', top: '-50%', left: '-50%', width: '200%', height: '200%', background: 'radial-gradient(circle, rgba(0,102,255,0.1) 0%, rgba(0,0,0,0) 70%)', pointerEvents: 'none', zIndex: 0 }
 };
 
 export default OrbitalDiscovery;
