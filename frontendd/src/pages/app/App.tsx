@@ -1,21 +1,59 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 
-// --- DOSYA YOLLARI KUSURSUZ HALE GETİRİLDİ (İki klasör yukarı: src/components/) ---
 import OrbitalDiscovery from '../../components/OrbitalDiscovery';
 import PremiumWatchlist from '../../components/PremiumWatchlist';
 import OverseerDashboard from '../../components/OverseerDashboard';
 import ProfileIdentity from '../../components/ProfileIdentity';
 
-// --- REACT ICONS BAĞLANTILARI (Garantili İkon Yönetimi) ---
 import { FiRadio, FiCheckSquare, FiShield, FiUser } from 'react-icons/fi';
+
+// --- YENİ EKLENEN: İŞLEMSEL YILDIZ TARLASI (PROCEDURAL STARFIELD) ---
+const TwinklingStars = () => {
+  const [stars, setStars] = useState<{id: number, top: string, left: string, size: number, duration: number, delay: number}[]>([]);
+
+  useEffect(() => {
+    // Ekran yüklendiğinde rastgele 50 adet yıldız üretir
+    const generatedStars = Array.from({ length: 50 }).map((_, i) => ({
+      id: i,
+      top: `${Math.random() * 100}%`,
+      left: `${Math.random() * 100}%`,
+      size: Math.random() * 2 + 1, // 1px ile 3px arası büyüklük
+      duration: Math.random() * 3 + 2, // 2s ile 5s arası parlama hızı
+      delay: Math.random() * 2 // Rastgele başlama gecikmesi
+    }));
+    setStars(generatedStars);
+  }, []);
+
+  return (
+    <div style={{ position: 'absolute', width: '100%', height: '100%', overflow: 'hidden', pointerEvents: 'none', zIndex: 0 }}>
+      {stars.map((star) => (
+        <motion.div
+          key={star.id}
+          initial={{ opacity: 0.1 }}
+          animate={{ opacity: [0.1, 1, 0.1] }}
+          transition={{ duration: star.duration, delay: star.delay, repeat: Infinity, ease: "easeInOut" }}
+          style={{
+            position: 'absolute',
+            top: star.top,
+            left: star.left,
+            width: `${star.size}px`,
+            height: `${star.size}px`,
+            backgroundColor: '#fff',
+            borderRadius: '50%',
+            boxShadow: `0 0 ${star.size * 2}px #fff`,
+          }}
+        />
+      ))}
+    </div>
+  );
+};
 
 const App: React.FC = () => {
   const [activeTab, setActiveTab] = useState<string>('DISCOVER');
   const [dbStatus, setDbStatus] = useState<number>(84);
   const [time, setTime] = useState<string>('');
 
-  // Canlı Saat Efekti
   useEffect(() => {
     const timer = setInterval(() => {
       const now = new Date();
@@ -37,9 +75,10 @@ const App: React.FC = () => {
   return (
     <div style={styles.appShell}>
       
-      {/* 1. SİBER ARKA PLAN */}
+      {/* 1. SİBER ARKA PLAN VE PARLAYAN YILDIZLAR */}
       <div style={styles.ambientGlow}></div>
       <div style={styles.matrixGrid}></div>
+      <TwinklingStars /> {/* YILDIZ MOTORU BURADA ÇALIŞIYOR */}
 
       {/* 2. TELEMETRİ ÜST BAR */}
       <header style={styles.telemetryHeader}>
@@ -85,7 +124,6 @@ const App: React.FC = () => {
               onClick={() => setActiveTab(item.id)}
               style={styles.navButton}
             >
-              {/* Arkada Kayan Neon Işık Havuzu */}
               {isActive && (
                 <motion.div
                   layoutId="hologramGlow"
@@ -94,7 +132,6 @@ const App: React.FC = () => {
                 />
               )}
               
-              {/* İkon ve Metin Katmanı */}
               <motion.div 
                 animate={{ y: isActive ? -4 : 0 }}
                 style={{ ...styles.metaContainer, color: isActive ? '#00f0ff' : '#4a5568' }}
@@ -112,7 +149,7 @@ const App: React.FC = () => {
   );
 };
 
-// --- CSS HATALARI (CamelCase) TAMAMEN TEMİZLENDİ ---
+// --- CSS ---
 const styles: { [key: string]: React.CSSProperties } = {
   appShell: {
     position: 'relative', width: '100vw', height: '100vh', backgroundColor: '#020205',
