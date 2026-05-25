@@ -1,138 +1,149 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 
-// --- LINGUISTIC ENGINE (Req 10) ---
-const translations = {
+// --- REQ 10: LINGUISTIC ENGINE (Sözlük Motoru) ---
+const dict = {
   TR: {
-    title: "SİNAPTİK KİMLİK",
-    rank: "RÜTBE: BAŞ MİMAR",
-    nameLabel: "OPERATÖR ADI",
-    langLabel: "SİSTEM DİLİ",
-    updateBtn: "BİLGİLERİ GÜNCELLE",
-    status: "SİSTEM ÇEVRİMİÇİ",
+    header: 'SİNAPTİK KİMLİK',
+    reqBadge: 'REQ 1, 10',
+    idCard: 'RESMİ OPERATÖR KARTI',
+    name: 'Tayfun Karlı',
+    role: 'Baş Mimar (Lead Architect)',
+    location: 'SDÜ Command Center, Isparta',
+    status: 'SİSTEME BAĞLI',
+    langTitle: 'Dil Motoru (Req 10)',
+    sysLogs: 'Sistem Kayıtları',
+    encryption: '256-bit Kuantum Şifreleme',
+    logout: 'BAĞLANTIYI KES'
   },
   EN: {
-    title: "SYNAPTIC IDENTITY",
-    rank: "RANK: LEAD ARCHITECT",
-    nameLabel: "OPERATOR NAME",
-    langLabel: "SYSTEM LANGUAGE",
-    updateBtn: "UPDATE PROTOCOLS",
-    status: "SYSTEM ONLINE",
+    header: 'SYNAPTIC IDENTITY',
+    reqBadge: 'REQ 1, 10',
+    idCard: 'OFFICIAL OPERATOR CARD',
+    name: 'Tayfun Karli',
+    role: 'Lead Architect',
+    location: 'SDU Command Center, Isparta',
+    status: 'CONNECTED',
+    langTitle: 'Linguistic Engine (Req 10)',
+    sysLogs: 'System Logs',
+    encryption: '256-bit Quantum Encryption',
+    logout: 'DISCONNECT'
   }
 };
 
 const ProfileIdentity: React.FC = () => {
   const [lang, setLang] = useState<'TR' | 'EN'>('TR');
-  const [name, setName] = useState('TAYFUN KARLI');
-  const [isEditing, setIsEditing] = useState(false);
-
-  const t = translations[lang];
+  const t = dict[lang]; // Seçili dile göre metinleri çeker
 
   return (
     <div style={styles.container}>
-      {/* ÜST DURUM ÇUBUĞU */}
-      <div style={styles.statusLine}>
-        <div style={styles.pulseDot}></div>
-        <span style={styles.statusText}>{t.status}</span>
+      <div style={styles.metaHeader}>
+        <span style={styles.sectionTitle}>{t.header}</span>
+        <span style={styles.reqBadge}>{t.reqBadge}</span>
       </div>
 
+      {/* REQ 1: SYNAPTIC ID CARD */}
       <motion.div 
-        layout
-        style={styles.idCard}
-        initial={{ opacity: 0, scale: 0.9 }}
-        animate={{ opacity: 1, scale: 1 }}
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ type: 'spring', stiffness: 100 }}
+        style={styles.idCardContainer}
       >
-        <h2 style={styles.cardHeader}>{t.title}</h2>
+        <div style={styles.cardHeader}>
+          <span style={styles.cardHeaderText}>{t.idCard}</span>
+          <div style={styles.statusDot}></div>
+        </div>
         
-        {/* AVATAR BÖLÜMÜ */}
-        <div style={styles.avatarSection}>
-          <div style={styles.avatarCircle}>
-            <span style={{fontSize: '24px', fontWeight: 'bold', color: '#00f0ff'}}>TK</span>
-            <svg style={styles.svgRing} viewBox="0 0 100 100">
-              <circle cx="50" cy="50" r="45" fill="none" stroke="#00f0ff" strokeWidth="2" strokeDasharray="10 5" />
-            </svg>
+        <div style={styles.profileSection}>
+          <div style={styles.avatarWrapper}>
+            <div style={styles.avatarHologram}>TK</div>
           </div>
-          <div style={styles.rankInfo}>
-            <p style={styles.rankText}>{t.rank}</p>
-            <p style={styles.clearance}>LEVEL 10 // ENCRYPTED</p>
+          <div style={styles.userInfo}>
+            <h2 style={styles.userName}>{t.name}</h2>
+            <p style={styles.userRole}>{t.role}</p>
+            <p style={styles.userLocation}><i className="fa-solid fa-location-crosshairs"></i> {t.location}</p>
+            <div style={styles.statusBadge}>{t.status}</div>
           </div>
         </div>
-
-        {/* REQ 1: PROFİL DÜZENLEME FORMU */}
-        <div style={styles.formGroup}>
-          <label style={styles.label}>{t.nameLabel}</label>
-          <input 
-            type="text" 
-            value={name} 
-            onChange={(e) => setName(e.target.value)}
-            style={styles.input}
-          />
-        </div>
-
-        {/* REQ 10: DİL SEÇENEKLERİ (TOGGLE) */}
-        <div style={styles.formGroup}>
-          <label style={styles.label}>{t.langLabel}</label>
-          <div style={styles.langToggle}>
-            <button 
-              onClick={() => setLang('TR')} 
-              style={{...styles.langBtn, ...(lang === 'TR' ? styles.langBtnActive : {})}}
-            >TR</button>
-            <button 
-              onClick={() => setLang('EN')} 
-              style={{...styles.langBtn, ...(lang === 'EN' ? styles.langBtnActive : {})}}
-            >EN</button>
-          </div>
-        </div>
-
-        <motion.button 
-          whileTap={{ scale: 0.95 }}
-          onClick={() => {
-            setIsEditing(true);
-            setTimeout(() => setIsEditing(false), 2000);
-          }}
-          style={styles.updateButton}
-        >
-          {isEditing ? "..." : t.updateBtn}
-        </motion.button>
       </motion.div>
 
-      {/* FOOTER DECORATION */}
-      <p style={styles.footerInfo}>SDR_LINK_ESTABLISHED // PORT: 8080</p>
+      {/* REQ 10: LINGUISTIC ENGINE CONTROLS */}
+      <motion.div 
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.1, type: 'spring', stiffness: 100 }}
+        style={styles.settingsPanel}
+      >
+        <h3 style={styles.panelTitle}>{t.langTitle}</h3>
+        <div style={styles.langToggleGroup}>
+          <button 
+            onClick={() => setLang('TR')} 
+            style={{...styles.langBtn, ...(lang === 'TR' ? styles.langBtnActive : {})}}
+          >
+            TÜRKÇE
+          </button>
+          <button 
+            onClick={() => setLang('EN')} 
+            style={{...styles.langBtn, ...(lang === 'EN' ? styles.langBtnActive : {})}}
+          >
+            ENGLISH
+          </button>
+        </div>
+      </motion.div>
+
+      {/* SYSTEM INFO (Visual Fluff) */}
+      <motion.div 
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.2 }}
+        style={styles.sysInfoList}
+      >
+        <div style={styles.sysItem}><span>{t.sysLogs}</span> <span style={styles.sysValue}>OK</span></div>
+        <div style={styles.sysItem}><span>{t.encryption}</span> <span style={styles.sysValue}>AKTİF</span></div>
+      </motion.div>
+
+      <motion.button 
+        whileTap={{ scale: 0.95 }}
+        style={styles.logoutBtn}
+      >
+        {t.logout}
+      </motion.button>
     </div>
   );
 };
 
-// --- STYLES ---
+// --- PREMIUM INLINE CSS ---
 const styles: { [key: string]: React.CSSProperties } = {
-  container: { padding: '30px 20px', backgroundColor: '#02050a', minHeight: '60vh', fontFamily: '"Space Mono", monospace' },
-  statusLine: { display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '20px' },
-  pulseDot: { width: '8px', height: '8px', backgroundColor: '#00f0ff', borderRadius: '50%', boxShadow: '0 0 10px #00f0ff' },
-  statusText: { fontSize: '10px', color: '#00f0ff', letterSpacing: '2px' },
+  container: { padding: '20px', color: '#fff', fontFamily: '"Share Tech Mono", monospace' },
+  metaHeader: { display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '25px', borderBottom: '1px solid #1a202c', paddingBottom: '10px' },
+  sectionTitle: { fontSize: '18px', fontWeight: 'bold', letterSpacing: '2px', color: '#00f0ff' },
+  reqBadge: { fontSize: '10px', backgroundColor: 'rgba(0, 240, 255, 0.1)', color: '#00f0ff', padding: '3px 8px', borderRadius: '4px', border: '1px solid rgba(0, 240, 255, 0.2)' },
   
-  idCard: { 
-    backgroundColor: 'rgba(11, 22, 40, 0.4)', backdropFilter: 'blur(15px)', 
-    border: '1px solid rgba(0, 240, 255, 0.2)', padding: '25px', borderRadius: '20px',
-    boxShadow: '0 20px 50px rgba(0,0,0,0.5)' 
-  },
-  cardHeader: { fontSize: '18px', color: '#fff', margin: '0 0 25px 0', borderBottom: '1px solid rgba(255,255,255,0.1)', paddingBottom: '10px' },
+  idCardContainer: { backgroundColor: 'rgba(9, 13, 22, 0.8)', backdropFilter: 'blur(10px)', border: '1px solid rgba(0, 240, 255, 0.3)', borderRadius: '16px', padding: '20px', marginBottom: '25px', boxShadow: '0 10px 30px rgba(0,240,255,0.05)', position: 'relative', overflow: 'hidden' },
+  cardHeader: { display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px', borderBottom: '1px solid rgba(255,255,255,0.1)', paddingBottom: '5px' },
+  cardHeaderText: { fontSize: '10px', color: '#4a5568', letterSpacing: '1px' },
+  statusDot: { width: '8px', height: '8px', backgroundColor: '#00ffaa', borderRadius: '50%', boxShadow: '0 0 10px #00ffaa' },
   
-  avatarSection: { display: 'flex', alignItems: 'center', gap: '20px', marginBottom: '30px' },
-  avatarCircle: { width: '70px', height: '70px', borderRadius: '50%', border: '1px solid rgba(255,255,255,0.1)', display: 'flex', justifyContent: 'center', alignItems: 'center', position: 'relative' },
-  svgRing: { position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', animation: 'spin 10s linear infinite' },
-  rankInfo: { display: 'flex', flexDirection: 'column' },
-  rankText: { fontSize: '13px', color: '#fff', margin: 0, fontWeight: 'bold' },
-  clearance: { fontSize: '10px', color: '#45a29e', margin: 0, marginTop: '4px' },
+  profileSection: { display: 'flex', alignItems: 'center', gap: '20px' },
+  avatarWrapper: { width: '80px', height: '80px', borderRadius: '12px', background: 'linear-gradient(45deg, rgba(0,240,255,0.2), rgba(0,0,0,0))', border: '1px solid #00f0ff', display: 'flex', justifyContent: 'center', alignItems: 'center', boxShadow: 'inset 0 0 15px rgba(0,240,255,0.2)' },
+  avatarHologram: { fontSize: '28px', color: '#00f0ff', fontWeight: 'bold', textShadow: '0 0 10px #00f0ff' },
+  userInfo: { flex: 1 },
+  userName: { margin: '0 0 5px 0', fontSize: '22px', color: '#fff', textTransform: 'uppercase', letterSpacing: '1px' },
+  userRole: { margin: '0 0 8px 0', fontSize: '12px', color: '#00f0ff' },
+  userLocation: { margin: '0 0 10px 0', fontSize: '10px', color: '#64748b' },
+  statusBadge: { display: 'inline-block', padding: '4px 8px', backgroundColor: 'rgba(0, 255, 170, 0.1)', color: '#00ffaa', fontSize: '9px', borderRadius: '4px', border: '1px solid rgba(0,255,170,0.3)' },
 
-  formGroup: { marginBottom: '20px' },
-  label: { display: 'block', fontSize: '10px', color: '#888', marginBottom: '8px', textTransform: 'uppercase' },
-  input: { width: '100%', backgroundColor: 'rgba(0,0,0,0.3)', border: '1px solid #112240', color: '#fff', padding: '12px', borderRadius: '8px', fontSize: '14px', outline: 'none' },
-  
-  langToggle: { display: 'flex', gap: '10px' },
-  langBtn: { flex: 1, padding: '10px', backgroundColor: '#050a14', border: '1px solid #112240', color: '#666', cursor: 'pointer', borderRadius: '8px', transition: '0.3s' },
-  langBtnActive: { borderColor: '#00f0ff', color: '#00f0ff', backgroundColor: 'rgba(0, 240, 255, 0.05)' },
-  
-  updateButton: { width: '100%', padding: '15px', backgroundColor: '#00f0ff', color: '#000', border: 'none', borderRadius: '8px', fontWeight: 'bold', cursor: 'pointer', marginTop: '10px' },
-  footerInfo: { textAlign: 'center', fontSize: '9px', color: '#333', marginTop: '30px', letterSpacing: '1px' }
+  settingsPanel: { backgroundColor: '#050a14', border: '1px solid #112240', borderRadius: '12px', padding: '15px', marginBottom: '20px' },
+  panelTitle: { margin: '0 0 15px 0', fontSize: '14px', color: '#888' },
+  langToggleGroup: { display: 'flex', gap: '10px' },
+  langBtn: { flex: 1, padding: '12px', backgroundColor: 'transparent', border: '1px solid #112240', color: '#666', borderRadius: '8px', cursor: 'pointer', transition: '0.3s', fontSize: '12px', fontWeight: 'bold' },
+  langBtnActive: { backgroundColor: 'rgba(0, 240, 255, 0.1)', borderColor: '#00f0ff', color: '#00f0ff', boxShadow: '0 0 15px rgba(0,240,255,0.1)' },
+
+  sysInfoList: { display: 'flex', flexDirection: 'column', gap: '10px', marginBottom: '30px' },
+  sysItem: { display: 'flex', justifyContent: 'space-between', padding: '10px 15px', backgroundColor: '#020205', border: '1px solid #0f172a', borderRadius: '8px', fontSize: '12px', color: '#4a5568' },
+  sysValue: { color: '#00f0ff' },
+
+  logoutBtn: { width: '100%', padding: '15px', backgroundColor: 'rgba(255, 51, 102, 0.1)', border: '1px solid #ff3366', color: '#ff3366', borderRadius: '12px', fontSize: '14px', fontWeight: 'bold', cursor: 'pointer', letterSpacing: '1px' }
 };
 
 export default ProfileIdentity;
