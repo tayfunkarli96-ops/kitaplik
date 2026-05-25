@@ -37,15 +37,18 @@ const OverseerDashboard: React.FC = () => {
 
   return (
     <div style={styles.container}>
-      <h2 style={styles.header}>OVERSEER COMMAND</h2>
+      <div style={styles.metaHeader}>
+        <span style={styles.sectionTitle}>OVERSEER COMMAND</span>
+        <span style={styles.reqBadge}>REQ 5, 7, 9</span>
+      </div>
       
       {/* TABS */}
       <div style={styles.tabContainer}>
         <button onClick={() => setActiveTab('MODERATION')} style={{...styles.tab, ...(activeTab === 'MODERATION' ? styles.activeTab : {})}}>
-          Sinyaller (Req 5/7)
+          Sinyaller (Mod)
         </button>
         <button onClick={() => setActiveTab('BROADCAST')} style={{...styles.tab, ...(activeTab === 'BROADCAST' ? styles.activeTab : {})}}>
-          Yayın (Req 9)
+          Yayın Frekansı
         </button>
       </div>
 
@@ -95,7 +98,9 @@ const OverseerDashboard: React.FC = () => {
               ))}
             </AnimatePresence>
             {comments.filter(c => c.status === 'pending').length === 0 && (
-              <p style={{textAlign: 'center', color: '#666', marginTop: '20px'}}>Tüm sinyaller temizlendi.</p>
+              <p style={{textAlign: 'center', color: '#666', marginTop: '20px', fontFamily: '"Share Tech Mono", monospace', fontSize: '12px'}}>
+                Tüm sinyaller temizlendi.
+              </p>
             )}
           </div>
         </motion.div>
@@ -104,20 +109,23 @@ const OverseerDashboard: React.FC = () => {
   );
 };
 
-// --- PREMIUM GLASSMORPHISM STYLES ---
+// --- CSS HATALARI (CamelCase) TAMAMEN TEMİZLENDİ ---
 const styles: { [key: string]: React.CSSProperties } = {
-  container: { padding: '20px', backgroundColor: '#02050a', minHeight: '60vh', color: '#fff', fontFamily: '"Inter", sans-serif' },
-  header: { fontSize: '22px', fontWeight: 'bold', color: '#00f0ff', letterSpacing: '2px', textAlign: 'center', marginBottom: '20px' },
+  container: { padding: '20px', color: '#fff', fontFamily: '"Inter", sans-serif' },
+  metaHeader: { display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px', borderBottom: '1px solid #1a202c', paddingBottom: '10px' },
+  sectionTitle: { fontSize: '18px', fontWeight: 'bold', letterSpacing: '2px', color: '#00f0ff' },
+  reqBadge: { fontSize: '10px', backgroundColor: 'rgba(0, 240, 255, 0.1)', color: '#00f0ff', padding: '3px 8px', borderRadius: '4px', border: '1px solid rgba(0, 240, 255, 0.2)' },
+  
   tabContainer: { display: 'flex', backgroundColor: '#0a1526', borderRadius: '12px', padding: '5px', marginBottom: '20px' },
-  tab: { flex: 1, padding: '10px', backgroundColor: 'transparent', border: 'none', color: '#666', fontWeight: 'bold', borderRadius: '8px', transition: '0.3s', cursor: 'pointer' },
+  tab: { flex: 1, padding: '10px', backgroundColor: 'transparent', border: 'none', color: '#666', fontWeight: 'bold', borderRadius: '8px', transition: '0.3s', cursor: 'pointer', fontSize: '12px' },
   activeTab: { backgroundColor: '#112240', color: '#00f0ff', boxShadow: '0 4px 10px rgba(0,0,0,0.3)' },
   
   glassPanel: { backgroundColor: 'rgba(10, 21, 38, 0.6)', backdropFilter: 'blur(10px)', border: '1px solid rgba(0, 240, 255, 0.1)', padding: '20px', borderRadius: '16px' },
   panelTitle: { margin: '0 0 5px 0', fontSize: '16px', color: '#fff' },
   subText: { fontSize: '12px', color: '#888', marginBottom: '15px' },
   
-  textArea: { width: '100%', height: '80px', backgroundColor: '#050a14', border: '1px solid #112240', color: '#fff', padding: '10px', borderRadius: '8px', marginBottom: '15px', resize: 'none', fontFamily: 'monospace' },
-  actionBtn: { width: '100%', padding: '12px', backgroundColor: 'rgba(0, 240, 255, 0.1)', border: '1px solid #00f0ff', color: '#00f0ff', fontWeight: 'bold', borderRadius: '8px', cursor: 'pointer', letterSpacing: '1px' },
+  textArea: { width: '100%', height: '80px', backgroundColor: '#050a14', border: '1px solid #112240', color: '#fff', padding: '10px', borderRadius: '8px', marginBottom: '15px', resize: 'none', fontFamily: '"Share Tech Mono", monospace', fontSize: '12px', boxSizing: 'border-box' },
+  actionBtn: { width: '100%', padding: '12px', backgroundColor: 'rgba(0, 240, 255, 0.1)', border: '1px solid #00f0ff', color: '#00f0ff', fontWeight: 'bold', borderRadius: '8px', cursor: 'pointer', letterSpacing: '1px', fontSize: '12px' },
   alertBox: { marginTop: '15px', padding: '10px', backgroundColor: '#00f0ff', color: '#000', fontWeight: 'bold', borderRadius: '6px', fontSize: '12px', textAlign: 'center' },
   
   commentList: { display: 'flex', flexDirection: 'column', gap: '15px' },
