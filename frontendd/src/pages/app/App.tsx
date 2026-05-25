@@ -1,18 +1,21 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 
-// --- GERÇEK BİLEŞENLERİN BAĞLANTISI (Burayı sahtelerle değiştirmiştik, şimdi gerçeğe bağlıyoruz) ---
+// --- DOSYA YOLLARI KUSURSUZ HALE GETİRİLDİ (İki klasör yukarı: src/components/) ---
 import OrbitalDiscovery from '../../components/OrbitalDiscovery';
 import PremiumWatchlist from '../../components/PremiumWatchlist';
 import OverseerDashboard from '../../components/OverseerDashboard';
 import ProfileIdentity from '../../components/ProfileIdentity';
 
+// --- REACT ICONS BAĞLANTILARI (Garantili İkon Yönetimi) ---
+import { FiRadio, FiCheckSquare, FiShield, FiUser } from 'react-icons/fi';
+
 const App: React.FC = () => {
   const [activeTab, setActiveTab] = useState<string>('DISCOVER');
-  const [dbStatus, setDbStatus] = useState<number>(84); // Canlı veri yükleme simülasyonu
+  const [dbStatus, setDbStatus] = useState<number>(84);
   const [time, setTime] = useState<string>('');
 
-  // Canlı Saat Efekti (HUD paneli için olmazsa olmaz)
+  // Canlı Saat Efekti
   useEffect(() => {
     const timer = setInterval(() => {
       const now = new Date();
@@ -34,7 +37,7 @@ const App: React.FC = () => {
   return (
     <div style={styles.appShell}>
       
-      {/* 1. SİBER ARKA PLAN (Yıldız Tozu Efekti) */}
+      {/* 1. SİBER ARKA PLAN */}
       <div style={styles.ambientGlow}></div>
       <div style={styles.matrixGrid}></div>
 
@@ -47,7 +50,7 @@ const App: React.FC = () => {
         <div style={styles.telemetryGroup}>
           <span style={styles.telemetryData}>DB_LOAD: {dbStatus}%</span>
           <span style={styles.telemetryDivider}>|</span>
-          <span style={styles.telemetryData}><i className="fa-solid fa-clock"></i> {time}</span>
+          <span style={styles.telemetryData}>{time}</span>
         </div>
       </header>
 
@@ -67,13 +70,13 @@ const App: React.FC = () => {
         </AnimatePresence>
       </main>
 
-      {/* 4. MEGA KLAS HOLOGRAFİK BOTTOM NAVIGATION */}
+      {/* 4. HOLOGRAFİK BOTTOM NAVIGATION */}
       <nav style={styles.hologramNav}>
         {[
-          { id: 'DISCOVER', icon: 'fa-solid fa-satellite-dish', label: 'PREMIERES' },
-          { id: 'WATCHLIST', icon: 'fa-solid fa-list-check', label: 'TARGETS' },
-          { id: 'ADMIN', icon: 'fa-solid fa-shield-halved', label: 'OVERSEER' },
-          { id: 'PROFILE', icon: 'fa-solid fa-fingerprint', label: 'IDENTITY' }
+          { id: 'DISCOVER', icon: <FiRadio size={18} />, label: 'PREMIERES' },
+          { id: 'WATCHLIST', icon: <FiCheckSquare size={18} />, label: 'TARGETS' },
+          { id: 'ADMIN', icon: <FiShield size={18} />, label: 'OVERSEER' },
+          { id: 'PROFILE', icon: <FiUser size={18} />, label: 'IDENTITY' }
         ].map((item) => {
           const isActive = activeTab === item.id;
           return (
@@ -96,7 +99,9 @@ const App: React.FC = () => {
                 animate={{ y: isActive ? -4 : 0 }}
                 style={{ ...styles.metaContainer, color: isActive ? '#00f0ff' : '#4a5568' }}
               >
-                <i className={item.icon} style={{ fontSize: '18px', textShadow: isActive ? '0 0 10px #00f0ff' : 'none' }}></i>
+                <div style={{ position: 'relative', zIndex: 1, display: 'flex', alignItems: 'center', filter: isActive ? 'drop-shadow(0 0 8px #00f0ff)' : 'none' }}>
+                  {item.icon}
+                </div>
                 <span style={{ ...styles.navLabel, fontWeight: isActive ? '700' : '400' }}>{item.label}</span>
               </motion.div>
             </button>
@@ -107,7 +112,7 @@ const App: React.FC = () => {
   );
 };
 
-// --- ULTRA PREMIUM INLINE CSS (CamelCase Hataları Düzeltildi) ---
+// --- CSS HATALARI (CamelCase) TAMAMEN TEMİZLENDİ ---
 const styles: { [key: string]: React.CSSProperties } = {
   appShell: {
     position: 'relative', width: '100vw', height: '100vh', backgroundColor: '#020205',
@@ -130,7 +135,7 @@ const styles: { [key: string]: React.CSSProperties } = {
     display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '0 20px'
   },
   telemetryGroup: { display: 'flex', alignItems: 'center', gap: '10px' },
-  pulseNode: { width: '6px', height: '6px', backgroundColor: '#00f0ff', borderRadius: '50%', boxShadow: '0 0 8px #00f0ff', animation: 'blink 2s infinite' },
+  pulseNode: { width: '6px', height: '6px', backgroundColor: '#00f0ff', borderRadius: '50%', boxShadow: '0 0 8px #00f0ff' },
   systemBrand: { fontSize: '11px', letterSpacing: '2px', color: '#00f0ff', opacity: 0.8 },
   telemetryData: { fontSize: '11px', letterSpacing: '1px', color: '#4a5568' },
   telemetryDivider: { color: '#1a202c', fontSize: '11px' },
