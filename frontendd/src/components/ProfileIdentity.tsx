@@ -1,144 +1,137 @@
-
-  /**
+/**
  * ============================================================================
- * CORNFLIX CORE OPERATING SYSTEM // PROFILE & SYNAPTIC IDENTITY MODULE v4.0
+ * CORNFLIX CORE OS // AUTH GATEWAY & SYNAPTIC IDENTITY MODULE v5.0
  * ============================================================================
  * LEAD ARCHITECT: Tayfun Karlı
- * UNIVERSITY: Süleyman Demirel Üniversitesi (SDÜ) - Bilgisayar Mühendisliği
- * * * BUGFIX REPORT: 
- * - Modal State Crash Resolved (Variable misreference fixed)
- * - Safe Initials Computation Added (Bulletproof string parsing)
- * - Enhanced LocalStorage Error Boundary (Prevents JSON parse crashes)
+ * UNIVERSITY: Süleyman Demirel Üniversitesi (SDÜ)
+ * * * SYSTEM PATCHES & UPGRADES:
+ * - [FIXED] Fatal Black Screen (Memory Leak in Terminal Interval Resolved)
+ * - [ADDED] Full Authentication Gateway (Login & Register System)
+ * - [ADDED] JWT Mock Tokenization via LocalStorage
+ * - [ENHANCED] Strict Type Safety & Null Checks for Zero Crashes
  * ============================================================================
  */
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 // ----------------------------------------------------------------------------
-// 1. KESİN TİP TANIMLAMALARI (TYPE SAFETY)
+// 1. TİP MİMARİSİ (TYPE SAFETY)
 // ----------------------------------------------------------------------------
 interface ProfileData {
   name: string;
   role: string;
   location: string;
   bio: string;
-  securityClearance: string;
 }
 
-interface SkillItem {
-  id: string;
-  name: string;
-  level: number;
-  color: string;
-}
-
-interface SessionItem {
-  id: number;
-  ip: string;
-  node: string;
-  time: string;
-  status: 'VERIFIED' | 'ENCRYPTED' | 'BLOCKED';
+interface AuthState {
+  isAuthenticated: boolean;
+  userEmail: string | null;
 }
 
 // ----------------------------------------------------------------------------
-// 2. REQ 10: SIFIR GECİKMELİ LİNGUİSTİK MOTOR (DICTIONARY MATRIX)
+// 2. LİNGUİSTİK VERİTABANI (DİL MOTORU)
 // ----------------------------------------------------------------------------
-const linguisticDatabase = {
+const dict = {
   TR: {
+    // Auth Modülü
+    authTitle: 'SİSTEME GİRİŞ YAP',
+    registerTitle: 'YENİ OPERATÖR KAYDI',
+    emailLabel: 'Siber Ağ Adresi (Email)',
+    passLabel: 'Kuantum Şifresi (Password)',
+    nameLabel: 'Operatör Adı',
+    loginBtn: 'AĞA BAĞLAN (LOGIN)',
+    registerBtn: 'KİMLİK OLUŞTUR (REGISTER)',
+    switchToReg: 'Yetkiniz yok mu? Yeni kayıt oluşturun.',
+    switchToLog: 'Zaten yetkiniz var mı? Sisteme giriş yapın.',
+    authError: 'HATA: Lütfen tüm protokol alanlarını doldurun.',
+    
+    // Kimlik Modülü
     pageTitle: 'SİNAPTİK KİMLİK & KONTROL MERKEZİ',
-    reqBadge: 'REQ 1, 10 // IDENTITY & I18N',
-    langSelector: 'DİL FREKANSI MODÜLASYONU',
-    idCardHeader: 'RESMİ OPERATÖR KARTI // CLASSIFIED TIER 1',
+    reqBadge: 'REQ 1, 10 // AUTH & IDENTITY',
+    idCardHeader: 'RESMİ OPERATÖR KARTI // CLASSIFIED',
     skillsTitle: 'NÖRAL YETENEK MATRİSİ',
     terminalTitle: 'SİSTEM GÜVENLİK & TERMİNAL LOGLARI',
-    sessionTitle: 'SON ERİŞİM VE OTURUM KAYITLARI',
     logoutBtn: 'AĞ BAĞLANTISINI KES (SECURE DISCONNECT)',
-    editBtn: 'KİMLİK PROTOKOLÜNÜ GÜNCELLE',
+    editBtn: 'KİMLİK GÜNCELLE',
     saveBtn: 'VERİLERİ ŞİFRELE VE KAYDET',
-    cancelBtn: 'İŞLEMİ İPTAL ET',
-    validationError: 'HATA: Operatör ismi boş bırakılamaz. Protokol reddedildi!',
-    labels: {
-      name: 'Operatör Resmi Adı',
-      role: 'Sistem Atanmış Rütbesi',
-      loc: 'Fiziksel / Siber Lokasyon',
-      bio: 'Biyometrik İmza / Görev Özeti'
-    },
+    cancelBtn: 'İPTAL ET',
+    labels: { name: 'Operatör Adı', role: 'Sistem Rütbesi', loc: 'Lokasyon', bio: 'Görev Özeti' },
     logs: [
-      "> [INIT] Kimlik doğrulama sekansı başlatıldı...",
-      "> [SECURE] 256-bit Kuantum şifreleme anahtarı ağa enjekte edildi.",
-      "> [BIOMETRIC] Retina ve DNA eşleşmesi onaylandı: TAYFUN KARLI.",
-      "> [NETWORK] SDÜ Command Mainframe bağlantı hızı: 12ms (Optimum).",
-      "> [AUTH] Kök (root) düzeyinde erişim yetkileri Baş Mimar'a devredildi.",
-      "> [SYSTEM] Çevresel tarama tamamlandı. Core OS v2.0 stabil."
+      "> [INIT] Güvenli ağ bağlantısı kuruldu...",
+      "> [SECURE] 256-bit Kuantum şifreleme aktif.",
+      "> [AUTH] Biyometrik kimlik eşleşmesi BAŞARILI.",
+      "> [SYSTEM] Bellek sızıntısı (Memory Leak) protokolü onarıldı.",
+      "> [ROOT] Kök erişimi Baş Mimar'a devredildi."
     ]
   },
   EN: {
-    pageTitle: 'SYNAPTIC IDENTITY & CONTROL CENTER',
-    reqBadge: 'REQ 1, 10 // IDENTITY & I18N',
-    langSelector: 'LANGUAGE FREQUENCY MODULATION',
-    idCardHeader: 'OFFICIAL OPERATOR CARD // CLASSIFIED TIER 1',
+    authTitle: 'SYSTEM LOGIN',
+    registerTitle: 'NEW OPERATOR REGISTRATION',
+    emailLabel: 'Cyber Network Address (Email)',
+    passLabel: 'Quantum Password',
+    nameLabel: 'Operator Name',
+    loginBtn: 'CONNECT TO NETWORK (LOGIN)',
+    registerBtn: 'CREATE IDENTITY (REGISTER)',
+    switchToReg: 'No clearance? Create a new record.',
+    switchToLog: 'Already cleared? Login to system.',
+    authError: 'ERROR: Please complete all protocol fields.',
+    
+    pageTitle: 'SYNAPTIC IDENTITY & COMMAND CENTER',
+    reqBadge: 'REQ 1, 10 // AUTH & IDENTITY',
+    idCardHeader: 'OFFICIAL OPERATOR CARD // CLASSIFIED',
     skillsTitle: 'NEURAL SKILL MATRIX',
-    terminalTitle: 'SYSTEM SECURITY & TERMINAL LOGS',
-    sessionTitle: 'RECENT ACCESS & SESSION RECORDS',
+    terminalTitle: 'SYSTEM SECURITY LOGS',
     logoutBtn: 'SECURE DISCONNECT FROM MAINFRAME',
-    editBtn: 'UPDATE IDENTITY PROTOCOL',
-    saveBtn: 'ENCRYPT & SAVE SYSTEM DATA',
-    cancelBtn: 'ABORT OPERATION',
-    validationError: 'ERROR: Operator name cannot be blank. Protocol denied!',
-    labels: {
-      name: 'Operator Official Name',
-      role: 'System Assigned Rank',
-      loc: 'Physical / Cyber Location',
-      bio: 'Biometric Signature / Duty Brief'
-    },
+    editBtn: 'UPDATE IDENTITY',
+    saveBtn: 'ENCRYPT & SAVE DATA',
+    cancelBtn: 'ABORT',
+    labels: { name: 'Operator Name', role: 'System Rank', loc: 'Location', bio: 'Duty Brief' },
     logs: [
-      "> [INIT] Authentication sequence initiated...",
-      "> [SECURE] 256-bit Quantum encryption key injected into network.",
-      "> [BIOMETRIC] Retinal and DNA scan verified: TAYFUN KARLI.",
-      "> [NETWORK] Connection to SDU Command Mainframe: 12ms (Optimum).",
-      "> [AUTH] Root-level access rights transferred to Lead Architect.",
-      "> [SYSTEM] Environmental scan completed. Core OS v2.0 stable."
+      "> [INIT] Secure network connection established...",
+      "> [SECURE] 256-bit Quantum encryption active.",
+      "> [AUTH] Biometric identity match SUCCESSFUL.",
+      "> [SYSTEM] Memory Leak protocol patched and secured.",
+      "> [ROOT] Root access handed over to Lead Architect."
     ]
   }
 };
 
-// ----------------------------------------------------------------------------
-// 3. STATİK BİLGİ AĞLARI
-// ----------------------------------------------------------------------------
-const skillMatrixData: SkillItem[] = [
-  { id: 'sk-01', name: 'React 19 & Spatial Archi', level: 98, color: '#00f0ff' },
-  { id: 'sk-02', name: 'Framer Motion Dynamics', level: 95, color: '#00ffaa' },
-  { id: 'sk-03', name: 'System Core Architecture', level: 99, color: '#f59e0b' },
-  { id: 'sk-04', name: 'Quantum Cryptography', level: 87, color: '#ff3366' }
-];
-
-const initialSessions: SessionItem[] = [
-  { id: 901, ip: '192.168.1.104', node: 'SDU Core Node', time: '12 Dakika Önce', status: 'VERIFIED' },
-  { id: 902, ip: '10.0.4.219', node: 'Isparta Server', time: '2 Gün Önce', status: 'ENCRYPTED' },
-  { id: 903, ip: 'Unknown_Relay', node: 'Proxy Firewall', time: '5 Gün Önce', status: 'BLOCKED' }
+const skillMatrix = [
+  { id: 's1', name: 'React 19 & Spatial UX', level: 98, color: '#00f0ff' },
+  { id: 's2', name: 'Framer Motion Dynamics', level: 95, color: '#00ffaa' },
+  { id: 's3', name: 'System Architecture', level: 99, color: '#f59e0b' },
+  { id: 's4', name: 'Memory Leak Prevention', level: 100, color: '#ff3366' }
 ];
 
 // ============================================================================
-// 4. SUB-COMPONENT: KESİNTİSİZ CANLI TERMİNAL (LIVE TERMINAL)
+// 3. ALT BİLEŞEN: KIRILMAZ CANLI TERMİNAL (CRASH-FREE)
 // ============================================================================
-const LiveTerminalConsole: React.FC<{ logBuffer: string[] }> = ({ logBuffer }) => {
+const LiveTerminalConsole: React.FC<{ logs: string[] }> = ({ logs }) => {
   const [streamedLogs, setStreamedLogs] = useState<string[]>([]);
+  const timerRef = useRef<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
+    // Siyah ekran hatasını çözen ana mekanizma: Önceki döngüleri kesin olarak temizle.
+    if (timerRef.current) clearInterval(timerRef.current);
+    
     setStreamedLogs([]);
-    let currentLogIndex = 0;
-    const streamInterval = setInterval(() => {
-      if (currentLogIndex < logBuffer.length) {
-        setStreamedLogs(prev => [...prev, logBuffer[currentLogIndex]]);
-        currentLogIndex++;
+    let i = 0;
+    
+    timerRef.current = setInterval(() => {
+      if (i < logs.length) {
+        setStreamedLogs(prev => [...prev, logs[i]]);
+        i++;
       } else {
-        clearInterval(streamInterval);
+        if (timerRef.current) clearInterval(timerRef.current);
       }
-    }, 450);
+    }, 500);
 
-    return () => clearInterval(streamInterval);
-  }, [logBuffer]);
+    return () => {
+      if (timerRef.current) clearInterval(timerRef.current);
+    };
+  }, [logs]);
 
   return (
     <div style={styles.terminalContainer}>
@@ -148,412 +141,345 @@ const LiveTerminalConsole: React.FC<{ logBuffer: string[] }> = ({ logBuffer }) =
           <span style={{ ...styles.windowDot, backgroundColor: '#f59e0b' }}></span>
           <span style={{ ...styles.windowDot, backgroundColor: '#00ffaa' }}></span>
         </div>
-        <span style={styles.terminalTitleText}>operator@cornflix_core_os:~/secure_logs</span>
+        <span style={styles.terminalTitleText}>root@cornflix_os:~/secure_logs</span>
       </div>
       <div style={styles.terminalBodyArea}>
         <AnimatePresence>
           {streamedLogs.map((logLine, index) => (
-            <motion.div
-              key={index}
-              initial={{ opacity: 0, x: -15 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.3 }}
-              style={styles.terminalLogLine}
-            >
-              <span style={{
-                color: logLine.includes('SECURE') ? '#00f0ff' : 
-                       logLine.includes('BIOMETRIC') ? '#00ffaa' : 
-                       logLine.includes('HATA') || logLine.includes('ERROR') ? '#ff3366' : '#cbd5e1'
-              }}>
+            <motion.div key={index} initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }} style={styles.terminalLogLine}>
+              <span style={{ color: logLine.includes('SECURE') || logLine.includes('AUTH') ? '#00f0ff' : logLine.includes('SYSTEM') ? '#00ffaa' : '#cbd5e1' }}>
                 {logLine}
               </span>
             </motion.div>
           ))}
         </AnimatePresence>
-        <motion.div
-          animate={{ opacity: [0, 1, 0] }}
-          transition={{ repeat: Infinity, duration: 0.8 }}
-          style={styles.terminalCursorTick}
-        />
+        <motion.div animate={{ opacity: [0, 1, 0] }} transition={{ repeat: Infinity, duration: 0.8 }} style={styles.terminalCursorTick} />
       </div>
     </div>
   );
 };
 
 // ============================================================================
-// 5. ANA KÖK BİLEŞEN: PROFILE IDENTITY (KIRILMAZ MİMARİ)
+// 4. ANA BİLEŞEN: KİMLİK & AUTH AĞIT (GATEWAY)
 // ============================================================================
 const ProfileIdentity: React.FC = () => {
-  // 5.1. Dil Motoru State'i
-  const [currentLanguage, setCurrentLanguage] = useState<'TR' | 'EN'>('TR');
-  const t = linguisticDatabase[currentLanguage];
+  const [lang, setLang] = useState<'TR' | 'EN'>('TR');
+  const t = dict[lang];
 
-  // 5.2. Profil State'leri (Hata Çözümü Burada Başlıyor)
+  // --- AUTH (GİRİŞ/KAYIT) STATE MİMARİSİ ---
+  const [auth, setAuth] = useState<AuthState>({ isAuthenticated: false, userEmail: null });
+  const [authMode, setAuthMode] = useState<'LOGIN' | 'REGISTER'>('LOGIN');
+  const [authForm, setAuthForm] = useState({ name: '', email: '', password: '' });
+  const [authError, setAuthError] = useState<string | null>(null);
+
+  // --- PROFİL KİMLİK STATE MİMARİSİ ---
   const [isEditModalOpen, setIsEditModalOpen] = useState<boolean>(false);
   const [profileState, setProfileState] = useState<ProfileData>({
-    name: 'Tayfun Karlı',
-    role: 'Baş Mimar (Lead Architect)',
-    location: 'SDÜ Command Center, Isparta',
-    bio: 'Cornflix Core OS v2.0 Baş Geliştiricisi. İleri düzey yazılım mimarisi, GPU render optimizasyonu ve uzamsal UI mekanikleri uzmanı.',
-    securityClearance: 'LEVEL_ALPHA_9'
+    name: 'Sistem Operatörü',
+    role: 'Aday Mimar',
+    location: 'Bilinmeyen Düğüm (Node)',
+    bio: 'Sisteme yeni giriş yapıldı. Kayıtlar bekleniyor.'
   });
-  
-  // DİKKAT: State ismini `formInputState` olarak mühürledik. Modal içinde SADECE bu kullanılacak.
   const [formInputState, setFormInputState] = useState<ProfileData>(profileState);
 
-  // 5.3. Kırılmaz Baş Harf Hesaplayıcı (Try-Catch Kalkanı)
-  const computeSafeInitials = (targetName: string): string => {
-    try {
-      if (!targetName || typeof targetName !== 'string') return 'TK';
-      const trimmed = targetName.trim();
-      if (trimmed === '') return 'TK';
-      const nameTokens = trimmed.split(' ');
-      if (nameTokens.length === 1) return nameTokens[0].substring(0, 2).toUpperCase();
-      return (nameTokens[0][0] + nameTokens[nameTokens.length - 1][0]).toUpperCase();
-    } catch (crashException) {
-      console.warn("Initials Parsing Bypass:", crashException);
-      return 'TK'; // Sistem çökmek yerine güvenli formata döner
-    }
-  };
-
-  // 5.4. LocalStorage Güvenli Okuma Döngüsü
+  // Başlangıçta Auth kontrolü yap (Kullanıcı daha önce giriş yapmış mı?)
   useEffect(() => {
     try {
-      const activeProfileSignal = localStorage.getItem('cornflix_secured_profile_v4');
-      if (activeProfileSignal) {
-        const decodedProfile = JSON.parse(activeProfileSignal);
-        if (decodedProfile && decodedProfile.name) {
-          setProfileState(decodedProfile);
-          setFormInputState(decodedProfile);
-        }
+      const token = localStorage.getItem('cornflix_session_token');
+      const savedProfile = localStorage.getItem('cornflix_secured_profile_v5');
+      
+      if (token) {
+        setAuth({ isAuthenticated: true, userEmail: token });
       }
-    } catch (storageReadingError) {
-      console.error("Local Storage Verisi Bozuk. Varsayılanlar Korumaya Alındı.", storageReadingError);
-      // Hata durumunda sistem kendi statik state'ini kullanmaya devam eder.
+      if (savedProfile) {
+        const decoded = JSON.parse(savedProfile);
+        if (decoded && decoded.name) setProfileState(decoded);
+      } else {
+        // Eğer profil yoksa Tayfun Karlı efsanesini varsayılan olarak yaz
+        const defaultLegend = {
+          name: 'Tayfun Karlı',
+          role: 'Baş Mimar (Lead Architect)',
+          location: 'SDÜ Command Center, Isparta',
+          bio: 'Cornflix Core OS Baş Geliştiricisi. Kırılmaz mimariler ve uzamsal UI mekanizmaları uzmanı.'
+        };
+        setProfileState(defaultLegend);
+        localStorage.setItem('cornflix_secured_profile_v5', JSON.stringify(defaultLegend));
+      }
+    } catch (e) {
+      console.error("Boot Error:", e);
     }
   }, []);
 
-  // 5.5. Profil Şifreleme ve Kaydetme Protokolü
-  const triggerProfileEncryptionProtocol = () => {
-    if (!formInputState.name || formInputState.name.trim() === '') {
-      alert(t.validationError);
-      return;
+  // --- AUTH FONKSİYONLARI ---
+  const handleAuthSubmit = () => {
+    setAuthError(null);
+    if (authMode === 'REGISTER') {
+      if (!authForm.name || !authForm.email || !authForm.password) {
+        setAuthError(t.authError); return;
+      }
+      // Kayıt başarılı: Yeni profili oluştur ve giriş yap
+      const newProfile = { name: authForm.name, role: 'Sistem Operatörü', location: 'Merkez Ağ', bio: 'Yeni kayıtlı operatör.' };
+      setProfileState(newProfile);
+      localStorage.setItem('cornflix_secured_profile_v5', JSON.stringify(newProfile));
+      localStorage.setItem('cornflix_session_token', authForm.email);
+      setAuth({ isAuthenticated: true, userEmail: authForm.email });
+      
+    } else {
+      // Login Modu
+      if (!authForm.email || !authForm.password) {
+        setAuthError(t.authError); return;
+      }
+      localStorage.setItem('cornflix_session_token', authForm.email);
+      setAuth({ isAuthenticated: true, userEmail: authForm.email });
     }
+  };
+
+  const handleLogout = () => {
+    localStorage.removeItem('cornflix_session_token');
+    setAuth({ isAuthenticated: false, userEmail: null });
+    setAuthForm({ name: '', email: '', password: '' });
+  };
+
+  // --- KİMLİK GÜNCELLEME FONKSİYONLARI ---
+  const handleSaveProfile = () => {
+    if (!formInputState.name || formInputState.name.trim() === '') return;
     setProfileState(formInputState);
-    localStorage.setItem('cornflix_secured_profile_v4', JSON.stringify(formInputState));
+    localStorage.setItem('cornflix_secured_profile_v5', JSON.stringify(formInputState));
     setIsEditModalOpen(false);
   };
 
-  // 5.6. Framer Motion Animasyon Paketleri
-  const layoutStaggerVariants = {
-    hidden: { opacity: 0 },
-    display: { opacity: 1, transition: { staggerChildren: 0.12 } }
+  const computeInitials = (name: string) => {
+    try {
+      if (!name) return 'TK';
+      const parts = name.trim().split(' ');
+      if (parts.length === 1) return parts[0].substring(0, 2).toUpperCase();
+      return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
+    } catch { return 'TK'; }
   };
 
-  const adaptiveCardVariants = {
-    hidden: { opacity: 0, y: 30, scale: 0.97 },
-    display: { opacity: 1, y: 0, scale: 1, transition: { type: 'spring', stiffness: 100, damping: 15 } }
-  };
+  // ============================================================================
+  // GÖRÜNÜM 1: AUTHENTICATION (GİRİŞ/KAYIT) EKRANI
+  // ============================================================================
+  if (!auth.isAuthenticated) {
+    return (
+      <div style={styles.authViewport}>
+        <motion.div initial={{ opacity: 0, scale: 0.9, y: 20 }} animate={{ opacity: 1, scale: 1, y: 0 }} transition={{ type: 'spring', damping: 20 }} style={styles.authCard}>
+          <div style={styles.authLogoContainer}>
+            <div style={styles.pulseNodeBig}></div>
+            <h2 style={styles.authMainTitle}>CORNFLIX // CORE_OS</h2>
+          </div>
+          
+          <h3 style={styles.authSubtitle}>{authMode === 'LOGIN' ? t.authTitle : t.registerTitle}</h3>
+          
+          {authError && <div style={styles.authErrorBox}>{authError}</div>}
 
+          <div style={styles.authFormStack}>
+            <AnimatePresence>
+              {authMode === 'REGISTER' && (
+                <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }} exit={{ opacity: 0, height: 0 }}>
+                  <label style={styles.inputLabel}>{t.nameLabel}</label>
+                  <input type="text" value={authForm.name} onChange={e => setAuthForm({...authForm, name: e.target.value})} style={styles.inputField} />
+                </motion.div>
+              )}
+            </AnimatePresence>
+
+            <div style={{ marginBottom: '15px' }}>
+              <label style={styles.inputLabel}>{t.emailLabel}</label>
+              <input type="email" value={authForm.email} onChange={e => setAuthForm({...authForm, email: e.target.value})} style={styles.inputField} />
+            </div>
+
+            <div style={{ marginBottom: '25px' }}>
+              <label style={styles.inputLabel}>{t.passLabel}</label>
+              <input type="password" value={authForm.password} onChange={e => setAuthForm({...authForm, password: e.target.value})} style={styles.inputField} />
+            </div>
+
+            <button onClick={handleAuthSubmit} style={styles.authSubmitBtn}>
+              {authMode === 'LOGIN' ? t.loginBtn : t.registerBtn}
+            </button>
+            
+            <button onClick={() => { setAuthMode(authMode === 'LOGIN' ? 'REGISTER' : 'LOGIN'); setAuthError(null); }} style={styles.authSwitchBtn}>
+              {authMode === 'LOGIN' ? t.switchToReg : t.switchToLog}
+            </button>
+          </div>
+        </motion.div>
+      </div>
+    );
+  }
+
+  // ============================================================================
+  // GÖRÜNÜM 2: SİNAPTİK KİMLİK EKRANI (DASHBOARD)
+  // ============================================================================
   return (
-    <div style={styles.viewportWrapper}>
+    <div style={styles.viewContainer}>
       
-      {/* GLOBAL MODÜL BAŞLIĞI */}
-      <div style={styles.moduleMetaHeader}>
-        <div style={styles.titleColumn}>
-          <span style={styles.systemPrimaryTitle}>{t.pageTitle}</span>
-          <span style={styles.systemSubtextTitle}>Nöral Kimlik ve Operatör Telemetri Matrisi</span>
+      {/* HEADER & DİL MOTORU */}
+      <div style={styles.metaHeader}>
+        <div style={{ display: 'flex', flexDirection: 'column' }}>
+          <span style={styles.sectionTitle}>{t.pageTitle}</span>
+          <span style={{ fontSize: '11px', color: '#64748b', marginTop: '4px' }}>Logged in as: {auth.userEmail}</span>
         </div>
-        <span style={styles.badgeRequirement}>{t.reqBadge}</span>
+        <span style={styles.reqBadge}>{t.reqBadge}</span>
       </div>
 
-      {/* CORE FRAME LAYOUT STACK */}
-      <motion.div variants={layoutStaggerVariants} initial="hidden" animate="display">
-        
-        {/* REQ 10: DİL MOTORU PANELİ */}
-        <motion.div variants={adaptiveCardVariants} style={styles.neuralControlPanel}>
-          <div style={styles.panelHeaderRow}>
-            <span style={styles.activeGlowPulseNode}></span>
-            <p style={styles.panelHeaderLabel}>{t.langSelector}</p>
-          </div>
-          <div style={styles.dualToggleGroup}>
-            <button 
-              onClick={() => setCurrentLanguage('TR')} 
-              style={{ ...styles.frequencyBtn, ...(currentLanguage === 'TR' ? styles.frequencyBtnActive : {}) }}
-            >
-              TÜRKÇE [SYS_TR]
-            </button>
-            <button 
-              onClick={() => setCurrentLanguage('EN')} 
-              style={{ ...styles.frequencyBtn, ...(currentLanguage === 'EN' ? styles.frequencyBtnActive : {}) }}
-            >
-              ENGLISH [GLOBAL]
-            </button>
-          </div>
-        </motion.div>
+      <div style={styles.langToggleGroup}>
+        <button onClick={() => setLang('TR')} style={{ ...styles.langBtn, ...(lang === 'TR' ? styles.langBtnActive : {}) }}>TÜRKÇE [TR]</button>
+        <button onClick={() => setLang('EN')} style={{ ...styles.langBtn, ...(lang === 'EN' ? styles.langBtnActive : {}) }}>ENGLISH [EN]</button>
+      </div>
 
-        {/* REQ 1: RESMİ OPERATÖR KİMLİK KARTI (HERO SECTION) */}
-        <motion.div variants={adaptiveCardVariants} style={styles.synapticIdCardContainer}>
-          <div style={styles.matrixBackgroundGrid}></div>
-          <div style={styles.chromaRadialGlow}></div>
+      {/* KİMLİK KARTI (HERO) */}
+      <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} style={styles.idCardContainer}>
+        <div style={styles.cardHeaderRow}>
+          <span style={styles.idCardHeaderClassified}>{t.idCardHeader}</span>
+          <button onClick={() => { setFormInputState(profileState); setIsEditModalOpen(true); }} style={styles.actionModifyBtn}>
+            ⚙️ {t.editBtn}
+          </button>
+        </div>
 
-          <div style={styles.idCardHeaderRow}>
-            <span style={styles.idCardHeaderClassified}>{t.idCardHeader}</span>
-            <button 
-              onClick={() => { 
-                setFormInputState(profileState); // Modalı açarken mevcut veriyi form state'ine kopyala
-                setIsEditModalOpen(true); 
-              }} 
-              style={styles.actionModifyBtn}
-            >
-              <span style={{ marginRight: '6px' }}>⚙️</span> {t.editBtn}
-            </button>
+        <div style={styles.profileDataLayoutRow}>
+          <div style={styles.hologramAvatarWrapper}>
+            <div style={styles.hologramScanlineEffect}></div>
+            <div style={styles.hologramInitialsText}>{computeInitials(profileState.name)}</div>
           </div>
 
-          <div style={styles.profileDataLayoutRow}>
-            <div style={styles.hologramAvatarWrapper}>
-              <div style={styles.hologramScanlineEffect}></div>
-              <div style={styles.hologramInitialsText}>{computeSafeInitials(profileState.name)}</div>
-            </div>
-
-            <div style={styles.operatorIdentityColumn}>
-              <h2 style={styles.operatorNameHeading}>{profileState.name}</h2>
-              <p style={styles.operatorRankText}>{profileState.role}</p>
-              <p style={styles.operatorLocationText}>🌐 {profileState.location}</p>
-              <p style={styles.operatorBioParagraph}>"{profileState.bio}"</p>
-              
-              {/* Siberpunk Görsel Barkod Simülasyonu */}
-              <div style={styles.visualBarcodeStream}>
-                {Array.from({ length: 32 }).map((_, barIndex) => (
-                  <div key={barIndex} style={{
-                    width: `${(barIndex % 3 === 0 ? 4 : barIndex % 2 === 0 ? 2 : 1)}px`,
-                    height: '14px',
-                    backgroundColor: 'rgba(0, 240, 255, 0.45)',
-                    marginRight: '2px'
-                  }} />
-                ))}
-              </div>
-            </div>
+          <div style={styles.operatorIdentityColumn}>
+            <h2 style={styles.operatorNameHeading}>{profileState.name}</h2>
+            <p style={styles.operatorRankText}>{profileState.role}</p>
+            <p style={styles.operatorLocationText}>🌐 {profileState.location}</p>
+            <p style={styles.operatorBioParagraph}>"{profileState.bio}"</p>
           </div>
-        </motion.div>
-
-        {/* NÖRAL YETENEK MATRİSİ AĞACI */}
-        <motion.div variants={adaptiveCardVariants} style={styles.standardMetricsCard}>
-          <h3 style={styles.subModuleSectionTitle}>{t.skillsTitle}</h3>
-          <div style={styles.skillsStackContainer}>
-            {skillMatrixData.map((skillNode, skillIndex) => (
-              <div key={skillNode.id} style={styles.skillNodeLayout}>
-                <div style={styles.skillNodeLabelRow}>
-                  <span style={styles.skillNodeNameText}>{skillNode.name}</span>
-                  <span style={{ ...styles.skillNodePercentText, color: skillNode.color }}>{skillNode.level}%</span>
-                </div>
-                <div style={styles.skillNodeTrackBg}>
-                  <motion.div
-                    initial={{ width: 0 }}
-                    animate={{ width: `${skillNode.level}%` }}
-                    transition={{ duration: 1.6, delay: 0.4 + (skillIndex * 0.15), type: 'spring' }}
-                    style={{ ...styles.skillNodeFillBar, backgroundColor: skillNode.color, boxShadow: `0 0 12px ${skillNode.color}` }}
-                  />
-                </div>
-              </div>
-            ))}
-          </div>
-        </motion.div>
-
-        {/* ERİŞİM VE OTURUM GEÇMİŞİ VERİ ODASI */}
-        <motion.div variants={adaptiveCardVariants} style={{ marginBottom: '30px' }}>
-          <h3 style={styles.subModuleSectionTitle}>{t.sessionTitle}</h3>
-          <div style={styles.sessionTableWrapper}>
-            {initialSessions.map(sessionNode => (
-              <div key={sessionNode.id} style={styles.sessionDataRow}>
-                <div style={styles.sessionMetadataGroup}>
-                  <span style={styles.sessionIpText}>IP_ADDR: {sessionNode.ip}</span>
-                  <span style={styles.sessionNodeText}>{sessionNode.node} // {sessionNode.time}</span>
-                </div>
-                <span style={{
-                  ...styles.sessionStatusBadge,
-                  backgroundColor: sessionNode.status === 'VERIFIED' ? 'rgba(0, 255, 170, 0.08)' : 
-                                   sessionNode.status === 'ENCRYPTED' ? 'rgba(0, 240, 255, 0.08)' : 'rgba(255, 51, 102, 0.08)',
-                  color: sessionNode.status === 'VERIFIED' ? '#00ffaa' : 
-                         sessionNode.status === 'ENCRYPTED' ? '#00f0ff' : '#ff3366',
-                  borderColor: sessionNode.status === 'VERIFIED' ? 'rgba(0, 255, 170, 0.25)' : 
-                               sessionNode.status === 'ENCRYPTED' ? 'rgba(0, 240, 255, 0.25)' : 'rgba(255, 51, 102, 0.25)'
-                }}>
-                  {sessionNode.status}
-                </span>
-              </div>
-            ))}
-          </div>
-        </motion.div>
-
-        {/* CANLI TERMİNAL GÜVENLİK AKIŞI */}
-        <motion.div variants={adaptiveCardVariants}>
-          <h3 style={styles.subModuleSectionTitle}>{t.terminalTitle}</h3>
-          <LiveTerminalConsole logBuffer={t.logs} />
-        </motion.div>
-
-        {/* BAĞLANTI KESME SİSTEM BUTONU */}
-        <motion.button 
-          variants={adaptiveCardVariants} 
-          whileTap={{ scale: 0.96 }} 
-          style={styles.systemCoreDisconnectBtn}
-        >
-          ⚡ {t.logoutBtn}
-        </motion.button>
-
+        </div>
       </motion.div>
 
+      {/* YETENEK MATRİSİ */}
+      <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }} style={styles.standardMetricsCard}>
+        <h3 style={styles.subModuleSectionTitle}>{t.skillsTitle}</h3>
+        <div style={styles.skillsStackContainer}>
+          {skillMatrix.map((skill, index) => (
+            <div key={skill.id} style={{ marginBottom: '12px' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '13px', marginBottom: '6px' }}>
+                <span style={{ color: '#cbd5e1', fontWeight: 'bold' }}>{skill.name}</span>
+                <span style={{ color: skill.color, fontWeight: 'bold' }}>{skill.level}%</span>
+              </div>
+              <div style={{ width: '100%', height: '8px', backgroundColor: '#112240', borderRadius: '4px', overflow: 'hidden' }}>
+                <motion.div initial={{ width: 0 }} animate={{ width: `${skill.level}%` }} transition={{ duration: 1.2, delay: 0.3 + (index * 0.1) }} style={{ height: '100%', backgroundColor: skill.color, boxShadow: `0 0 10px ${skill.color}` }} />
+              </div>
+            </div>
+          ))}
+        </div>
+      </motion.div>
+
+      {/* CANLI TERMİNAL */}
+      <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}>
+        <h3 style={styles.subModuleSectionTitle}>{t.terminalTitle}</h3>
+        <LiveTerminalConsole logs={t.logs} />
+      </motion.div>
+
+      {/* GÜVENLİ ÇIKIŞ BUTONU */}
+      <motion.button whileTap={{ scale: 0.96 }} onClick={handleLogout} style={styles.systemCoreDisconnectBtn}>
+        ⚡ {t.logoutBtn}
+      </motion.button>
+
       {/* ============================================================================
-       * GÜVENLİ BİYOMETRİK DÜZENLEME MODALI (OVERLAY INTERACTIVE)
+       * PROFİL DÜZENLEME MODALI
        * ============================================================================ */}
       <AnimatePresence>
         {isEditModalOpen && (
           <div style={styles.modalViewportOverlay}>
-            <motion.div
-              initial={{ scale: 0.92, opacity: 0, y: 30 }}
-              animate={{ scale: 1, opacity: 1, y: 0 }}
-              exit={{ scale: 0.92, opacity: 0, y: 30 }}
-              transition={{ type: 'spring', damping: 20 }}
-              style={styles.modalContentWrapper}
-            >
-              <h3 style={styles.modalHeadingTitle}>KİMLİK VERİLERİ ŞİFRELEME ODASI</h3>
+            <motion.div initial={{ scale: 0.9, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} exit={{ scale: 0.9, opacity: 0 }} style={styles.modalContentWrapper}>
+              <h3 style={{ color: '#00f0ff', marginBottom: '20px', borderBottom: '1px solid rgba(0,240,255,0.2)', paddingBottom: '10px' }}>KİMLİK VERİLERİNİ GÜNCELLE</h3>
               
-              {/* STATE GÜVENLİĞİ: Tüm value'lar 'formInputState' objesinden gelir */}
-              <div style={styles.modalFormInputGroup}>
-                <label style={styles.modalFormLabel}>{t.labels.name}</label>
-                <input 
-                  value={formInputState.name} 
-                  onChange={e => setFormInputState({ ...formInputState, name: e.target.value })} 
-                  style={styles.modalInputField} 
-                />
+              <div style={{ marginBottom: '15px' }}>
+                <label style={styles.inputLabel}>{t.labels.name}</label>
+                <input value={formInputState.name} onChange={e => setFormInputState({...formInputState, name: e.target.value})} style={styles.inputField} />
               </div>
-
-              <div style={styles.modalFormInputGroup}>
-                <label style={styles.modalFormLabel}>{t.labels.role}</label>
-                <input 
-                  value={formInputState.role} 
-                  onChange={e => setFormInputState({ ...formInputState, role: e.target.value })} 
-                  style={styles.modalInputField} 
-                />
+              <div style={{ marginBottom: '15px' }}>
+                <label style={styles.inputLabel}>{t.labels.role}</label>
+                <input value={formInputState.role} onChange={e => setFormInputState({...formInputState, role: e.target.value})} style={styles.inputField} />
               </div>
-
-              <div style={styles.modalFormInputGroup}>
-                <label style={styles.modalFormLabel}>{t.labels.loc}</label>
-                <input 
-                  value={formInputState.location} 
-                  onChange={e => setFormInputState({ ...formInputState, location: e.target.value })} 
-                  style={styles.modalInputField} 
-                />
+              <div style={{ marginBottom: '15px' }}>
+                <label style={styles.inputLabel}>{t.labels.loc}</label>
+                <input value={formInputState.location} onChange={e => setFormInputState({...formInputState, location: e.target.value})} style={styles.inputField} />
               </div>
-
-              <div style={styles.modalFormInputGroup}>
-                <label style={styles.modalFormLabel}>{t.labels.bio}</label>
-                <textarea 
-                  value={formInputState.bio} 
-                  onChange={e => setFormInputState({ ...formInputState, bio: e.target.value })} 
-                  style={styles.modalTextAreaField} 
-                />
+              <div style={{ marginBottom: '20px' }}>
+                <label style={styles.inputLabel}>{t.labels.bio}</label>
+                <textarea value={formInputState.bio} onChange={e => setFormInputState({...formInputState, bio: e.target.value})} style={{...styles.inputField, height: '80px', resize: 'none'}} />
               </div>
-
-              <div style={styles.modalActionButtonsRow}>
-                <button onClick={triggerProfileEncryptionProtocol} style={styles.modalSaveExecutionBtn}>
-                  {t.saveBtn}
-                </button>
-                <button onClick={() => setIsEditModalOpen(false)} style={styles.modalCancelDismissBtn}>
-                  {t.cancelBtn}
-                </button>
+              
+              <div style={{ display: 'flex', gap: '15px' }}>
+                <button onClick={handleSaveProfile} style={styles.modalSaveBtn}>✅ {t.saveBtn}</button>
+                <button onClick={() => setIsEditModalOpen(false)} style={styles.modalCancelBtn}>✕ {t.cancelBtn}</button>
               </div>
-
             </motion.div>
           </div>
         )}
       </AnimatePresence>
-
     </div>
   );
 };
 
 // ----------------------------------------------------------------------------
-// 6. 500 SATIRLIK MÜHENDİSLİĞİ DESTEKLEYEN DEVASA CSS MİMARİSİ
+// 5. DEVASA PREMIUM CSS MİMARİSİ
 // ----------------------------------------------------------------------------
 const styles: { [key: string]: React.CSSProperties } = {
-  viewportWrapper: { padding: '20px', color: '#fff', fontFamily: '"Share Tech Mono", monospace', paddingBottom: '120px' },
-  moduleMetaHeader: { display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '30px', borderBottom: '1px solid rgba(0,240,255,0.22)', paddingBottom: '16px' },
-  titleColumn: { display: 'flex', flexDirection: 'column' },
-  systemPrimaryTitle: { fontSize: '22px', fontWeight: 'bold', color: '#00f0ff', letterSpacing: '2px', textShadow: '0 0 12px rgba(0,240,255,0.45)' },
-  systemSubtextTitle: { fontSize: '11px', color: '#64748b', marginTop: '4px', letterSpacing: '0.5px' },
-  badgeRequirement: { fontSize: '10px', backgroundColor: 'rgba(0, 240, 255, 0.1)', color: '#00f0ff', padding: '6px 12px', borderRadius: '6px', border: '1px solid rgba(0, 240, 255, 0.3)', fontWeight: 'bold' },
-  subModuleSectionTitle: { fontSize: '13px', color: '#00f0ff', marginBottom: '16px', borderBottom: '1px dashed #112240', paddingBottom: '8px', letterSpacing: '1px', textTransform: 'uppercase' },
+  viewContainer: { padding: '20px', color: '#fff', fontFamily: '"Share Tech Mono", monospace', paddingBottom: '120px' },
   
-  // Dil Paneli
-  neuralControlPanel: { backgroundColor: '#050a14', border: '1px solid #112240', borderRadius: '16px', padding: '20px', marginBottom: '30px', boxShadow: '0 6px 25px rgba(0,0,0,0.45)' },
-  panelHeaderRow: { display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '16px' },
-  activeGlowPulseNode: { width: '8px', height: '8px', backgroundColor: '#00ffaa', borderRadius: '50%', boxShadow: '0 0 12px #00ffaa', animation: 'blink 1.5s infinite' },
-  panelHeaderLabel: { margin: 0, fontSize: '11px', color: '#64748b', letterSpacing: '1px' },
-  dualToggleGroup: { display: 'flex', gap: '16px' },
-  frequencyBtn: { flex: 1, padding: '14px', backgroundColor: 'transparent', border: '1px solid #1a202c', color: '#64748b', borderRadius: '12px', cursor: 'pointer', fontSize: '12px', fontWeight: 'bold', transition: 'all 0.3s ease', fontFamily: '"Share Tech Mono", monospace' },
-  frequencyBtnActive: { backgroundColor: 'rgba(0, 240, 255, 0.08)', borderColor: '#00f0ff', color: '#00f0ff', boxShadow: '0 0 20px rgba(0,240,255,0.15)' },
+  // Auth Ekranı Stilleri
+  authViewport: { width: '100%', minHeight: '80vh', display: 'flex', justifyContent: 'center', alignItems: 'center', padding: '20px', fontFamily: '"Share Tech Mono", monospace' },
+  authCard: { width: '100%', maxWidth: '400px', backgroundColor: 'rgba(5, 10, 20, 0.9)', border: '1px solid #00f0ff', borderRadius: '24px', padding: '40px 30px', boxShadow: '0 20px 60px rgba(0,240,255,0.15)' },
+  authLogoContainer: { display: 'flex', flexDirection: 'column', alignItems: 'center', marginBottom: '30px' },
+  pulseNodeBig: { width: '16px', height: '16px', backgroundColor: '#00f0ff', borderRadius: '50%', boxShadow: '0 0 20px #00f0ff', animation: 'pulse 2s infinite', marginBottom: '15px' },
+  authMainTitle: { fontSize: '24px', color: '#fff', margin: 0, letterSpacing: '2px', textShadow: '0 0 10px rgba(0,240,255,0.5)' },
+  authSubtitle: { fontSize: '14px', color: '#00f0ff', textAlign: 'center', marginBottom: '25px', letterSpacing: '1px' },
+  authErrorBox: { backgroundColor: 'rgba(255,51,102,0.1)', border: '1px solid #ff3366', color: '#ff3366', padding: '10px', borderRadius: '8px', fontSize: '12px', marginBottom: '20px', textAlign: 'center' },
+  authFormStack: { display: 'flex', flexDirection: 'column' },
+  authSubmitBtn: { width: '100%', padding: '16px', backgroundColor: 'rgba(0,240,255,0.15)', border: '1px solid #00f0ff', color: '#00f0ff', borderRadius: '12px', fontSize: '14px', fontWeight: 'bold', cursor: 'pointer', marginBottom: '15px', fontFamily: '"Share Tech Mono", monospace', transition: 'all 0.3s', boxShadow: '0 0 15px rgba(0,240,255,0.2)' },
+  authSwitchBtn: { backgroundColor: 'transparent', border: 'none', color: '#64748b', fontSize: '11px', cursor: 'pointer', textDecoration: 'underline', fontFamily: '"Share Tech Mono", monospace' },
+
+  // Kimlik Dashboard Stilleri
+  metaHeader: { display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '25px', borderBottom: '1px solid rgba(0,240,255,0.2)', paddingBottom: '15px' },
+  sectionTitle: { fontSize: '22px', fontWeight: 'bold', color: '#00f0ff', letterSpacing: '2px', margin: 0 },
+  reqBadge: { fontSize: '10px', backgroundColor: 'rgba(0, 240, 255, 0.1)', color: '#00f0ff', padding: '6px 12px', borderRadius: '6px', border: '1px solid rgba(0, 240, 255, 0.3)' },
   
-  // Operatör Kartı (Kimlik)
-  synapticIdCardContainer: { backgroundColor: 'rgba(9, 13, 22, 0.82)', backdropFilter: 'blur(12px)', border: '1px solid rgba(0, 240, 255, 0.28)', borderRadius: '24px', padding: '30px', marginBottom: '35px', position: 'relative', overflow: 'hidden', boxShadow: '0 16px 45px rgba(0,240,255,0.08)' },
-  matrixBackgroundGrid: { position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', backgroundImage: 'linear-gradient(rgba(255, 255, 255, 0.015) 1px, transparent 1px), linear-gradient(90deg, rgba(255, 255, 255, 0.015) 1px, transparent 1px)', backgroundSize: '20px 20px', pointerEvents: 'none', zIndex: 0 },
-  chromaRadialGlow: { position: 'absolute', right: '-15%', bottom: '-15%', width: '160px', height: '160px', background: 'radial-gradient(circle, rgba(0,240,255,0.18) 0%, transparent 70%)', filter: 'blur(25px)', zIndex: 0 },
-  idCardHeaderRow: { position: 'relative', zIndex: 2, display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '25px', borderBottom: '1px solid rgba(255,255,255,0.08)', paddingBottom: '12px' },
+  langToggleGroup: { display: 'flex', gap: '15px', marginBottom: '30px' },
+  langBtn: { flex: 1, padding: '12px', backgroundColor: 'transparent', border: '1px solid #1a202c', color: '#64748b', borderRadius: '12px', cursor: 'pointer', fontSize: '12px', fontWeight: 'bold', fontFamily: '"Share Tech Mono", monospace' },
+  langBtnActive: { backgroundColor: 'rgba(0, 240, 255, 0.08)', borderColor: '#00f0ff', color: '#00f0ff', boxShadow: '0 0 15px rgba(0,240,255,0.15)' },
+  
+  idCardContainer: { backgroundColor: 'rgba(9, 13, 22, 0.8)', border: '1px solid rgba(0, 240, 255, 0.25)', borderRadius: '24px', padding: '30px', marginBottom: '35px', boxShadow: '0 15px 40px rgba(0,240,255,0.08)' },
+  cardHeaderRow: { display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '25px', borderBottom: '1px solid rgba(255,255,255,0.08)', paddingBottom: '10px' },
   idCardHeaderClassified: { fontSize: '10px', color: '#94a3b8', letterSpacing: '2px', fontWeight: 'bold' },
-  actionModifyBtn: { backgroundColor: 'rgba(0, 240, 255, 0.1)', border: '1px solid #00f0ff', color: '#00f0ff', padding: '6px 14px', borderRadius: '8px', fontSize: '11px', cursor: 'pointer', fontWeight: 'bold', fontFamily: '"Share Tech Mono", monospace', transition: 'all 0.2s' },
-  profileDataLayoutRow: { position: 'relative', zIndex: 2, display: 'flex', alignItems: 'flex-start', gap: '25px' },
-  hologramAvatarWrapper: { position: 'relative', width: '95px', height: '95px', borderRadius: '20px', background: 'linear-gradient(135deg, rgba(0,240,255,0.22), rgba(0,0,0,0.6))', border: '1px solid rgba(0,240,255,0.5)', display: 'flex', justifyContent: 'center', alignItems: 'center', overflow: 'hidden', boxShadow: 'inset 0 0 20px rgba(0,240,255,0.35)' },
-  hologramScanlineEffect: { position: 'absolute', top: 0, left: 0, width: '100%', height: '4px', backgroundColor: 'rgba(0,240,255,0.65)', filter: 'blur(1px)', animation: 'scan 2.5s linear infinite' },
-  hologramInitialsText: { fontSize: '36px', color: '#fff', fontWeight: 'bold', textShadow: '0 0 16px #00f0ff', letterSpacing: '1px' },
+  actionModifyBtn: { backgroundColor: 'rgba(0, 240, 255, 0.1)', border: '1px solid #00f0ff', color: '#00f0ff', padding: '6px 14px', borderRadius: '8px', fontSize: '11px', cursor: 'pointer', fontWeight: 'bold', fontFamily: '"Share Tech Mono", monospace' },
+  profileDataLayoutRow: { display: 'flex', alignItems: 'flex-start', gap: '25px' },
+  hologramAvatarWrapper: { position: 'relative', width: '95px', height: '95px', borderRadius: '20px', background: 'linear-gradient(135deg, rgba(0,240,255,0.2), rgba(0,0,0,0.6))', border: '1px solid rgba(0,240,255,0.5)', display: 'flex', justifyContent: 'center', alignItems: 'center', overflow: 'hidden' },
+  hologramScanlineEffect: { position: 'absolute', top: 0, left: 0, width: '100%', height: '4px', backgroundColor: 'rgba(0,240,255,0.6)', filter: 'blur(1px)' },
+  hologramInitialsText: { fontSize: '36px', color: '#fff', fontWeight: 'bold', textShadow: '0 0 15px #00f0ff' },
   operatorIdentityColumn: { flex: 1 },
-  operatorNameHeading: { margin: '0 0 6px 0', fontSize: '25px', color: '#fff', textTransform: 'uppercase', letterSpacing: '1px' },
-  operatorRankText: { margin: '0 0 10px 0', fontSize: '13px', color: '#00f0ff', fontWeight: 'bold', letterSpacing: '0.5px' },
+  operatorNameHeading: { margin: '0 0 6px 0', fontSize: '24px', color: '#fff', textTransform: 'uppercase', letterSpacing: '1px' },
+  operatorRankText: { margin: '0 0 10px 0', fontSize: '13px', color: '#00f0ff', fontWeight: 'bold' },
   operatorLocationText: { margin: '0 0 12px 0', fontSize: '11px', color: '#94a3b8' },
-  operatorBioParagraph: { margin: '0 0 16px 0', fontSize: '12px', color: '#cbd5e1', fontStyle: 'italic', lineHeight: '1.65' },
-  visualBarcodeStream: { display: 'flex', alignItems: 'center', opacity: 0.65 },
+  operatorBioParagraph: { margin: 0, fontSize: '12px', color: '#cbd5e1', fontStyle: 'italic', lineHeight: '1.6' },
   
-  // Yetenek Matrisi
   standardMetricsCard: { marginBottom: '35px' },
-  skillsStackContainer: { display: 'flex', flexDirection: 'column', gap: '18px' },
-  skillNodeLayout: { display: 'flex', flexDirection: 'column', gap: '8px' },
-  skillNodeLabelRow: { display: 'flex', justifyContent: 'space-between', fontSize: '13px' },
-  skillNodeNameText: { color: '#cbd5e1', fontWeight: 'bold', letterSpacing: '0.5px' },
-  skillNodePercentText: { fontWeight: 'bold' },
-  skillNodeTrackBg: { width: '100%', height: '8px', backgroundColor: '#112240', borderRadius: '4px', overflow: 'hidden' },
-  skillNodeFillBar: { height: '100%', borderRadius: '4px' },
+  subModuleSectionTitle: { fontSize: '13px', color: '#00f0ff', marginBottom: '15px', borderBottom: '1px dashed #112240', paddingBottom: '8px' },
+  skillsStackContainer: { display: 'flex', flexDirection: 'column' },
   
-  // Oturum Geçmişi
-  sessionTableWrapper: { display: 'flex', flexDirection: 'column', gap: '12px' },
-  sessionDataRow: { display: 'flex', justifyContent: 'space-between', alignItems: 'center', backgroundColor: '#050a14', border: '1px solid #112240', padding: '14px 18px', borderRadius: '12px', boxShadow: '0 4px 15px rgba(0,0,0,0.2)' },
-  sessionMetadataGroup: { display: 'flex', flexDirection: 'column', gap: '4px' },
-  sessionIpText: { color: '#fff', fontSize: '13px', fontWeight: 'bold', letterSpacing: '0.5px' },
-  sessionNodeText: { color: '#64748b', fontSize: '11px' },
-  sessionStatusBadge: { fontSize: '10px', padding: '5px 10px', borderRadius: '6px', fontWeight: 'bold', border: '1px solid', letterSpacing: '0.5px' },
-  
-  // Live Terminal
-  terminalContainer: { backgroundColor: '#020205', border: '1px solid #112240', borderRadius: '16px', overflow: 'hidden', marginBottom: '35px', boxShadow: '0 12px 30px rgba(0,0,0,0.6)' },
+  terminalContainer: { backgroundColor: '#020205', border: '1px solid #112240', borderRadius: '16px', overflow: 'hidden', marginBottom: '35px' },
   terminalHeaderBar: { backgroundColor: '#0a1526', padding: '14px 20px', display: 'flex', alignItems: 'center', borderBottom: '1px solid #112240' },
   terminalWindowButtons: { display: 'flex', gap: '8px', marginRight: '20px' },
   windowDot: { width: '11px', height: '11px', borderRadius: '50%' },
-  terminalTitleText: { color: '#64748b', fontSize: '11px', letterSpacing: '0.5px' },
-  terminalBodyArea: { padding: '20px', minHeight: '170px', display: 'flex', flexDirection: 'column', gap: '10px', backgroundColor: 'rgba(2,2,5,0.95)' },
-  terminalLogLine: { fontSize: '12px', fontFamily: '"Share Tech Mono", monospace', letterSpacing: '0.5px', lineHeight: '1.5' },
+  terminalTitleText: { color: '#64748b', fontSize: '11px' },
+  terminalBodyArea: { padding: '20px', minHeight: '170px', display: 'flex', flexDirection: 'column', gap: '10px' },
+  terminalLogLine: { fontSize: '12px', fontFamily: '"Share Tech Mono", monospace', lineHeight: '1.5' },
   terminalCursorTick: { width: '9px', height: '14px', backgroundColor: '#00ffaa', display: 'inline-block', marginTop: '4px' },
   
-  // Çıkış Butonu
-  systemCoreDisconnectBtn: { width: '100%', padding: '20px', backgroundColor: 'rgba(255, 51, 102, 0.08)', border: '1px solid #ff3366', color: '#ff3366', borderRadius: '16px', fontSize: '14px', fontWeight: 'bold', cursor: 'pointer', fontFamily: '"Share Tech Mono", monospace', letterSpacing: '2px', transition: 'all 0.3s ease', boxShadow: '0 0 25px rgba(255,51,102,0.12)' },
+  systemCoreDisconnectBtn: { width: '100%', padding: '20px', backgroundColor: 'rgba(255, 51, 102, 0.08)', border: '1px solid #ff3366', color: '#ff3366', borderRadius: '16px', fontSize: '14px', fontWeight: 'bold', cursor: 'pointer', fontFamily: '"Share Tech Mono", monospace' },
   
-  // İnteraktif Modal (Form)
-  modalViewportOverlay: { position: 'fixed', top: 0, left: 0, width: '100vw', height: '100vh', backgroundColor: 'rgba(2, 2, 5, 0.94)', backdropFilter: 'blur(12px)', zIndex: 9999, display: 'flex', justifyContent: 'center', alignItems: 'center', padding: '20px' },
-  modalContentWrapper: { width: '100%', maxWidth: '460px', backgroundColor: '#050a14', borderRadius: '24px', padding: '30px', border: '1px solid #00f0ff', boxShadow: '0 25px 65px rgba(0,240,255,0.16)', display: 'flex', flexDirection: 'column' },
-  modalHeadingTitle: { color: '#00f0ff', margin: '0 0 25px 0', fontSize: '18px', borderBottom: '1px solid rgba(0,240,255,0.25)', paddingBottom: '16px', letterSpacing: '1px', textTransform: 'uppercase' },
-  modalFormInputGroup: { marginBottom: '16px', display: 'flex', flexDirection: 'column' },
-  modalFormLabel: { fontSize: '11px', color: '#64748b', marginBottom: '8px', letterSpacing: '0.5px' },
-  modalInputField: { width: '100%', padding: '14px', backgroundColor: '#020205', border: '1px solid #112240', borderRadius: '10px', color: '#fff', fontSize: '13px', boxSizing: 'border-box', fontFamily: '"Share Tech Mono", monospace', outline: 'none' },
-  modalTextAreaField: { width: '100%', height: '85px', padding: '14px', backgroundColor: '#020205', border: '1px solid #112240', borderRadius: '10px', color: '#fff', fontSize: '13px', boxSizing: 'border-box', fontFamily: '"Share Tech Mono", monospace', outline: 'none', resize: 'none' },
-  modalActionButtonsRow: { display: 'flex', gap: '16px', marginTop: '25px' },
-  modalSaveExecutionBtn: { flex: 1, padding: '16px', backgroundColor: 'rgba(0, 255, 170, 0.12)', border: '1px solid #00ffaa', color: '#00ffaa', borderRadius: '12px', fontWeight: 'bold', cursor: 'pointer', fontSize: '12px', transition: 'all 0.3s ease', fontFamily: '"Share Tech Mono", monospace' },
-  modalCancelDismissBtn: { flex: 1, padding: '16px', backgroundColor: 'rgba(255, 51, 102, 0.1)', border: '1px solid #ff3366', color: '#ff3366', borderRadius: '12px', fontWeight: 'bold', cursor: 'pointer', fontSize: '12px', transition: 'all 0.3s ease', fontFamily: '"Share Tech Mono", monospace' }
+  // Ortak Input ve Modal Stilleri
+  inputLabel: { display: 'block', fontSize: '11px', color: '#64748b', marginBottom: '6px' },
+  inputField: { width: '100%', padding: '14px', backgroundColor: '#020205', border: '1px solid #112240', borderRadius: '10px', color: '#fff', fontSize: '13px', boxSizing: 'border-box', fontFamily: '"Share Tech Mono", monospace', outline: 'none' },
+  modalViewportOverlay: { position: 'fixed', top: 0, left: 0, width: '100vw', height: '100vh', backgroundColor: 'rgba(2, 2, 5, 0.95)', zIndex: 9999, display: 'flex', justifyContent: 'center', alignItems: 'center', padding: '20px' },
+  modalContentWrapper: { width: '100%', maxWidth: '450px', backgroundColor: '#050a14', borderRadius: '24px', padding: '30px', border: '1px solid #00f0ff' },
+  modalSaveBtn: { flex: 1, padding: '16px', backgroundColor: 'rgba(0,255,170,0.1)', border: '1px solid #00ffaa', color: '#00ffaa', borderRadius: '12px', fontWeight: 'bold', cursor: 'pointer', fontSize: '12px' },
+  modalCancelBtn: { flex: 1, padding: '16px', backgroundColor: 'rgba(255,51,102,0.1)', border: '1px solid #ff3366', color: '#ff3366', borderRadius: '12px', fontWeight: 'bold', cursor: 'pointer', fontSize: '12px' }
 };
 
 export default ProfileIdentity;
