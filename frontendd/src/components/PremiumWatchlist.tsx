@@ -1,112 +1,140 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 
-interface WatchlistItem {
+// --- VERİ MODELİ VE MOCK DATA ---
+interface TargetMovie {
   id: number;
   title: string;
-  category: string;
-  status: 'pending' | 'watched';
+  year: string;
+  poster: string;
+  status: 'LOCKED' | 'PENDING';
 }
 
-const initialList: WatchlistItem[] = [
-  { id: 1, title: 'The Matrix', category: 'Sci-Fi', status: 'pending' },
-  { id: 2, title: 'The Godfather', category: 'Crime', status: 'pending' },
-  { id: 3, title: 'Pulp Fiction', category: 'Action', status: 'pending' },
+const initialTargets: TargetMovie[] = [
+  { 
+    id: 101, 
+    title: 'Blade Runner 2049', 
+    year: '2017', 
+    poster: 'https://images.unsplash.com/photo-1534447677768-be436bb09401?w=500&q=80',
+    status: 'LOCKED' 
+  },
+  { 
+    id: 102, 
+    title: 'Cyberpunk: Edgerunners', 
+    year: '2022', 
+    poster: 'https://images.unsplash.com/photo-1605806616949-1e87b487cb2a?w=500&q=80',
+    status: 'LOCKED' 
+  },
+  { 
+    id: 103, 
+    title: 'The Matrix', 
+    year: '1999', 
+    poster: 'https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?w=500&q=80',
+    status: 'PENDING' 
+  },
 ];
 
 const PremiumWatchlist: React.FC = () => {
-  const [list, setList] = useState<WatchlistItem[]>(initialList);
+  const [targets, setTargets] = useState<TargetMovie[]>(initialTargets);
 
-  // Sola kaydırınca (Sil)
-  const handleRemove = (id: number) => {
-    setList(prev => prev.filter(item => item.id !== id));
-  };
-
-  // Sağa kaydırınca (İzlendi olarak işaretle)
-  const handleWatched = (id: number) => {
-    setList(prev => prev.map(item => 
-      item.id === id ? { ...item, status: 'watched' } : item
-    ));
+  // REQ 6: Kaydırma Jestleriyle (Swipe) Listeden Çıkarma Mantığı
+  const handleDismiss = (id: number) => {
+    setTargets(prev => prev.filter(item => item.id !== id));
   };
 
   return (
-    <div style={styles.container}>
-      <h2 style={styles.header}>Kişisel Uydu Linki (Req 6)</h2>
-      <p style={styles.subtext}>Aksiyon için öğeleri sağa veya sola kaydırın.</p>
+    <div style={styles.viewContainer}>
+      <div style={styles.metaHeader}>
+        <span style={styles.sectionTitle}>TARGET WATCHLIST</span>
+        <span style={styles.reqBadge}>REQ 6 // SWIPE ENGINE</span>
+      </div>
 
-      <div style={styles.listWrapper}>
-        <AnimatePresence>
-          {list.map(movie => (
-            <motion.div
-              key={movie.id}
-              layout
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, scale: 0.8, x: movie.status === 'watched' ? 200 : -200 }}
-              transition={{ type: 'spring', stiffness: 200, damping: 20 }}
-              style={styles.itemContainer}
+      <div style={styles.instructionBanner}>
+        <i className="fa-solid fa-angles-right" style={{ color: '#00f0ff' }}></i>
+        <span> Sinyali kesmek için kartları sağa kaydırın.</span>
+      </div>
+
+      <div style={styles.listStack}>
+        <AnimatePresence mode="popLayout">
+          {targets.length === 0 ? (
+            <motion.div 
+              initial={{ opacity: 0, y: 20 }} 
+              animate={{ opacity: 1, y: 0 }} 
+              style={styles.emptyState}
             >
-              {/* Arka plandaki ikonlar (Sağda ve Solda) */}
-              <div style={{ ...styles.actionBackground, backgroundColor: '#ff003c', left: 0 }}>
-                <span style={styles.actionText}>SİLİNİYOR</span>
-              </div>
-              <div style={{ ...styles.actionBackground, backgroundColor: '#00f0ff', right: 0 }}>
-                <span style={styles.actionText}>İZLENDİ</span>
-              </div>
-
-              {/* Sürüklenebilir Kart */}
-              <motion.div
-                drag="x"
-                dragConstraints={{ left: 0, right: 0 }} // Bırakınca ortaya döner
-                dragElastic={0.8} // Kaydırma direnci (lastik hissi)
-                onDragEnd={(e, info) => {
-                  if (info.offset.x > 100) handleWatched(movie.id); // Sağa çok kaydırıldıysa
-                  else if (info.offset.x < -100) handleRemove(movie.id); // Sola çok kaydırıldıysa
-                }}
-                style={{
-                  ...styles.card,
-                  borderColor: movie.status === 'watched' ? '#00f0ff' : 'rgba(255,255,255,0.1)',
-                  opacity: movie.status === 'watched' ? 0.5 : 1
-                }}
-              >
-                <div>
-                  <h3 style={styles.title}>{movie.title}</h3>
-                  <span style={styles.badge}>{movie.category}</span>
-                </div>
-                {movie.status === 'watched' && <span style={styles.watchedIcon}>✓</span>}
-              </motion.div>
+              <i className="fa-solid fa-radar" style={{ fontSize: '32px', color: '#112240', marginBottom: '15px', display: 'block' }}></i>
+              Aktif hedef bulunamadı. Yeni sinyaller bekleniyor...
             </motion.div>
-          ))}
+          ) : (
+            targets.map(movie => (
+              <motion.div
+                key={movie.id}
+                layout // Eleman silinince altındakilerin pürüzsüzce yukarı kaymasını sağlar
+                drag="x" // Sadece yatay eksende sürüklenebilir
+                dragConstraints={{ left: 0, right: 300 }} // Sola kaydırmayı engeller, sadece sağa izin verir
+                onDragEnd={(_, info) => {
+                  // Kullanıcı kartı X ekseninde 120px'den fazla sağa çekerse tetiklenir
+                  if (info.offset.x > 120) {
+                    handleDismiss(movie.id);
+                  }
+                }}
+                whileDrag={{ scale: 1.02, backgroundColor: 'rgba(255, 51, 102, 0.1)', borderColor: '#ff3366' }}
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ x: '100%', opacity: 0, scale: 0.9, transition: { duration: 0.2 } }}
+                style={styles.dragCard}
+              >
+                {/* Sol Taraftaki Silme İpucu (Kart sağa çekildikçe altından kırmızı ışık çıkar) */}
+                <div style={styles.deleteHint}>SİL</div>
+
+                {/* Ana Kart İçeriği */}
+                <div style={styles.cardContent}>
+                  <img src={movie.poster} alt={movie.title} style={styles.thumbnail} />
+                  
+                  <div style={styles.cardBody}>
+                    <h4 style={styles.movieTitle}>{movie.title}</h4>
+                    <span style={styles.movieYear}>
+                      <i className="fa-solid fa-satellite"></i> {movie.year} // SYSTEM_QUEUE
+                    </span>
+                  </div>
+
+                  <div style={styles.swipeIcon}>
+                    <i className="fa-solid fa-chevron-right"></i>
+                  </div>
+                </div>
+              </motion.div>
+            ))
+          )}
         </AnimatePresence>
-        {list.length === 0 && (
-          <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} style={styles.emptyText}>
-            İzlenecekler listeniz boş. Yeni hedefler ekleyin.
-          </motion.p>
-        )}
       </div>
     </div>
   );
 };
 
-// --- STYLES ---
+// --- PREMIUM SİBERPUNK CSS ---
 const styles: { [key: string]: React.CSSProperties } = {
-  container: { padding: '20px', backgroundColor: '#050a14', minHeight: '50vh', color: '#fff', fontFamily: '"Inter", sans-serif' },
-  header: { fontSize: '20px', color: '#fff', margin: '0 0 5px 0', letterSpacing: '1px' },
-  subtext: { fontSize: '12px', color: '#888', marginBottom: '20px' },
-  listWrapper: { display: 'flex', flexDirection: 'column', gap: '15px', overflow: 'hidden' },
-  itemContainer: { position: 'relative', width: '100%', height: '70px', borderRadius: '12px' },
-  actionBackground: { position: 'absolute', top: 0, bottom: 0, width: '100%', borderRadius: '12px', display: 'flex', alignItems: 'center', padding: '0 20px', zIndex: 0 },
-  actionText: { fontSize: '12px', fontWeight: 'bold', color: '#000', letterSpacing: '2px' },
-  card: { 
-    position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', 
-    backgroundColor: '#0f172a', borderRadius: '12px', border: '1px solid',
-    display: 'flex', justifyContent: 'space-between', alignItems: 'center', 
-    padding: '0 20px', zIndex: 1, cursor: 'grab', boxShadow: '0 5px 15px rgba(0,0,0,0.3)'
+  viewContainer: { padding: '20px', color: '#fff', fontFamily: '"Share Tech Mono", monospace' },
+  metaHeader: { display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '15px', borderBottom: '1px solid #1a202c', paddingBottom: '10px' },
+  sectionTitle: { fontSize: '18px', fontWeight: 'bold', letterSpacing: '2px', color: '#00f0ff' },
+  reqBadge: { fontSize: '10px', backgroundColor: 'rgba(0, 240, 255, 0.1)', color: '#00f0ff', padding: '3px 8px', borderRadius: '4px', border: '1px solid rgba(0, 240, 255, 0.2)' },
+  
+  instructionBanner: { backgroundColor: '#050a14', border: '1px solid #112240', borderRadius: '8px', padding: '10px 15px', fontSize: '11px', color: '#888', marginBottom: '20px', display: 'flex', alignItems: 'center', gap: '10px', boxShadow: 'inset 0 0 10px rgba(0,240,255,0.05)' },
+  
+  listStack: { display: 'flex', flexDirection: 'column', gap: '15px' },
+  
+  dragCard: {
+    backgroundColor: '#090d16', border: '1px solid #112240', borderRadius: '12px', overflow: 'hidden', cursor: 'grab', position: 'relative', touchAction: 'none' // Mobilde kaydırmanın sorunsuz çalışması için touchAction şart
   },
-  title: { margin: '0 0 5px 0', fontSize: '16px', fontWeight: '600' },
-  badge: { fontSize: '10px', padding: '2px 6px', backgroundColor: 'rgba(255,255,255,0.1)', borderRadius: '4px', textTransform: 'uppercase' },
-  watchedIcon: { color: '#00f0ff', fontSize: '20px', fontWeight: 'bold' },
-  emptyText: { textAlign: 'center', color: '#666', marginTop: '20px', fontSize: '14px' }
+  deleteHint: { position: 'absolute', left: '20px', top: '0', height: '100%', display: 'flex', alignItems: 'center', color: '#ff3366', fontWeight: 'bold', letterSpacing: '2px', fontSize: '14px', zIndex: 0 },
+  
+  cardContent: { position: 'relative', zIndex: 1, backgroundColor: '#090d16', display: 'flex', alignItems: 'center', padding: '12px', borderRadius: '12px' },
+  thumbnail: { width: '60px', height: '85px', objectFit: 'cover', borderRadius: '8px', border: '1px solid rgba(255,255,255,0.1)' },
+  cardBody: { flex: 1, marginLeft: '15px' },
+  movieTitle: { fontSize: '15px', margin: '0 0 8px 0', color: '#fff', fontFamily: 'sans-serif', fontWeight: 'bold', letterSpacing: '0.5px' },
+  movieYear: { fontSize: '10px', color: '#4a5568' },
+  swipeIcon: { color: '#112240', fontSize: '16px', marginLeft: '10px' },
+  
+  emptyState: { textAlign: 'center', padding: '60px 20px', color: '#4a5568', fontSize: '12px', border: '1px dashed #112240', borderRadius: '12px' }
 };
 
 export default PremiumWatchlist;
