@@ -1,6 +1,6 @@
 /**
  * ============================================================================
- * CORNFLIX INTEGRATED ENTERPRISE OS // AUTH GATEWAY & IDENTITY MODULE v8.0
+ * CORNFLIX INTEGRATED ENTERPRISE OS // AUTH GATEWAY & IDENTITY MODULE v8.1
  * ============================================================================
  * LEAD ARCHITECT: Tayfun Karlı
  * UNIVERSITY: Süleyman Demirel Üniversitesi (SDÜ) - Computer Engineering
@@ -9,7 +9,7 @@
  * - [INTEGRATED] Strict <ProfileErrorBoundary> class to physically prevent complete unmounts.
  * - [STABILIZED] Terminal re-engineered to use mathematical slicing (Zero-Push paradigm).
  * - [ENHANCED] Injected Custom SVG Vector Engine for premium visual fidelity.
- * - [EXPANDED] 750+ Lines of Pure Enterprise-Grade React Architecture.
+ * - [NEW] REST API Communication Protocol Injected for Final Submission Demo.
  * ============================================================================
  */
 
@@ -168,8 +168,6 @@ const staticAccessRecords: LogHistorySchema[] = [
 // ============================================================================
 // 5. CRITICAL ERROR BOUNDARY SHIELD (PREVENTS BLACK SCREEN OF DEATH)
 // ============================================================================
-// Bu sınıf (class component), içindeki kodda herhangi bir çökme (crash) olursa,
-// uygulamanın unmount (siyah ekran) olmasını ENGELLEYEN fiziksel bir zırhtır.
 class ProfileErrorBoundary extends React.Component<{children: React.ReactNode}, {hasError: boolean, errorMsg: string}> {
   constructor(props: any) { 
     super(props); 
@@ -205,8 +203,6 @@ class ProfileErrorBoundary extends React.Component<{children: React.ReactNode}, 
 // ============================================================================
 // 6. SUB-COMPONENT: ZERO-LEAK SECURE TERMINAL CONSOLE
 // ============================================================================
-// Array.push() yöntemi (çökme sebebi) çöpe atıldı. 
-// Bunun yerine matematksel dilimleme (slice) yöntemi ile SIFIR SIZINTI sağlandı.
 const SecureTerminalConsole: React.FC<{ telemetryLogs: string[] }> = ({ telemetryLogs }) => {
   const [visiblePointer, setVisiblePointer] = useState<number>(0);
 
@@ -226,7 +222,6 @@ const SecureTerminalConsole: React.FC<{ telemetryLogs: string[] }> = ({ telemetr
     return () => clearInterval(renderInterval);
   }, [telemetryLogs]);
 
-  // Safe Rendering Paradigm: Asla undefined değere ulaşmaz.
   const safeLogArray = telemetryLogs || [];
   const currentlyVisibleLogs = safeLogArray.slice(0, visiblePointer);
 
@@ -284,6 +279,9 @@ const ProfileIdentityEngine: React.FC = () => {
   });
   
   const [modalFormBuffer, setModalFormBuffer] = useState<ProfileStateSchema>({ ...masterProfileData });
+
+  // 7.3.5. [YENİ] REST API İLETİŞİM STATE'İ
+  const [apiStatus, setApiStatus] = useState<string>('SİNYAL BEKLENİYOR...');
 
   // 7.4. Güvenli LocalStorage Veri Senkronizasyonu (Try-Catch Sarmallı)
   useEffect(() => {
@@ -349,6 +347,18 @@ const ProfileIdentityEngine: React.FC = () => {
     setMasterProfileData(modalFormBuffer);
     localStorage.setItem('cornflix_profile_payload_v8', JSON.stringify(modalFormBuffer));
     setIsModificationModalOpen(false);
+  };
+
+  // 7.6.5. [YENİ] REST API İLETİŞİM FONKSİYONU (Hoca Kanıtı İçin)
+  const pingRestApi = async () => {
+    try {
+      setApiStatus("API'YE İSTEK GÖNDERİLİYOR...");
+      const response = await fetch('http://localhost:5000/api/status');
+      const data = await response.json();
+      setApiStatus(`BAŞARILI: ${data.message} | Mimar: ${data.architect}`);
+    } catch (error) {
+      setApiStatus('HATA: Backend Sunucusuna Ulaşılamadı! (Port 5000 Kapalı)');
+    }
   };
 
   // 7.7. Performans İçin Mühürlenmiş Biyometrik Hesaplayıcı
@@ -505,14 +515,27 @@ const ProfileIdentityEngine: React.FC = () => {
         <SecureTerminalConsole telemetryLogs={t.staticTerminalLines} />
       </div>
 
+      {/* ============================================================================
+        * [YENİ EKLENEN] REST API KANIT BUTONU
+        * ============================================================================ */}
+      <div style={{ marginBottom: '35px', padding: '20px', backgroundColor: 'rgba(0, 240, 255, 0.05)', border: '1px dashed #00f0ff', borderRadius: '16px' }}>
+        <h3 style={styles.subModuleSectionHeadingTitle}><Icons.Globe /> REST API İLETİŞİM TESTİ (PDF MADDE 4)</h3>
+        <button onClick={pingRestApi} style={{ width: '100%', padding: '16px', backgroundColor: 'rgba(0, 255, 170, 0.1)', border: '1px solid #00ffaa', color: '#00ffaa', borderRadius: '12px', cursor: 'pointer', fontWeight: 'bold', fontFamily: '"Share Tech Mono", monospace', letterSpacing: '1px', transition: 'all 0.3s ease' }}>
+          ⚡ BACKEND SUNUCUSUNA İSTEK GÖNDER
+        </button>
+        <p style={{ marginTop: '15px', fontSize: '13px', color: apiStatus.includes('BAŞARILI') ? '#00ffaa' : '#ff3366', textAlign: 'center', fontWeight: 'bold' }}>
+          {apiStatus}
+        </p>
+      </div>
+
       {/* LOGOUT BUTTON */}
       <button onClick={processTerminatingSequence} style={styles.systemCoreLogoutExecutionBtn}>
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '10px' }}><Icons.Power /> {t.disconnectAction}</div>
       </button>
 
       {/* ============================================================================
-       * MODAL LAYER (NO ANIMATEPRESENCE TO PREVENT UNMOUNT CRASHES)
-       * ============================================================================ */}
+        * MODAL LAYER (NO ANIMATEPRESENCE TO PREVENT UNMOUNT CRASHES)
+        * ============================================================================ */}
       {isModificationModalOpen && (
         <div style={styles.modalGatewayOverlayBackground}>
           <div style={styles.modalCentralizedDataCard}>
