@@ -1,6 +1,6 @@
 /**
  * ============================================================================
- * CORNFLIX INTEGRATED ENTERPRISE OS // AUTH GATEWAY & IDENTITY MODULE v8.1
+ * CORNFLIX INTEGRATED ENTERPRISE OS // AUTH GATEWAY & IDENTITY MODULE v8.2 (CLOUD API)
  * ============================================================================
  * LEAD ARCHITECT: Tayfun Karlı
  * UNIVERSITY: Süleyman Demirel Üniversitesi (SDÜ) - Computer Engineering
@@ -10,6 +10,7 @@
  * - [STABILIZED] Terminal re-engineered to use mathematical slicing (Zero-Push paradigm).
  * - [ENHANCED] Injected Custom SVG Vector Engine for premium visual fidelity.
  * - [NEW] REST API Communication Protocol Injected for Final Submission Demo.
+ * - [CLOUD] Backend endpoint migrated to GitHub Codespaces Public Port.
  * ============================================================================
  */
 
@@ -134,7 +135,7 @@ const globalLinguisticMatrix = {
     fieldsNameBlank: 'OPERATION DENIED: Name field cannot be empty!',
     
     metaLabels: { 
-      name: 'Operator Identity', role: 'System Role', loc: 'Location Data', bio: 'Biometric Stream',
+      name: 'Operator Identity', role: 'System Role', Location: 'Location Data', bio: 'Biometric Stream',
       clearance: 'Clearance Level', netKey: 'Network Matrix Key'
     },
     staticTerminalLines: [
@@ -349,15 +350,16 @@ const ProfileIdentityEngine: React.FC = () => {
     setIsModificationModalOpen(false);
   };
 
-  // 7.6.5. [YENİ] REST API İLETİŞİM FONKSİYONU (Hoca Kanıtı İçin)
+  // 7.6.5. [YENİ] REST API İLETİŞİM FONKSİYONU (Hoca Kanıtı İçin - GITHUB CLOUD UYUMLU)
   const pingRestApi = async () => {
     try {
       setApiStatus("API'YE İSTEK GÖNDERİLİYOR...");
-      const response = await fetch('http://localhost:5000/api/status');
+      // Link senin Github Codespaces Backend adresinle güncellendi:
+      const response = await fetch('https://cautious-adventure-g4vw599j5r9rfv9jq-5000.app.github.dev/api/status');
       const data = await response.json();
       setApiStatus(`BAŞARILI: ${data.message} | Mimar: ${data.architect}`);
     } catch (error) {
-      setApiStatus('HATA: Backend Sunucusuna Ulaşılamadı! (Port 5000 Kapalı)');
+      setApiStatus('HATA: Backend Sunucusuna Ulaşılamadı! (Port 5000 Kapalı veya Private olabilir)');
     }
   };
 
