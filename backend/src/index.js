@@ -1,8 +1,17 @@
 const express = require('express');
 const cors = require('cors');
+const redis = require('redis'); // YENİ: Redis sisteme dahil edildi
+
 const app = express();
 app.use(cors());
 app.use(express.json());
+
+// --- REDIS BAĞLANTISI (GARSON İŞE ALINDI) ---
+const redisClient = redis.createClient({ url: 'redis://localhost:6379' });
+redisClient.on('error', (err) => console.log('Redis Hatası:', err));
+redisClient.connect()
+    .then(() => console.log('⚡ Redis Hafıza Sistemi Aktif!'))
+    .catch(console.error);
 
 // --- VERİTABANI (Mevcut verilerini korudum) ---
 let movies = [
@@ -32,8 +41,39 @@ app.get('/api/movies/:id/cast', (req, res) => {
     res.json({ director: "Christopher Nolan", cast: ["Leonardo DiCaprio", "Joseph Gordon-Levitt"], movie_id: req.params.id });
 });
 
-// --- 4. FILM FİLTRELEME & LİSTELEME (RE-04) ---
-app.get('/api/movies', (req, res) => res.json(movies));
+// --- 4. FILM FİLTRELEME & LİSTELEME (RE-04) - REDİS ŞOVU BURADA! ---
+app.get('/api/movies', async (req, res) => {
+    try {
+        const cacheKey = 'moviesList';
+
+        // 1. Önce Redis'e (hafızaya) bakıyoruz
+        const cachedMovies = await redisClient.get(cacheKey);
+
+        if (cachedMovies) {
+            // VERİ REDİS'TEN GELDİ! (Videoda burayı göster)
+            console.log("⚡ Veriler şimşek gibi Redis'ten geldi!");
+            return res.json({
+                veri_kaynagi: "REDIS CACHE (Süper Hızlı)",
+                data: JSON.parse(cachedMovies)
+            });
+        }
+
+        // 2. Redis'te yoksa normal veritabanından çek (ilk istekte bu çalışır)
+        console.log("Veriler veritabanından çekildi ve Redis'e kaydediliyor...");
+        
+        // 3. Bir dahaki sefere hızlı gelmesi için Redis'e kaydet (1 saat = 3600 sn kalacak)
+        await redisClient.setEx(cacheKey, 3600, JSON.stringify(movies));
+
+        return res.json({
+            veri_kaynagi: "VERITABANI (İlk İstek)",
+            data: movies
+        });
+
+    } catch (error) {
+        console.error("Redis Hatası:", error);
+        res.json({ veri_kaynagi: "VERITABANI (Redis Çöktü)", data: movies });
+    }
+});
 
 // --- 5. YORUM DÜZENLEME (RE-05) ---
 app.put('/api/comments/:id', (req, res) => {
@@ -55,7 +95,7 @@ app.post('/api/quiz/recommend', (req, res) => {
     res.json({ recommendation: "Inception", matchRate: "%95", message: "Quiz sonuçlarınıza göre en uygun film seçildi." });
 });
 
-// --- 9. HABER DÜZENLEME (RE-09 - Mevcut kodunu korudum) ---
+// --- 9. HABER DÜZENLEME (RE-09) ---
 app.get('/api/news', (req, res) => res.json(news));
 
 app.put('/api/news/:id', (req, res) => {
