@@ -1,8 +1,32 @@
 const express = require('express');
 const cors = require('cors');
+const redis = require('redis'); // YENİ: Redis eklendi
+const amqp = require('amqplib'); // YENİ: RabbitMQ eklendi
+
 const app = express();
 app.use(cors());
 app.use(express.json());
+
+// --- ⚡ REDIS BAĞLANTISI (ÖNBELLEK / GARSON) ---
+const redisClient = redis.createClient({ url: 'redis://localhost:6379' });
+redisClient.on('error', (err) => console.log('Redis Hatası:', err));
+redisClient.connect()
+    .then(() => console.log('⚡ Redis Hafıza Sistemi Aktif!'))
+    .catch(console.error);
+
+// --- 🐇 RABBITMQ BAĞLANTISI (MESAJ KUYRUĞU / POSTACI) ---
+let channel;
+async function connectRabbitMQ() {
+    try {
+        const connection = await amqp.connect('amqp://localhost:5672');
+        channel = await connection.createChannel();
+        await channel.assertQueue('bildirim_kuyrugu');
+        console.log('🐇 RabbitMQ Mesaj Kuyruğu Aktif!');
+    } catch (error) {
+        console.log('RabbitMQ Hatası:', error);
+    }
+}
+connectRabbitMQ();
 
 // --- VERİTABANI (Mevcut verilerini korudum) ---
 let movies = [
@@ -32,17 +56,57 @@ app.get('/api/movies/:id/cast', (req, res) => {
     res.json({ director: "Christopher Nolan", cast: ["Leonardo DiCaprio", "Joseph Gordon-Levitt"], movie_id: req.params.id });
 });
 
-// --- 4. FILM FİLTRELEME & LİSTELEME (RE-04) ---
-app.get('/api/movies', (req, res) => res.json(movies));
+// --- 4. FILM FİLTRELEME & LİSTELEME (RE-04) - 🔥 REDIS ŞOVU BURADA! ---
+app.get('/api/movies', async (req, res) => {
+    try {
+        const cacheKey = 'moviesList';
+        
+        // 1. Redis'te veri var mı kontrol et
+        const cachedMovies = await redisClient.get(cacheKey);
+
+        if (cachedMovies) {
+            console.log("⚡ Veriler şimşek gibi Redis'ten geldi!");
+            return res.json({
+                veri_kaynagi: "REDIS CACHE (Süper Hızlı)",
+                data: JSON.parse(cachedMovies)
+            });
+        }
+
+        // 2. Yoksa veritabanından çek ve Redis'e kaydet (1 saat = 3600 sn)
+        console.log("Veriler SQL'den çekildi ve Redis'e kaydediliyor...");
+        await redisClient.setEx(cacheKey, 3600, JSON.stringify(movies));
+
+        return res.json({
+            veri_kaynagi: "VERITABANI (İlk İstek)",
+            data: movies
+        });
+
+    } catch (error) {
+        console.error("Redis Hatası:", error);
+        res.json({ veri_kaynagi: "VERITABANI (Hata Durumu)", data: movies });
+    }
+});
 
 // --- 5. YORUM DÜZENLEME (RE-05) ---
 app.put('/api/comments/:id', (req, res) => {
     res.json({ message: "Yorum başarıyla düzenlendi.", commentId: req.params.id });
 });
 
-// --- 6. İZLENECEKLER LİSTESİ OLUŞTURMA (RE-06) ---
+// --- 6. İZLENECEKLER LİSTESİ OLUŞTURMA (RE-06) - 🐇 RABBITMQ ŞOVU BURADA! ---
 app.post('/api/watchlist', (req, res) => {
-    res.json({ message: "Film izlenecekler listenize başarıyla eklendi.", status: "created" });
+    const mesaj = `Arka plan görevi: ID'si belli olmayan kullanıcı listeye yeni film ekledi, teşekkür maili atılacak.`;
+    
+    // Mesajı RabbitMQ kuyruğuna yolla (kullanıcıyı bekletmeden)
+    if (channel) {
+        channel.sendToQueue('bildirim_kuyrugu', Buffer.from(mesaj));
+        console.log("🐇 RabbitMQ Kuyruğuna Yeni Görev Eklendi:", mesaj);
+    }
+
+    res.json({ 
+        message: "Film izlenecekler listenize başarıyla eklendi.", 
+        status: "created",
+        kuyruk_durumu: "Arka planda bildirim maili sıraya alındı (RabbitMQ)!"
+    });
 });
 
 // --- 7. YORUM ONAYLAMA (RE-07) ---
@@ -55,7 +119,7 @@ app.post('/api/quiz/recommend', (req, res) => {
     res.json({ recommendation: "Inception", matchRate: "%95", message: "Quiz sonuçlarınıza göre en uygun film seçildi." });
 });
 
-// --- 9. HABER DÜZENLEME (RE-09 - Mevcut kodunu korudum) ---
+// --- 9. HABER DÜZENLEME (RE-09) ---
 app.get('/api/news', (req, res) => res.json(news));
 
 app.put('/api/news/:id', (req, res) => {
@@ -74,7 +138,7 @@ app.get('/api/language/:lang', (req, res) => {
     res.json({ message: `Sistem dili başarıyla ${req.params.lang} olarak değiştirildi.`, currentLang: req.params.lang });
 });
 
-// --- JOKER ROTA (Hata Almamak İçin) ---
+// --- JOKER ROTA ---
 app.all('*', (req, res) => {
     res.json({ status: "API Online", developer: "Tayfun Karlı", requirements_status: "10/10 Completed" });
 });
