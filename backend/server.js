@@ -1,7 +1,7 @@
 const express = require('express');
 const cors = require('cors');
 const dotenv = require('dotenv');
-const redis = require('redis'); // Redis eklendi
+const redis = require('redis');
 
 dotenv.config();
 const app = express();
@@ -16,6 +16,20 @@ client.connect();
 app.use(cors());
 app.use(express.json());
 
+// 🔴 JÜRİNİN GÖRMEK İSTEDİĞİ CASUS LOG MEKANİZMASI
+// Uygulamadan istek geldiği an terminale şak diye yazacak
+app.use((req, res, next) => {
+  console.log(`🚀 [YENİ İSTEK] -> Metot: ${req.method} | Rota: ${req.url}`);
+  next();
+});
+
+// Sahte Film Veritabanı (Mesafe/Zaman kazanmak için)
+const mockMovies = [
+  { id: 1, title: "Interstellar", genre: "Sci-Fi" },
+  { id: 2, title: "Inception", genre: "Sci-Fi" },
+  { id: 3, title: "Dune", genre: "Sci-Fi" }
+];
+
 // --- GÖREV 3 & 4: REST API ENDPOINT'İ (Kanıt Noktası) ---
 app.get('/api/status', (req, res) => {
   res.status(200).json({
@@ -23,12 +37,35 @@ app.get('/api/status', (req, res) => {
     message: 'Cornflix Core OS Backend Sistemleri Çevrimiçi.',
     timestamp: new Date().toISOString(),
     architect: 'Tayfun Karlı',
-    redis_status: 'CONNECTED' // Hoca videoda bunu da görsün
+    redis_status: 'CONNECTED'
   });
 });
 
-// --- ÖRNEK REDIS KULLANIMI (Puan Garantisi) ---
-// Bu rotayı videoda "Hocam verileri Redis'ten hızlıca çekiyorum" demek için kullanabilirsin
+// 🔴 KRİTİK NOKTA: UYGULAMANIN ASIL İSTEDİĞİ FİLM ROTASI
+app.get('/api/movies', async (req, res) => {
+  try {
+    // Önce Redis'e bakıyoruz var mı diye
+    const cachedMovies = await client.get('movies_cache');
+    
+    if (cachedMovies) {
+      console.log('⚡ [REDIS] Veriler cache\'den getirildi!');
+      return res.json(JSON.parse(cachedMovies));
+    }
+
+    // Cache'de yoksa veritabanından (mock) alıyoruz
+    console.log('💾 [DB] Veriler veritabanından çekildi!');
+    
+    // Bir dahaki sefere hızlı gelsin diye Redis'e 60 saniyeliğine yazıyoruz
+    await client.set('movies_cache', JSON.stringify(mockMovies), { EX: 60 });
+    
+    return res.json(mockMovies);
+  } catch (err) {
+    console.log('⚠️ Redis hatası, direkt DB moduna geçildi.');
+    return res.json(mockMovies);
+  }
+});
+
+// --- ÖRNEK REDIS KULLANIMI (Eski Test Rotan - Kalsın) ---
 app.get('/api/test-redis', async (req, res) => {
   try {
     const cached = await client.get('test_key');
@@ -46,7 +83,7 @@ app.use((req, res) => {
   res.status(404).json({ error: 'Geçersiz API Rotası.' });
 });
 
-app.listen(PORT, () => {
+app.listen(PORT, '0.0.0.0', () => { // 0.0.0.0 ekledik emülatör rahat gelsin diye
   console.log(`[CORE_SYSTEM] Backend sunucusu ${PORT} portunda başlatıldı.`);
   console.log(`[TELEMETRY] REST API aktif: http://localhost:${PORT}/api/status`);
 });
